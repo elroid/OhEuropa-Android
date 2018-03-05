@@ -4,10 +4,12 @@ import android.os.Bundle
 import android.support.annotation.LayoutRes
 import android.support.design.widget.BottomNavigationView
 import android.view.MenuItem
+import androidx.view.doOnPreDraw
 import com.oheuropa.android.R
 import com.oheuropa.android.ui.compass.CompassActivity
 import com.oheuropa.android.ui.info.InfoActivity
 import com.oheuropa.android.ui.map.MapActivity
+import com.oheuropa.android.util.ViewUtils
 import kotlinx.android.synthetic.main.bottom_navigation.*
 
 /**
@@ -24,7 +26,19 @@ abstract class BottomNavActivity : BaseActivity(), BottomNavigationView.OnNaviga
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		setContentView(getLayoutId())
-		bottomNavigationView.setOnNavigationItemSelectedListener(this)
+
+		//set up bottom nav
+		bottomNavigationView.onNavigationItemSelectedListener = this
+		bottomNavigationView.setTextVisibility(false)
+		val tabBarBgDrawable = bottomNavigationView.background
+		val iw = tabBarBgDrawable.intrinsicWidth
+		val ih = tabBarBgDrawable.intrinsicHeight
+		val sw = ViewUtils.getScreenWidth()
+		val th = ViewUtils.getHeightAtWidth(iw, ih, sw)
+		bottomNavigationView.doOnPreDraw {
+			bottomNavigationView.itemHeight = th
+			bottomNavigationView.setIconsMarginTop(ViewUtils.dpToPx(12))
+		}
 	}
 
 	@LayoutRes

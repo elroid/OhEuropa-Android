@@ -4,7 +4,9 @@
 	<color name="colorPrimaryDark">#303F9F</color>
 	<color name="colorAccent">#FF4081</color>
 
-	<color name="tab_bg">#FF212121</color>
+	<color name="tab_bg">#ff212121</color>
+	<color name="tab_fg">#ff666666</color>
+	<color name="tab_fg_sel">#ffffffff</color>
 
 	<color name="debug0">#00000000</color>
 	<color name="debug1">#66ff00ff</color>

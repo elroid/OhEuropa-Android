@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.BottomNavigationView
+<com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx
 	android:id="@+id/bottomNavigationView"
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:app="http://schemas.android.com/apk/res-auto"
 	android:layout_width="match_parent"
 	android:layout_height="wrap_content"
-	android:background="@color/tab_bg"
+	android:background="@drawable/tabbar"
+	app:itemIconTint="@color/bottom_nav_foreground"
 	app:menu="@menu/bottom_nav"
 	/>
