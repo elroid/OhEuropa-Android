@@ -1,8 +1,7 @@
 apply plugin: 'com.android.application'
-
 apply plugin: 'kotlin-android'
-
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
 
 android {
     compileSdkVersion 26
@@ -11,10 +10,14 @@ android {
         minSdkVersion 16
         targetSdkVersion 26
         versionCode 1
-        versionName "1.0"
+        versionName "0.1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
+        debug {
+            minifyEnabled false
+            applicationIdSuffix '.debug'
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
@@ -22,11 +25,72 @@ android {
     }
 }
 
+kapt {
+    generateStubs = true
+}
+
+project.ext {
+    supportLibraryVersion = "26.1.0"
+    daggerVersion = "2.13"
+    butterKnifeVersion = "8.8.1"
+    rxKotlinVersion = "2.2.0"
+    rxAndroidVersion = "2.0.1"
+    rxRelayVersion = "2.0.0"
+    timberVersion = "4.6.0"
+    retrofitVersion = "2.3.0"
+    espressoVersion = "3.0.1"
+    supportTestVersion = "1.0.1"
+    kotshiVersion = "1.0.0"
+}
+
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation"org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
-    implementation 'com.android.support:appcompat-v7:26.1.0'
-    testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'com.android.support.test:runner:1.0.1'
-    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
+
+
+
+
+    // Android support libs
+    implementation "com.android.support:appcompat-v7:$project.supportLibraryVersion"
+    implementation "com.android.support:design:$project.supportLibraryVersion"
+
+    // Kotlin
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jre8:$project.kotlinVersion"
+
+    // Dagger core
+    implementation "com.google.dagger:dagger:$project.daggerVersion"
+    kapt "com.google.dagger:dagger-compiler:$project.daggerVersion"
+    kaptTest "com.google.dagger:dagger-compiler:$project.daggerVersion"
+
+    // Dagger Android
+    kapt "com.google.dagger:dagger-android-processor:$project.daggerVersion"
+    implementation "com.google.dagger:dagger-android-support:$project.daggerVersion"
+
+    //moshi-kotlin/kotshi
+    implementation "se.ansman.kotshi:api:$kotshiVersion"
+    kapt "se.ansman.kotshi:compiler:$kotshiVersion"
+
+    // ReactiveX
+    implementation "io.reactivex.rxjava2:rxkotlin:$project.rxKotlinVersion"
+    implementation "io.reactivex.rxjava2:rxandroid:$project.rxAndroidVersion"
+    implementation "com.tspoon.traceur:traceur:1.0.1"
+
+    // RxRelay
+    implementation "com.jakewharton.rxrelay2:rxrelay:$project.rxRelayVersion"
+
+    // Timber
+    implementation "com.jakewharton.timber:timber:$project.timberVersion"
+
+    // Testing
+    testImplementation "junit:junit:4.12"
+    testImplementation "org.robolectric:robolectric:3.6.1"
+    testImplementation "org.jetbrains.kotlin:kotlin-stdlib-jre8:$project.kotlinVersion"
+    testImplementation "org.jetbrains.kotlin:kotlin-test-junit:$project.kotlinVersion"
+    testImplementation "com.nhaarman:mockito-kotlin:1.5.0"
+    kaptTest "com.google.dagger:dagger-compiler:$project.daggerVersion"
+
+    androidTestImplementation "com.android.support.test:runner:$project.supportTestVersion"
+    androidTestImplementation "com.android.support.test:rules:$project.supportTestVersion"
+    androidTestImplementation "com.android.support.test.espresso:espresso-core:$project.espressoVersion"
+    androidTestImplementation "com.android.support.test.espresso:espresso-intents:$project.espressoVersion"
+    androidTestImplementation "com.android.support:support-annotations:$project.supportLibraryVersion"
 }
