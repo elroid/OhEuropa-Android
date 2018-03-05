@@ -3,4 +3,14 @@
 	<color name="colorPrimary">#3F51B5</color>
 	<color name="colorPrimaryDark">#303F9F</color>
 	<color name="colorAccent">#FF4081</color>
+
+	<color name="tab_bg">#FF212121</color>
+
+	<color name="debug0">#00000000</color>
+	<color name="debug1">#66ff00ff</color>
+	<color name="debug2">#6600ff00</color>
+	<color name="debug3">#aaffff33</color>
+	<color name="debug4">#66666000</color>
+	<color name="debug5">#ff0000ff</color>
+	<color name="debug6">#ff224466</color>
 </resources>

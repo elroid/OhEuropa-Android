@@ -1,3 +1,7 @@
 <resources>
 	<string name="app_name">Oh Europa</string>
+
+	<string name="title_compass">Compass</string>
+	<string name="title_map">Map</string>
+	<string name="title_info">Info</string>
 </resources>

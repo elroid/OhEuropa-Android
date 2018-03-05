@@ -4,11 +4,11 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 
 android {
-    compileSdkVersion 26
+    compileSdkVersion 27
     defaultConfig {
         applicationId "com.oheuropa.android"
         minSdkVersion 16
-        targetSdkVersion 26
+        targetSdkVersion 27
         versionCode 1
         versionName "0.1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -30,7 +30,7 @@ kapt {
 }
 
 project.ext {
-    supportLibraryVersion = "26.1.0"
+    supportLibraryVersion = "27.1.0"
     daggerVersion = "2.13"
     butterKnifeVersion = "8.8.1"
     rxKotlinVersion = "2.2.0"
@@ -55,6 +55,7 @@ dependencies {
 
     // Kotlin
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jre8:$project.kotlinVersion"
+    implementation 'androidx.core:core-ktx:0.2'
 
     // Dagger core
     implementation "com.google.dagger:dagger:$project.daggerVersion"

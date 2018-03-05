@@ -1,10 +1,8 @@
-package com.oheuropa.android.ui.compass
+package com.oheuropa.android.ui.map
 
 import android.content.Context
 import android.content.Intent
-import android.os.Bundle
 import com.oheuropa.android.R
-import com.oheuropa.android.ui.base.BaseActivity
 import com.oheuropa.android.ui.base.BottomNavActivity
 
 /**
@@ -18,19 +16,19 @@ import com.oheuropa.android.ui.base.BottomNavActivity
  */
 
 
-class CompassActivity: BottomNavActivity() {
+class MapActivity : BottomNavActivity() {
 
 	companion object {
 		fun createIntent(ctx: Context): Intent {
-			return Intent(ctx, CompassActivity::class.java)
+			return Intent(ctx, MapActivity::class.java)
 		}
 	}
 
 	override fun getLayoutId(): Int {
-		return R.layout.activity_compass
+		return R.layout.activity_map
 	}
 
 	override fun getNavigationMenuItemId(): Int {
-		return R.id.navigation_compass
+		return R.id.navigation_map
 	}
 }

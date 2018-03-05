@@ -15,11 +15,11 @@ import android.widget.Toast
  */
 abstract class BaseActivity : AppCompatActivity() {
 
-	fun getCtx() : Context {
+	protected fun getCtx(): Context {
 		return this
 	}
 
-	protected fun toast(msg:CharSequence, length:Int = Toast.LENGTH_SHORT){
+	protected fun toast(msg: CharSequence, length: Int = Toast.LENGTH_SHORT) {
 		Toast.makeText(getCtx(), msg, length).show()
 	}
 }

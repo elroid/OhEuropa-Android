@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+	<item
+		android:id="@+id/navigation_compass"
+		android:icon="@drawable/ic_nav_compass_24dp"
+		android:title="@string/title_compass"
+		/>
+
+	<item
+		android:id="@+id/navigation_map"
+		android:icon="@drawable/ic_nav_map_24dp"
+		android:title="@string/title_map"
+		/>
+
+	<item
+		android:id="@+id/navigation_info"
+		android:icon="@drawable/ic_nav_info_24dp"
+		android:title="@string/title_info"
+		/>
+</menu>

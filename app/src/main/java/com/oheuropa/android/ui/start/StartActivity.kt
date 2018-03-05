@@ -17,8 +17,6 @@ class StartActivity : BaseActivity(){
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 
-		toast("Started!")
-
-		startActivity(CompassActivity.createIntent(getCtx(), 123))
+		startActivity(CompassActivity.createIntent(getCtx()))
 	}
 }
