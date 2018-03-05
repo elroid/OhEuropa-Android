@@ -3,7 +3,7 @@
 buildscript {
     ext{
         androidGradlePluginVersion = '3.0.1'
-        kotlinVersion = '1.2.21'
+        kotlinVersion = '1.2.30'
     }
     repositories {
         google()

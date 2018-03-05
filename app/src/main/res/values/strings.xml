@@ -4,4 +4,9 @@
 	<string name="title_compass">Compass</string>
 	<string name="title_map">Map</string>
 	<string name="title_info">Info</string>
+
+	<string name="info_title">OH EUROPA</string>
+	<string name="info_body">This compass and map directs you to beacons placed throughout Europe transmitting an ever-evolving library of love songs. These love songs are being collected by two British artists Gemma Paintin and James Stenhouse as they travel over 30,000km, from the northern most tip of Norway to the southern coast of Greece, and everywhere in between. As they travel they invite the people they meet to sing for them inside their motorhome.\n\nWhen you arrive at a beacon your compass will automatically pick up the transmission and play the songs through your device. Good luck!</string>
+	<string name="info_web_text">OHEUROPA.COM</string>
+	<string name="info_web_link">http://oheuropa.com</string>
 </resources>
