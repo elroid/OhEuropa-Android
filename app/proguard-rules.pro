@@ -20,8 +20,20 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 
-#BottomNavigationViewEx
+
+#BottomNavigationViewEx - https://github.com/ittianyu/BottomNavigationViewEx
 -keep public class android.support.design.widget.BottomNavigationView { *; }
 -keep public class android.support.design.internal.BottomNavigationMenuView { *; }
 -keep public class android.support.design.internal.BottomNavigationPresenter { *; }
 -keep public class android.support.design.internal.BottomNavigationItemView { *; }
+
+
+#Retrofit - https://github.com/square/retrofit
+# Retain generic type information for use by reflection by converters and adapters.
+-keepattributes Signature
+# Retain service method parameters.
+-keepclassmembernames,allowobfuscation interface * {
+    @retrofit2.http.* <methods>;
+}
+# Ignore annotation used for build tooling.
+-dontwarn org.codehaus.mojo.animal_sniffer.IgnoreJRERequirement

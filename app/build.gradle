@@ -47,7 +47,8 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
     implementation 'com.github.ittianyu:BottomNavigationViewEx:1.2.4'
-
+    implementation "com.squareup.retrofit2:retrofit:$retrofitVersion"
+    implementation "com.squareup.retrofit2:adapter-rxjava2:$retrofitVersion"
 
     // Android support libs
     implementation "com.android.support:appcompat-v7:$project.supportLibraryVersion"
@@ -61,6 +62,7 @@ dependencies {
     implementation "com.google.dagger:dagger:$project.daggerVersion"
     kapt "com.google.dagger:dagger-compiler:$project.daggerVersion"
     kaptTest "com.google.dagger:dagger-compiler:$project.daggerVersion"
+    kaptAndroidTest "com.google.dagger:dagger-compiler:$project.daggerVersion"
 
     // Dagger Android
     kapt "com.google.dagger:dagger-android-processor:$project.daggerVersion"
@@ -69,6 +71,7 @@ dependencies {
     //moshi-kotlin/kotshi
     implementation "se.ansman.kotshi:api:$kotshiVersion"
     kapt "se.ansman.kotshi:compiler:$kotshiVersion"
+    implementation "com.squareup.retrofit2:converter-moshi:$project.retrofitVersion"
 
     // ReactiveX
     implementation "io.reactivex.rxjava2:rxkotlin:$project.rxKotlinVersion"
