@@ -2,6 +2,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
+apply plugin: 'com.fernandocejas.frodo'
 
 android {
     compileSdkVersion 27
@@ -55,7 +56,7 @@ dependencies {
     implementation "com.android.support:design:$project.supportLibraryVersion"
 
     // Kotlin
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jre8:$project.kotlinVersion"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$project.kotlinVersion"
     implementation 'androidx.core:core-ktx:0.2'
 
     // Dagger core
