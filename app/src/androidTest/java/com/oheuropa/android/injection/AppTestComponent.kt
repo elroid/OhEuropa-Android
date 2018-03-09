@@ -14,9 +14,8 @@ import javax.inject.Singleton
  *         Copyright (c) 2018 Elroid Ltd. All rights reserved.
  */
 @Singleton
-@Component(modules = arrayOf(AppModule::class, AppTestModule::class))
-interface AppTestComponent : AppComponent {
+@Component(modules = arrayOf(AppModule::class))
+interface AppTestComponent : MainComponent {
 
 	fun inject(test: ApiConnectionTest)
-	//fun inject(test: ObjectBoxTest)
 }

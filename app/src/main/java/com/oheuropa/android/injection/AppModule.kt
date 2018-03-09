@@ -21,6 +21,7 @@ import javax.inject.Singleton
  * @author <a href="mailto:e@elroid.com">Elliot Long</a>
  *         Copyright (c) 2018 Elroid Ltd. All rights reserved.
  */
+@Suppress("unused")
 @Module
 class AppModule {
 

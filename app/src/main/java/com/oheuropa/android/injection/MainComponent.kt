@@ -1,7 +1,5 @@
 package com.oheuropa.android.injection
 
-import com.oheuropa.android.BaseApp
-
 /**
  *
  * Class: com.oheuropa.android.injection.MainComponent
