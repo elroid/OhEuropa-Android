@@ -1,7 +1,6 @@
 package com.oheuropa.android.injection
 
 import android.content.Context
-import com.oheuropa.android.App
 import com.oheuropa.android.data.remote.OhEuropaApiService
 import com.oheuropa.android.model.MyObjectBox
 import dagger.Module
@@ -24,11 +23,6 @@ import javax.inject.Singleton
  */
 @Module
 class AppModule {
-
-	@Provides
-	internal fun provideContext(application: App): Context {
-		return application.getApplicationContext()
-	}
 
 	@Singleton
 	@Provides

@@ -18,4 +18,5 @@ import javax.inject.Singleton
 interface AppTestComponent : AppComponent {
 
 	fun inject(test: ApiConnectionTest)
+	//fun inject(test: ObjectBoxTest)
 }

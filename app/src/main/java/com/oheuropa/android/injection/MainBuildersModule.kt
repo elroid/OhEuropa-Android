@@ -1,7 +1,6 @@
 package com.oheuropa.android.injection
 
 import dagger.Module
-import dagger.android.ContributesAndroidInjector
 
 /**
  *
@@ -13,10 +12,11 @@ import dagger.android.ContributesAndroidInjector
  *         Copyright (c) 2018 Elroid Ltd. All rights reserved.
  */
 @Module
-abstract class BuildersModule {
+abstract class MainBuildersModule {
 
 	/*@ContributesAndroidInjector(modules = arrayOf(LobbyViewModule::class, LobbyModule::class))
 	internal abstract fun bindLobbyActivity(): LobbyActivity*/
 
 	// Add bindings for other sub-components here
+
 }
