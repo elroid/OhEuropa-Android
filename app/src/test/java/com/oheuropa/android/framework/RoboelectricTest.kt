@@ -2,8 +2,10 @@ package com.oheuropa.android.framework
 
 import android.app.Application
 import android.content.Context
+import android.location.Location
 import android.util.Log
 import com.oheuropa.android.BuildConfig
+import com.oheuropa.android.model.Beacon
 import org.junit.Before
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
@@ -46,4 +48,18 @@ abstract class RoboelectricTest {
 	}
 
 	internal class ApplicationStub : Application()
+
+	protected fun createBeacon(name: String, id: Int, loc: Location): Beacon {
+		return Beacon(
+			id = id, name = name, placeid = "",
+			lat = loc.latitude.toFloat(),
+			lng = loc.longitude.toFloat(),
+			datecreated = "2018-03-08 16:29:00",
+			centerradius = 40,
+			innerradius = 60,
+			outerradius = 100,
+			radioplays = 0,
+			nearbys = 0
+		)
+	}
 }

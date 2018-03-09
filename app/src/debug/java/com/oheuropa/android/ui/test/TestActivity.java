@@ -4,7 +4,7 @@ import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 
-import com.oheuropa.android.model.Model;
+import com.oheuropa.android.model.Beacon;
 import com.oheuropa.android.ui.base.BaseActivity;
 
 import java.util.Collections;
@@ -30,15 +30,15 @@ public class TestActivity extends BaseActivity
 
 	}
 
-	private Observable<Model.Beacon> getClosestBeacon(
-		Observable<List<Model.Beacon>> allBeacons,
+	private Observable<Beacon> getClosestBeacon(
+		Observable<List<Beacon>> allBeacons,
 		Observable<Location> currentLocation){
 		return Observable.combineLatest(allBeacons,
 			currentLocation,
-			new BiFunction<List<Model.Beacon>, Location, Model.Beacon>()
+			new BiFunction<List<Beacon>, Location, Beacon>()
 			{
 				@Override
-				public Model.Beacon apply(List<Model.Beacon> allBeacons, final Location location) throws Exception{
+				public Beacon apply(List<Beacon> allBeacons, final Location location) throws Exception{
 
 					Collections.sort(allBeacons, new BeaconDistanceComparator(location));
 					return allBeacons.get(0);
@@ -46,7 +46,7 @@ public class TestActivity extends BaseActivity
 			});
 	}
 
-	private class BeaconDistanceComparator implements Comparator<Model.Beacon>{
+	private class BeaconDistanceComparator implements Comparator<Beacon>{
 		private Location loc1 = new Location("");
 		private Location loc2 = new Location("");
 		private Location currentLocation;
@@ -56,7 +56,7 @@ public class TestActivity extends BaseActivity
 		}
 
 		@Override
-		public int compare(Model.Beacon beacon1, Model.Beacon beacon2){
+		public int compare(Beacon beacon1, Beacon beacon2){
 			loc1.setLatitude(beacon1.getLat());
 			loc1.setLongitude(beacon1.getLng());
 			loc2.setLatitude(beacon2.getLat());

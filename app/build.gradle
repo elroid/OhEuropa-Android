@@ -3,6 +3,7 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'com.fernandocejas.frodo'
+apply plugin: 'io.objectbox'
 
 android {
     compileSdkVersion 27
@@ -28,6 +29,9 @@ android {
 
 kapt {
     generateStubs = true
+    arguments {
+        arg("objectbox.debug", true)
+    }
 }
 
 project.ext {
@@ -42,14 +46,35 @@ project.ext {
     espressoVersion = "3.0.1"
     supportTestVersion = "1.0.1"
     kotshiVersion = "1.0.0"
+    objectboxRxVersion = "0.9.8"
+
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
+    // UI libs /////////////////////////////////////////////////////////////////////////////////////
+
     implementation 'com.github.ittianyu:BottomNavigationViewEx:1.2.4'
+
+    // Back-end libs ///////////////////////////////////////////////////////////////////////////////
+
+    //retrofit
     implementation "com.squareup.retrofit2:retrofit:$retrofitVersion"
     implementation "com.squareup.retrofit2:adapter-rxjava2:$retrofitVersion"
+
+    //object box
+    kapt "io.objectbox:objectbox-processor:$objectboxVersion"
+    implementation "io.objectbox:objectbox-android:$objectboxVersion"
+    implementation "io.objectbox:objectbox-kotlin:$objectboxVersion"
+    implementation "io.objectbox:objectbox-rxjava:$objectboxRxVersion"
+
+//    kaptAndroidTest "io.objectbox:objectbox-processor:$objectboxVersion"
+//    androidTestImplementation "io.objectbox:objectbox-android:$objectboxVersion"
+//    androidTestImplementation "io.objectbox:objectbox-kotlin:$objectboxVersion"
+//    androidTestImplementation "io.objectbox:objectbox-rxjava:$objectboxRxVersion"
+
+    //Standard libs ////////////////////////////////////////////////////////////////////////////////
 
     // Android support libs
     implementation "com.android.support:appcompat-v7:$project.supportLibraryVersion"
@@ -85,13 +110,12 @@ dependencies {
     // Timber
     implementation "com.jakewharton.timber:timber:$project.timberVersion"
 
-    // Testing
+    // Testing libs ////////////////////////////////////////////////////////////////////////////////
     testImplementation "junit:junit:4.12"
     testImplementation "org.robolectric:robolectric:3.6.1"
     testImplementation "org.jetbrains.kotlin:kotlin-stdlib-jre8:$project.kotlinVersion"
     testImplementation "org.jetbrains.kotlin:kotlin-test-junit:$project.kotlinVersion"
     testImplementation "com.nhaarman:mockito-kotlin:1.5.0"
-    kaptTest "com.google.dagger:dagger-compiler:$project.daggerVersion"
 
     androidTestImplementation "com.android.support.test:runner:$project.supportTestVersion"
     androidTestImplementation "com.android.support.test:rules:$project.supportTestVersion"

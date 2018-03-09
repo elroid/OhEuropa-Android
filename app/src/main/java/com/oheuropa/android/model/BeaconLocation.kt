@@ -12,5 +12,5 @@ import android.location.Location
  *         Copyright (c) 2018 Elroid Ltd. All rights reserved.
  */
 data class BeaconLocation (
-	val beacon : Model.Beacon, val myLocation: Location
+	val beacon : Beacon, val myLocation: Location
 )

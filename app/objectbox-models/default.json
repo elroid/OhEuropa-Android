@@ -1,0 +1,72 @@
+{
+  "_note1": "KEEP THIS FILE! Check it into a version control system (VCS) like git.",
+  "_note2": "ObjectBox manages crucial IDs for your object model. See docs for details.",
+  "_note3": "If you have VCS merge conflicts, you must resolve them according to ObjectBox docs.",
+  "entities": [
+    {
+      "id": "1:4159023081999527709",
+      "lastPropertyId": "12:919911655262616331",
+      "name": "Beacon",
+      "properties": [
+        {
+          "id": "2:6737266528736147664",
+          "name": "id"
+        },
+        {
+          "id": "3:7187427317205624245",
+          "name": "name"
+        },
+        {
+          "id": "4:5357649702984772109",
+          "name": "placeid"
+        },
+        {
+          "id": "5:311188905842439062",
+          "name": "lat"
+        },
+        {
+          "id": "6:3049624430601553990",
+          "name": "lng"
+        },
+        {
+          "id": "7:8999722256099085507",
+          "name": "datecreated"
+        },
+        {
+          "id": "8:5399420809065274508",
+          "name": "centerradius"
+        },
+        {
+          "id": "9:886341914481845624",
+          "name": "innerradius"
+        },
+        {
+          "id": "10:1453994938421557692",
+          "name": "outerradius"
+        },
+        {
+          "id": "11:1268265985010828013",
+          "name": "radioplays"
+        },
+        {
+          "id": "12:919911655262616331",
+          "name": "nearbys"
+        }
+      ],
+      "relations": []
+    }
+  ],
+  "lastEntityId": "1:4159023081999527709",
+  "lastIndexId": "0:0",
+  "lastRelationId": "0:0",
+  "lastSequenceId": "0:0",
+  "modelVersion": 4,
+  "modelVersionParserMinimum": 4,
+  "retiredEntityUids": [],
+  "retiredIndexUids": [],
+  "retiredPropertyUids": [
+    8870797770738599598
+  ],
+  "retiredRelationUids": [],
+  "version": 1
+}

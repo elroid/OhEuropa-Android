@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:orientation="vertical"
+	android:gravity="center"
+	>
+
+	<Button
+		android:id="@+id/but1"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="One"
+		/>
+
+	<Button
+		android:id="@+id/but2"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="Two"
+		/>
+
+	<Button
+		android:id="@+id/but3"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="Three"
+		/>
+	<Button
+		android:id="@+id/but4"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="Four"
+		/>
+</LinearLayout>

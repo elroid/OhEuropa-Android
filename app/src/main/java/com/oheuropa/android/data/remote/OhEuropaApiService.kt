@@ -1,6 +1,6 @@
 package com.oheuropa.android.data.remote
 
-import com.oheuropa.android.model.Model
+import com.oheuropa.android.model.GetPlacesResponse
 import io.reactivex.Single
 import retrofit2.http.GET
 
@@ -16,5 +16,5 @@ import retrofit2.http.GET
 interface OhEuropaApiService {
 
 	@GET("getdata.php?getplaces")
-	fun getBeacons(): Single<Model.GetPlacesResponse>
+	fun getBeacons(): Single<GetPlacesResponse>
 }

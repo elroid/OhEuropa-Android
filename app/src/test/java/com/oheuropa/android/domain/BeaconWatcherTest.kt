@@ -5,7 +5,7 @@ import com.nhaarman.mockito_kotlin.doReturn
 import com.nhaarman.mockito_kotlin.mock
 import com.oheuropa.android.data.DataManager
 import com.oheuropa.android.framework.RoboelectricTest
-import com.oheuropa.android.model.Model
+import com.oheuropa.android.model.Beacon
 import io.reactivex.Observable
 import io.reactivex.subjects.ReplaySubject
 import org.junit.Test
@@ -58,7 +58,7 @@ class BeaconWatcherTest : RoboelectricTest() {
 				Timber.d("Outputting beacons:%s", it)
 			})
 		val dataManager = mock<DataManager> {
-			on { getBeaconList() }.doReturn(listObs)
+			on { followBeaconList() }.doReturn(listObs)
 		}
 
 		val beaconWatcher = BeaconWatcher(locator, dataManager)
@@ -76,19 +76,5 @@ class BeaconWatcherTest : RoboelectricTest() {
 		//check that beacon2 is now closest
 		val closestBeacon2 = testObserver.values()[1]
 		assertEquals(beacon2, closestBeacon2.beacon)
-	}
-
-	private fun createBeacon(name: String, id: Int, loc: Location): Model.Beacon {
-		return Model.Beacon(
-			id = id, name = name, placeid = "",
-			lat = loc.latitude.toFloat(),
-			lng = loc.longitude.toFloat(),
-			datecreated = "2018-03-08 16:29:00",
-			centerradius = 40,
-			innerradius = 60,
-			outerradius = 100,
-			radioplays = 0,
-			nearbys = 0
-		)
 	}
 }

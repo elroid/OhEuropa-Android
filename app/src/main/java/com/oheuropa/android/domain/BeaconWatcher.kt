@@ -3,16 +3,12 @@ package com.oheuropa.android.domain
 import android.location.Location
 import com.fernandocejas.frodo.annotation.RxLogObservable
 import com.oheuropa.android.data.DataManager
+import com.oheuropa.android.model.Beacon
 import com.oheuropa.android.model.BeaconLocation
-import com.oheuropa.android.model.Model
 import io.reactivex.Observable
-import io.reactivex.Scheduler
 import io.reactivex.functions.BiFunction
 import java.util.*
 import javax.inject.Inject
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.schedulers.Schedulers
-import timber.log.Timber
 
 
 /**
@@ -31,7 +27,7 @@ class BeaconWatcher @Inject constructor(
 
 	private val beaconObservable: Observable<BeaconLocation> by lazy {
 		getBeaconLocationObservable(
-			dataManager.getBeaconList(), locator.locationListener()
+			dataManager.followBeaconList(), locator.locationListener()
 		)
 	}
 
@@ -41,22 +37,22 @@ class BeaconWatcher @Inject constructor(
 	}
 
 	private fun getBeaconLocationObservable(
-		allBeacons: Observable<List<Model.Beacon>>,
+		allBeacons: Observable<List<Beacon>>,
 		currentLocation: Observable<Location>): Observable<BeaconLocation> {
-		return Observable.combineLatest<List<Model.Beacon>, Location, BeaconLocation>(allBeacons,
+		return Observable.combineLatest<List<Beacon>, Location, BeaconLocation>(allBeacons,
 			currentLocation,
-			BiFunction<List<Model.Beacon>, Location, BeaconLocation> { beacons, location ->
-				Collections.sort<Model.Beacon>(beacons, BeaconDistanceComparator(location))
+			BiFunction<List<Beacon>, Location, BeaconLocation> { beacons, location ->
+				Collections.sort<Beacon>(beacons, BeaconDistanceComparator(location))
 				BeaconLocation(beacons[0], location)
 			})
 	}
 
 	private inner class BeaconDistanceComparator internal constructor(
-		private val currentLocation: Location) : Comparator<Model.Beacon> {
+		private val currentLocation: Location) : Comparator<Beacon> {
 		private val loc1 = Location("")
 		private val loc2 = Location("")
 
-		override fun compare(beacon1: Model.Beacon, beacon2: Model.Beacon): Int {
+		override fun compare(beacon1: Beacon, beacon2: Beacon): Int {
 			loc1.latitude = beacon1.lat.toDouble()
 			loc1.longitude = beacon1.lng.toDouble()
 			loc2.latitude = beacon2.lat.toDouble()
