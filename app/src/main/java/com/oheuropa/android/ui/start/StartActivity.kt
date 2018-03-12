@@ -1,8 +1,18 @@
 package com.oheuropa.android.ui.start
 
+import android.annotation.SuppressLint
 import android.os.Bundle
+import com.oheuropa.android.BuildConfig
+import com.oheuropa.android.R
+import com.oheuropa.android.data.DataManager
 import com.oheuropa.android.ui.base.BaseActivity
-import com.oheuropa.android.ui.compass.CompassActivity
+import com.oheuropa.android.ui.info.InfoActivity
+import dagger.android.AndroidInjection
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
+import kotlinx.android.synthetic.main.activity_start.*
+import timber.log.Timber
+import javax.inject.Inject
 
 /**
  *
@@ -13,10 +23,41 @@ import com.oheuropa.android.ui.compass.CompassActivity
  * @author <a href="mailto:e@elroid.com">Elliot Long</a>
  *         Copyright (c) 2018 Elroid Ltd. All rights reserved.
  */
-class StartActivity : BaseActivity(){
-	override fun onCreate(savedInstanceState: Bundle?) {
-		super.onCreate(savedInstanceState)
+class StartActivity : BaseActivity() {
 
-		startActivity(CompassActivity.createIntent(getCtx()))
+	@Inject lateinit var dataManager: DataManager
+
+	@SuppressLint("SetTextI18n")
+	override fun onCreate(savedInstanceState: Bundle?) {
+		AndroidInjection.inject(this)
+		super.onCreate(savedInstanceState)
+		setContentView(R.layout.activity_start)
+		version.text = "v${getVersion(BuildConfig.DEBUG)}"
+
+		dataManager
+			.ensureBeaconListPresent()
+			.subscribeOn(Schedulers.io())
+			.observeOn(AndroidSchedulers.mainThread())
+			.subscribe(
+				{ continueToFirstActivity() },
+				{ showError(msg = getString(R.string.err_beacon_conn, it.message), fatal=true) })
+
+	}
+
+	private fun continueToFirstActivity() {
+		//startActivity(CompassActivity.createIntent(getCtx()))
+		startActivity(InfoActivity.createIntent(getCtx()))
+	}
+
+	private fun getVersion(full: Boolean): String {
+		return try {
+			val pinfo = packageManager.getPackageInfo(packageName, 0)
+			var result = pinfo.versionName
+			if (full) result += " (" + pinfo.versionCode + ")"
+			result
+		} catch (e: Exception) {
+			Timber.w(e, e.message)
+			"--"
+		}
 	}
 }

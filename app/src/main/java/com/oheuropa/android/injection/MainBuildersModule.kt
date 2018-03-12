@@ -1,6 +1,8 @@
 package com.oheuropa.android.injection
 
+import com.oheuropa.android.ui.start.StartActivity
 import dagger.Module
+import dagger.android.ContributesAndroidInjector
 
 /**
  *
@@ -18,5 +20,6 @@ abstract class MainBuildersModule {
 	internal abstract fun bindLobbyActivity(): LobbyActivity*/
 
 	// Add bindings for other sub-components here
-
+	@ContributesAndroidInjector
+	abstract fun bindStartActivity(): StartActivity
 }

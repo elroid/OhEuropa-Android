@@ -9,7 +9,6 @@ import io.objectbox.BoxStore
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.moshi.MoshiConverterFactory
-import timber.log.Timber
 import javax.inject.Singleton
 
 /**
@@ -39,7 +38,6 @@ class AppModule {
 	@Singleton
 	@Provides
 	internal fun provideBoxStore(ctx: Context): BoxStore {
-		Timber.i("Providing box store with context: %s", ctx)
 		return MyObjectBox.builder().androidContext(ctx).build()
 	}
 }

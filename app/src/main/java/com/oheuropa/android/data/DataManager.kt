@@ -45,4 +45,19 @@ class DataManager @Inject constructor(
 				})
 		}
 	}
+
+	fun ensureBeaconListPresent(): Completable {
+		return Completable.create { emitter ->
+			val beaconBox = boxStore.boxFor(Beacon::class.java)
+			val count = beaconBox.count()
+			if(count > 0) {
+				Timber.v("no update needed, we already have $count beacons")
+				emitter.onComplete()
+			}
+			else{
+				updateBeaconList()
+					.subscribe({emitter.onComplete()}, {emitter.onError(it)})
+			}
+		}
+	}
 }

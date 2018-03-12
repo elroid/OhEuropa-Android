@@ -1,9 +1,12 @@
 package com.oheuropa.android.ui.test;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 
+import com.oheuropa.android.R;
 import com.oheuropa.android.model.Beacon;
 import com.oheuropa.android.ui.base.BaseActivity;
 
@@ -28,6 +31,13 @@ public class TestActivity extends BaseActivity
 	protected void onCreate(@Nullable Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
 
+		new AlertDialog.Builder(this)
+			.setPositiveButton(R.string.err_quit, new DialogInterface.OnClickListener(){
+				@Override
+				public void onClick(DialogInterface dialog, int which){
+					quit();
+				}
+			});
 	}
 
 	private Observable<Beacon> getClosestBeacon(
