@@ -13,7 +13,7 @@ import com.daasuu.ei.Ease
 import com.daasuu.ei.EasingInterpolator
 import com.oheuropa.android.R
 import com.oheuropa.android.domain.AudioComponent
-import timber.log.Timber
+import timber.log.Timber.*
 import javax.inject.Inject
 
 /**
@@ -40,7 +40,7 @@ class AudioPlayer @Inject constructor(ctx: Context) : AudioComponent {
 	}
 
 	override fun setState(state: AudioComponent.State) {
-		Timber.v("setState:%s", state)
+		v("setState:%s", state)
 		Thread().run {
 			when (state) {
 				AudioComponent.State.QUIET -> {
@@ -64,12 +64,12 @@ class AudioPlayer @Inject constructor(ctx: Context) : AudioComponent {
 	}
 
 	override fun activate() {
-		Timber.v("activate()")
+		v("activate()")
 		setState(AudioComponent.State.QUIET)
 	}
 
 	override fun deactivate() {
-		Timber.v("deactivate()")
+		v("deactivate()")
 		staticAudio.stop()
 		radioAudio.stop()
 	}
@@ -82,7 +82,7 @@ class AudioPlayer @Inject constructor(ctx: Context) : AudioComponent {
 		private var streamUrl: Uri = RADIO_STREAM_URL.toUri()
 
 		fun setStreamUrl(radioStreamUrl: String) {
-			Timber.v("setStreamUrl:%s", radioStreamUrl)
+			v("setStreamUrl:%s", radioStreamUrl)
 			streamUrl = radioStreamUrl.toUri()
 			mediaPlayer.setDataSource(ctx, streamUrl)
 			mediaPlayer.prepare()
@@ -156,14 +156,14 @@ class AudioPlayer @Inject constructor(ctx: Context) : AudioComponent {
 		}
 
 		private fun play(mediaPlayer: MediaPlayer) {
-			Timber.v("play(${name()})")
+			v("play(${name()})")
 			if (!prepared) {
 				try {
-					Timber.d("media player is stopped, preparing...")
+					d("media player is stopped, preparing...")
 					mediaPlayer.prepare()
 					prepared = true
 				} catch (e: Exception) {
-					Timber.e("Ignoring prepare error")
+					w("Ignoring prepare error")
 				}
 			}
 			mediaPlayer.start()
@@ -172,16 +172,16 @@ class AudioPlayer @Inject constructor(ctx: Context) : AudioComponent {
 
 		fun pause() {
 			if (mediaPlayer.isPlaying) {
-				Timber.v("pausing ${name()}")
+				v("pausing ${name()}")
 				mediaPlayer.pause()
 			} else {
-				Timber.v("no need to pause ${name()}")
+				v("no need to pause ${name()}")
 			}
 		}
 
 
 		fun fadeTo(targetVolume: Float) {
-			Timber.v("${name()}.fadeTo($targetVolume) from $volume")
+			v("${name()}.fadeTo($targetVolume) from $volume")
 			if (!mediaPlayer.isPlaying && targetVolume > 0)
 				play(mediaPlayer)
 			if (targetVolume != volume) {

@@ -7,6 +7,7 @@ import io.objectbox.rx.RxQuery
 import io.reactivex.Completable
 import io.reactivex.Observable
 import timber.log.Timber
+import timber.log.Timber.v
 import javax.inject.Inject
 
 
@@ -36,9 +37,9 @@ class DataManager @Inject constructor(
 				.map { it.data }//get beacons from parent object
 				.subscribe({
 					val beaconBox = boxStore.boxFor(Beacon::class.java)
-					Timber.v("Adding %s beacons to object box of size(%s): %s", it.size, beaconBox.count(), it)
+					v("Adding ${it.size} beacons to object box of size(${beaconBox.count()}): $it")
 					beaconBox.put(it)
-					Timber.v("...done adding beacons, new size:%s", beaconBox.count())
+					v("...done adding beacons, new size:${beaconBox.count()}")
 					emitter.onComplete()
 				}, {
 					emitter.onError(it)
@@ -51,7 +52,7 @@ class DataManager @Inject constructor(
 			val beaconBox = boxStore.boxFor(Beacon::class.java)
 			val count = beaconBox.count()
 			if(count > 0) {
-				Timber.v("no update needed, we already have $count beacons")
+				v("no update needed, we already have $count beacons")
 				emitter.onComplete()
 			}
 			else{

@@ -49,7 +49,7 @@ abstract class RoboelectricTest {
 
 	internal class ApplicationStub : Application()
 
-	protected fun createBeacon(name: String, id: Int, loc: Location): Beacon {
+	protected fun createBeacon(name: String, id: Long, loc: Location): Beacon {
 		return Beacon(
 			id = id, name = name, placeid = "",
 			lat = loc.latitude.toFloat(),

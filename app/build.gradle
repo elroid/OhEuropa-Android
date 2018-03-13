@@ -122,7 +122,7 @@ dependencies {
     implementation "com.jakewharton.rxrelay2:rxrelay:$project.rxRelayVersion"
 
     // Timber
-    implementation "com.jakewharton.timber:timber:$project.timberVersion"
+    implementation 'com.github.ajalt:timberkt:1.4.0'
 
     // Testing libs ////////////////////////////////////////////////////////////////////////////////
     testImplementation "junit:junit:4.12"

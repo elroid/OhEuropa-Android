@@ -2,6 +2,7 @@ package com.oheuropa.android.util
 
 import android.content.res.Resources
 import timber.log.Timber
+import timber.log.Timber.w
 
 /**
  *
@@ -46,7 +47,7 @@ class ViewUtils {
 				val h = Resources.getSystem().displayMetrics.heightPixels
 				if (width) w else h
 			} catch (e: Exception) {
-				Timber.w(e, "Problem getting screen width - returning 0")
+				w(e, "Problem getting screen width - returning 0")
 				0
 			}
 		}

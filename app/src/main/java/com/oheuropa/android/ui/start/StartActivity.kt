@@ -56,7 +56,7 @@ class StartActivity : BaseActivity() {
 			if (full) result += " (" + pinfo.versionCode + ")"
 			result
 		} catch (e: Exception) {
-			Timber.w(e, e.message)
+			Timber.w(e)
 			"--"
 		}
 	}
