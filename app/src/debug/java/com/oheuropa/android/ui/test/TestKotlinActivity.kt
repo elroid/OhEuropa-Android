@@ -3,13 +3,9 @@ package com.oheuropa.android.ui.test
 import android.os.Bundle
 import android.widget.Button
 import com.oheuropa.android.R
-import com.oheuropa.android.data.DataManager
-import com.oheuropa.android.model.Beacon
+import com.oheuropa.android.domain.AudioComponent
 import com.oheuropa.android.ui.base.BaseActivity
 import dagger.android.AndroidInjection
-import io.objectbox.BoxStore
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -23,59 +19,43 @@ import javax.inject.Inject
  */
 class TestKotlinActivity : BaseActivity() {
 
-	@Inject lateinit var dataManager: DataManager
-	@Inject lateinit var boxStore: BoxStore
+	@Inject lateinit var audioPlayer: AudioComponent
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		AndroidInjection.inject(this)
 		super.onCreate(savedInstanceState)
 		setContentView(R.layout.kotlin_test)
+
+		audioPlayer.setStreamUrl("https://streams.radio.co/s02776f249/listen")
+
 		findViewById<Button>(R.id.but1).setOnClickListener({
-			Timber.i("Updating beacon list...")
-			dataManager.updateBeaconList()
-				.subscribeOn(Schedulers.io())
-				.observeOn(Schedulers.io())
-				.subscribe({
-					Timber.i("Update complete")
-				}, {
-					Timber.e(it, "updateBeaconList error")
-				})
+			Timber.i("Playing static")
+			audioPlayer.setState(AudioComponent.State.STATIC)
 		})
 		findViewById<Button>(R.id.but2).setOnClickListener({
-			dataManager.followBeaconList()
-				.subscribeOn(Schedulers.io())
-				.observeOn(Schedulers.io())
-				.subscribe({
-					Timber.i("Got updated list: %s", it)
-				}, {
-					Timber.e(it, "followBeacon error")
-				})
+			Timber.i("Playing static + stream")
+			audioPlayer.setState(AudioComponent.State.STATIC_MIX)
 		})
 
 		findViewById<Button>(R.id.but3).setOnClickListener({
-			Timber.i("Adding new beacon...")
-			val beaconBox = boxStore.boxFor(Beacon::class.java)
-			beaconBox.put(Beacon(
-				id = 666,
-				name = "New beak",
-				placeid = "",
-				lat = 51.5f,
-				lng = -2.6f,
-				datecreated = "2018-03-08 19:56:00",
-				centerradius = 40,
-				innerradius = 60,
-				outerradius = 100,
-				radioplays = 0,
-				nearbys = 0
-			))
+			Timber.i("Playing stream")
+			audioPlayer.setState(AudioComponent.State.SIGNAL)
 		})
 
 		findViewById<Button>(R.id.but4).setOnClickListener({
-			Timber.i("Clearing all beacons...")
-			val beaconBox = boxStore.boxFor(Beacon::class.java)
-			beaconBox.removeAll()
+			Timber.i("Playing silence")
+			audioPlayer.setState(AudioComponent.State.QUIET)
 		})
 	}
 
+	override fun onResume() {
+		super.onResume()
+		audioPlayer.activate()
+		Timber.d("done with activate()")
+	}
 
+	override fun onPause() {
+		audioPlayer.deactivate()
+		super.onPause()
+	}
 }

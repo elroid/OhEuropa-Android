@@ -12,10 +12,16 @@ package com.oheuropa.android.domain
  */
 interface AudioComponent {
 
-	data class State(
-		val radioStreamUrl:String, val staticPlaying:Boolean, val radioPlaying:Boolean
-	)
-	fun setState(state:AudioComponent.State)
+	enum class State {
+		QUIET, STATIC, STATIC_MIX, SIGNAL
+	}
+	fun setStreamUrl(radioStreamUrl: String)
+
+	fun setState(state: AudioComponent.State)
+
+	fun activate()
+
+	fun deactivate()
 
 }
 

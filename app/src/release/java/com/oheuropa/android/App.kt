@@ -26,8 +26,6 @@ class App : BaseApp(), HasActivityInjector {
 	override fun onCreate() {
 		super.onCreate()
 
-		Timber.plant(Timber.DebugTree())
-
 		DaggerAppComponent
 			.builder()
 			.application(this)

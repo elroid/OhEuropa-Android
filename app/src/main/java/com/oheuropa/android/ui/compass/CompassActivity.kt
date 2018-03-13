@@ -3,6 +3,7 @@ package com.oheuropa.android.ui.compass
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.WindowManager
 import com.oheuropa.android.R
 import com.oheuropa.android.ui.base.BaseActivity
 import com.oheuropa.android.ui.base.BottomNavActivity
@@ -24,6 +25,11 @@ class CompassActivity: BottomNavActivity() {
 		fun createIntent(ctx: Context): Intent {
 			return Intent(ctx, CompassActivity::class.java)
 		}
+	}
+
+	override fun onCreate(savedInstanceState: Bundle?) {
+		super.onCreate(savedInstanceState)
+		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 	}
 
 	override fun getLayoutId(): Int {

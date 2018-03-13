@@ -2,6 +2,8 @@ package com.oheuropa.android.ui.map
 
 import android.content.Context
 import android.content.Intent
+import android.os.Bundle
+import android.view.WindowManager
 import com.oheuropa.android.R
 import com.oheuropa.android.ui.base.BottomNavActivity
 
@@ -22,6 +24,11 @@ class MapActivity : BottomNavActivity() {
 		fun createIntent(ctx: Context): Intent {
 			return Intent(ctx, MapActivity::class.java)
 		}
+	}
+
+	override fun onCreate(savedInstanceState: Bundle?) {
+		super.onCreate(savedInstanceState)
+		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 	}
 
 	override fun getLayoutId(): Int {

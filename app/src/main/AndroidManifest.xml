@@ -1,5 +1,6 @@
 <manifest package="com.oheuropa.android"
 		  xmlns:android="http://schemas.android.com/apk/res/android"
+		  xmlns:tools="http://schemas.android.com/tools"
 	>
 
 	<uses-permission android:name="android.permission.INTERNET"/>
@@ -11,6 +12,7 @@
 		android:roundIcon="@mipmap/ic_launcher_round"
 		android:supportsRtl="false"
 		android:theme="@style/AppTheme"
+		tools:replace="android:supportsRtl,android:allowBackup"
 		>
 		<activity
 			android:name=".ui.start.StartActivity"

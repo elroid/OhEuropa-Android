@@ -1,7 +1,9 @@
 package com.oheuropa.android.injection
 
 import android.content.Context
+import com.oheuropa.android.data.AudioPlayer
 import com.oheuropa.android.data.remote.OhEuropaApiService
+import com.oheuropa.android.domain.AudioComponent
 import com.oheuropa.android.model.MyObjectBox
 import dagger.Module
 import dagger.Provides
@@ -39,5 +41,11 @@ class AppModule {
 	@Provides
 	internal fun provideBoxStore(ctx: Context): BoxStore {
 		return MyObjectBox.builder().androidContext(ctx).build()
+	}
+
+	@Singleton
+	@Provides
+	internal fun provideAudioComponent(ctx: Context): AudioComponent {
+		return AudioPlayer(ctx)
 	}
 }

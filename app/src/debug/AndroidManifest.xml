@@ -1,5 +1,6 @@
 <manifest package="com.oheuropa.android"
 		  xmlns:android="http://schemas.android.com/apk/res/android"
+		  xmlns:tools="http://schemas.android.com/tools"
 	>
 
 	<uses-permission android:name="android.permission.DISABLE_KEYGUARD"/>
@@ -7,6 +8,7 @@
 
 	<application
 		android:name=".DebugApp"
+		tools:replace="android:name"
 		>
 		<activity
 			android:name=".ui.test.TestKotlinActivity"

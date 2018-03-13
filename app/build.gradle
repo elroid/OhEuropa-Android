@@ -71,6 +71,7 @@ dependencies {
     implementation 'com.github.ittianyu:BottomNavigationViewEx:1.2.4'
 
     // Back-end libs ///////////////////////////////////////////////////////////////////////////////
+    compile 'com.daasuu:EasingInterpolator:1.0.0' //for audio fade interpolators
 
     //retrofit
     implementation "com.squareup.retrofit2:retrofit:$retrofitVersion"

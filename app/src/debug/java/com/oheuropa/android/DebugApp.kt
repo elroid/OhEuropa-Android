@@ -1,7 +1,6 @@
 package com.oheuropa.android
 
 import android.app.Activity
-import android.app.Application
 import com.oheuropa.android.injection.DaggerDebugAppComponent
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
@@ -26,13 +25,13 @@ class DebugApp : BaseApp(), HasActivityInjector {
 	override fun onCreate() {
 		super.onCreate()
 
-		Timber.plant(Timber.DebugTree())
-
 		DaggerDebugAppComponent
 			.builder()
 			.application(this)
 			.build()
 			.inject(this)
+
+		Timber.plant(Timber.DebugTree())
 	}
 
 	override fun activityInjector(): AndroidInjector<Activity> {
