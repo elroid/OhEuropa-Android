@@ -1,7 +1,6 @@
 package com.oheuropa.android.util
 
 import android.content.res.Resources
-import timber.log.Timber
 import timber.log.Timber.w
 
 /**
@@ -13,6 +12,7 @@ import timber.log.Timber.w
  * @author <a href="mailto:e@elroid.com">Elliot Long</a>
  *         Copyright (c) 2018 Elroid Ltd. All rights reserved.
  */
+@Suppress("unused") //utilities class
 class ViewUtils {
 	companion object {
 		fun pxToDp(px: Float): Float {

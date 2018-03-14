@@ -1,10 +1,10 @@
 package com.oheuropa.android.domain
 
-import android.location.Location
 import com.nhaarman.mockito_kotlin.doReturn
 import com.nhaarman.mockito_kotlin.mock
 import com.oheuropa.android.data.DataManager
 import com.oheuropa.android.framework.RoboelectricTest
+import com.oheuropa.android.model.Coordinate
 import io.reactivex.Observable
 import io.reactivex.subjects.ReplaySubject
 import org.junit.Test
@@ -31,20 +31,12 @@ class BeaconWatcherTest : RoboelectricTest() {
 		val eastLon = -2.5
 		val midEastLon = -2.6
 		val midLon = -2.7
-		val northPoint = Location("")
-		northPoint.latitude = northLat
-		northPoint.longitude = midLon
-		val eastPoint = Location("")
-		eastPoint.latitude = midLat
-		eastPoint.longitude = eastLon
-		val startLoc = Location("")
-		startLoc.latitude = midNorthLat
-		startLoc.longitude = midLon
-		val endLoc = Location("")
-		endLoc.latitude = midLat
-		endLoc.longitude = midEastLon
+		val northPoint = Coordinate(northLat, midLon)
+		val eastPoint = Coordinate(midLat, eastLon)
+		val startLoc = Coordinate(midNorthLat, midLon)
+		val endLoc = Coordinate(midLat, midEastLon)
 
-		val locObs = ReplaySubject.create<Location>()
+		val locObs = ReplaySubject.create<Coordinate>()
 		val locator = mock<LocationComponent> {
 			on { locationListener() }.doReturn(locObs)
 		}
@@ -68,12 +60,12 @@ class BeaconWatcherTest : RoboelectricTest() {
 		//check that beacon1 is the closest
 		val testObserver = beaconWatcher.followBeaconLocation().test()
 		val closestBeacon1 = testObserver.values()[0]
-		assertEquals(beacon1, closestBeacon1.beacon)
+		assertEquals(beacon1, closestBeacon1.beacons[0])
 
 		//emit end loc
 		locObs.onNext(endLoc)
 		//check that beacon2 is now closest
 		val closestBeacon2 = testObserver.values()[1]
-		assertEquals(beacon2, closestBeacon2.beacon)
+		assertEquals(beacon2, closestBeacon2.beacons[0])
 	}
 }

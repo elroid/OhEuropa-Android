@@ -1,6 +1,8 @@
 package com.oheuropa.android.data
 
 import com.oheuropa.android.framework.RoboelectricTest
+import org.junit.Test
+import kotlin.test.assertTrue
 
 /**
  *
@@ -13,5 +15,8 @@ import com.oheuropa.android.framework.RoboelectricTest
  */
 class DataManagerTest : RoboelectricTest() {
 
-
+	@Test
+	fun emptyTest(){
+		assertTrue(true)
+	}
 }

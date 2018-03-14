@@ -1,10 +1,10 @@
 package com.oheuropa.android.domain
 
-import android.location.Location
 import com.fernandocejas.frodo.annotation.RxLogObservable
 import com.oheuropa.android.data.DataManager
 import com.oheuropa.android.model.Beacon
 import com.oheuropa.android.model.BeaconLocation
+import com.oheuropa.android.model.Coordinate
 import io.reactivex.Observable
 import io.reactivex.functions.BiFunction
 import java.util.*
@@ -27,7 +27,8 @@ class BeaconWatcher @Inject constructor(
 
 	private val beaconObservable: Observable<BeaconLocation> by lazy {
 		getBeaconLocationObservable(
-			dataManager.followBeaconList(), locator.locationListener()
+			dataManager.getTestBeaconList(),//dataManager.followBeaconList(),
+			locator.locationListener()
 		)
 	}
 
@@ -38,27 +39,21 @@ class BeaconWatcher @Inject constructor(
 
 	private fun getBeaconLocationObservable(
 		allBeacons: Observable<List<Beacon>>,
-		currentLocation: Observable<Location>): Observable<BeaconLocation> {
-		return Observable.combineLatest<List<Beacon>, Location, BeaconLocation>(allBeacons,
+		currentLocation: Observable<Coordinate>): Observable<BeaconLocation> {
+		return Observable.combineLatest<List<Beacon>, Coordinate, BeaconLocation>(allBeacons,
 			currentLocation,
-			BiFunction<List<Beacon>, Location, BeaconLocation> { beacons, location ->
+			BiFunction<List<Beacon>, Coordinate, BeaconLocation> { beacons, location ->
 				Collections.sort<Beacon>(beacons, BeaconDistanceComparator(location))
-				BeaconLocation(beacons[0], location)
+				BeaconLocation(beacons, location)
 			})
 	}
 
 	private inner class BeaconDistanceComparator internal constructor(
-		private val currentLocation: Location) : Comparator<Beacon> {
-		private val loc1 = Location("")
-		private val loc2 = Location("")
+		private val currentLocation: Coordinate) : Comparator<Beacon> {
 
 		override fun compare(beacon1: Beacon, beacon2: Beacon): Int {
-			loc1.latitude = beacon1.lat.toDouble()
-			loc1.longitude = beacon1.lng.toDouble()
-			loc2.latitude = beacon2.lat.toDouble()
-			loc2.longitude = beacon2.lng.toDouble()
-			return java.lang.Float.valueOf(loc1.distanceTo(currentLocation))!!
-				.compareTo(loc2.distanceTo(currentLocation))
+			return beacon1.getCoordinate().getDistanceMeters(currentLocation)
+				.compareTo(beacon2.getCoordinate().getDistanceMeters(currentLocation))
 		}
 	}
 }

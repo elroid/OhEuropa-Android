@@ -1,6 +1,6 @@
 package com.oheuropa.android.domain
 
-import android.location.Location
+import com.oheuropa.android.model.Coordinate
 import io.reactivex.Observable
 
 /**
@@ -13,5 +13,5 @@ import io.reactivex.Observable
  *         Copyright (c) 2018 Elroid Ltd. All rights reserved.
  */
 interface LocationComponent {
-	fun locationListener() : Observable<Location>
+	fun locationListener(): Observable<Coordinate>
 }

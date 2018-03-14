@@ -1,9 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
 <manifest package="com.oheuropa.android"
 		  xmlns:android="http://schemas.android.com/apk/res/android"
 		  xmlns:tools="http://schemas.android.com/tools"
 	>
 
 	<uses-permission android:name="android.permission.INTERNET"/>
+	<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
 
 	<application
 		android:allowBackup="false"
@@ -34,6 +36,14 @@
 		<activity
 			android:name=".ui.map.MapActivity"
 			android:screenOrientation="sensorPortrait"
+			android:theme="@style/AppTheme.Map"
 			/>
+
+		<meta-data
+			android:name="com.google.android.geo.API_KEY"
+			android:value="@string/google_maps_key"
+			/>
+
 	</application>
+
 </manifest>

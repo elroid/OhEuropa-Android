@@ -1,7 +1,5 @@
 package com.oheuropa.android.model
 
-import android.location.Location
-
 /**
  *
  * Class: com.oheuropa.android.model.BeaconLocation
@@ -11,6 +9,6 @@ import android.location.Location
  * @author <a href="mailto:e@elroid.com">Elliot Long</a>
  *         Copyright (c) 2018 Elroid Ltd. All rights reserved.
  */
-data class BeaconLocation (
-	val beacon : Beacon, val myLocation: Location
+data class BeaconLocation(
+	val beacons: List<Beacon>, val myLocation: Coordinate
 )
