@@ -1,5 +1,9 @@
 package com.oheuropa.android.injection
 
+import com.oheuropa.android.ui.compass.CompassActivity
+import com.oheuropa.android.ui.map.MapActivity
+import com.oheuropa.android.ui.map.MapModule
+import com.oheuropa.android.ui.map.MapViewModule
 import com.oheuropa.android.ui.start.StartActivity
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
@@ -16,10 +20,12 @@ import dagger.android.ContributesAndroidInjector
 @Module
 abstract class MainBuildersModule {
 
-	/*@ContributesAndroidInjector(modules = arrayOf(LobbyViewModule::class, LobbyModule::class))
-	internal abstract fun bindLobbyActivity(): LobbyActivity*/
-
-	// Add bindings for other sub-components here
 	@ContributesAndroidInjector
 	abstract fun bindStartActivity(): StartActivity
+
+	@ContributesAndroidInjector
+	abstract fun bindCompassActivity(): CompassActivity
+
+	@ContributesAndroidInjector(modules = arrayOf(MapViewModule::class, MapModule::class))
+	internal abstract fun bindMapActivity(): MapActivity
 }

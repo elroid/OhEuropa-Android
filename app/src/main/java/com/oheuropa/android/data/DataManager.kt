@@ -6,8 +6,9 @@ import io.objectbox.BoxStore
 import io.objectbox.rx.RxQuery
 import io.reactivex.Completable
 import io.reactivex.Observable
-import timber.log.Timber
+import io.reactivex.ObservableEmitter
 import timber.log.Timber.v
+import java.util.*
 import javax.inject.Inject
 
 
@@ -31,7 +32,16 @@ class DataManager @Inject constructor(
 		return RxQuery.observable(query)
 	}
 
-	fun updateBeaconList(): Completable {
+	fun getTestBeaconList(): Observable<List<Beacon>> {
+		return Observable.create({ it: ObservableEmitter<List<Beacon>> ->
+			val beacons2 = ArrayList<Beacon>(2)
+			beacons2.add(Beacon(name = "ChocFactory", id = 10, lat = 51.468002f, lng = -2.552165f))
+			beacons2.add(Beacon(name = "StreetEnd", id = 10, lat = 51.469125f, lng = -2.550244f))
+			it.onNext(beacons2)
+		})
+	}
+
+	private fun updateBeaconList(): Completable {
 		return Completable.create { emitter ->
 			apiService.getBeacons()
 				.map { it.data }//get beacons from parent object
@@ -51,13 +61,12 @@ class DataManager @Inject constructor(
 		return Completable.create { emitter ->
 			val beaconBox = boxStore.boxFor(Beacon::class.java)
 			val count = beaconBox.count()
-			if(count > 0) {
+			if (count > 0) {
 				v("no update needed, we already have $count beacons")
 				emitter.onComplete()
-			}
-			else{
+			} else {
 				updateBeaconList()
-					.subscribe({emitter.onComplete()}, {emitter.onError(it)})
+					.subscribe({ emitter.onComplete() }, { emitter.onError(it) })
 			}
 		}
 	}

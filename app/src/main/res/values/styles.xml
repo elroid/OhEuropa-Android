@@ -10,6 +10,8 @@
 
 	<style name="AppTheme" parent="AppTheme.Base"/>
 
+	<style name="AppTheme.Map"/>
+
 	<style name="Title">
 		<item name="android:fontFamily">@font/cooper_hewitt_heavy</item>
 		<item name="android:textColor">@color/text_dark</item>

@@ -6,10 +6,9 @@ import com.oheuropa.android.BuildConfig
 import com.oheuropa.android.R
 import com.oheuropa.android.data.DataManager
 import com.oheuropa.android.ui.base.BaseActivity
-import com.oheuropa.android.ui.info.InfoActivity
+import com.oheuropa.android.ui.base.SchedulersFacade
+import com.oheuropa.android.ui.map.MapActivity
 import dagger.android.AndroidInjection
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_start.*
 import timber.log.Timber
 import javax.inject.Inject
@@ -36,17 +35,18 @@ class StartActivity : BaseActivity() {
 
 		dataManager
 			.ensureBeaconListPresent()
-			.subscribeOn(Schedulers.io())
-			.observeOn(AndroidSchedulers.mainThread())
+			.subscribeOn(SchedulersFacade.io())
+			.observeOn(SchedulersFacade.ui())
 			.subscribe(
 				{ continueToFirstActivity() },
-				{ showError(msg = getString(R.string.err_beacon_conn, it.message), fatal=true) })
+				{ showError(msg = getString(R.string.err_beacon_conn, it.message), fatal = true) })
 
 	}
 
 	private fun continueToFirstActivity() {
 		//startActivity(CompassActivity.createIntent(getCtx()))
-		startActivity(InfoActivity.createIntent(getCtx()))
+		startActivity(MapActivity.createIntent(getCtx()))
+		//startActivity(InfoActivity.createIntent(getCtx()))
 	}
 
 	private fun getVersion(full: Boolean): String {

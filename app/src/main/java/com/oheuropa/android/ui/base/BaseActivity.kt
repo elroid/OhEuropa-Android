@@ -17,17 +17,17 @@ import java.security.InvalidParameterException
  * @author <a href="mailto:e@elroid.com">Elliot Long</a>
  *         Copyright (c) 2018 Elroid Ltd. All rights reserved.
  */
-abstract class BaseActivity : AppCompatActivity() {
+abstract class BaseActivity : AppCompatActivity(),BaseView {
 
-	protected fun getCtx(): Context {
+	override fun getCtx(): Context {
 		return this
 	}
 
-	protected fun toast(msg: CharSequence, length: Int = Toast.LENGTH_SHORT) {
+	override fun toast(msg: CharSequence, length: Int) {
 		Toast.makeText(getCtx(), msg, length).show()
 	}
 
-	protected fun showError(msgId: Int = 0, msg: String?, fatal: Boolean = false) {
+	override fun showError(msgId: Int, msg: String?, fatal: Boolean) {
 		val builder = AlertDialog.Builder(this)
 		builder.setTitle(R.string.err_title)
 		when {
@@ -50,7 +50,7 @@ abstract class BaseActivity : AppCompatActivity() {
 		builder.create().show()
 	}
 
-	protected fun quit() {
+	override fun quit() {
 		System.exit(0)
 	}
 }

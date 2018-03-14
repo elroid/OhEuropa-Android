@@ -3,4 +3,9 @@
 	<style name="AppTheme" parent="AppTheme.Base">
 		<item name="android:windowLightStatusBar">true</item>
 	</style>
+
+	<style name="AppTheme.Map">
+		<item name="android:windowDrawsSystemBarBackgrounds">true</item>
+		<item name="android:statusBarColor">@color/status_bg_trans</item>
+	</style>
 </resources>
