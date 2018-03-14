@@ -27,7 +27,8 @@ class BeaconWatcher @Inject constructor(
 
 	private val beaconObservable: Observable<BeaconLocation> by lazy {
 		getBeaconLocationObservable(
-			dataManager.getTestBeaconList(),//dataManager.followBeaconList(),
+			dataManager.getTestBeaconList(),
+//			dataManager.followBeaconList(),
 			locator.locationListener()
 		)
 	}

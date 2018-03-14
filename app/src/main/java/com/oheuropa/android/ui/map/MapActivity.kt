@@ -2,6 +2,7 @@ package com.oheuropa.android.ui.map
 
 import android.content.Context
 import android.content.Intent
+import android.content.res.Resources
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.drawable.BitmapDrawable
@@ -12,18 +13,20 @@ import android.view.View
 import android.view.WindowManager
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.GoogleMap.MAP_TYPE_TERRAIN
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLngBounds
+import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.android.gms.maps.model.MarkerOptions
 import com.oheuropa.android.R
 import com.oheuropa.android.model.Beacon
 import com.oheuropa.android.model.Coordinate
 import com.oheuropa.android.ui.base.BottomNavActivity
 import com.oheuropa.android.util.ViewUtils.Companion.dpToPx
+import com.oheuropa.android.util.ViewUtils.Companion.getScreenWidth
 import dagger.android.AndroidInjection
+import timber.log.Timber.*
 import javax.inject.Inject
 
 /**
@@ -69,8 +72,21 @@ class MapActivity : BottomNavActivity(), OnMapReadyCallback, MapContract.View {
 
 	override fun onMapReady(googleMap: GoogleMap) {
 		map = googleMap
-		map.mapType = MAP_TYPE_TERRAIN
+		applyMapStyle(map)
+
 		presenter.startBeaconListener()
+	}
+
+	private fun applyMapStyle(map: GoogleMap) {
+		try {
+			if (map.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.map_style))) {
+				v("Map style success")
+			} else {
+				w("Map style failed")
+			}
+		} catch (ex: Resources.NotFoundException) {
+			e(ex, "Error applying map style")
+		}
 	}
 
 	override fun showBeacons(beacons: List<Beacon>) {
@@ -105,7 +121,8 @@ class MapActivity : BottomNavActivity(), OnMapReadyCallback, MapContract.View {
 		}
 		b.include(myLocation.toLatLng())
 		val bounds = b.build()
-		map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, dpToPx(32)))
+		val margin = getScreenWidth() / 4
+		map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, margin))
 	}
 
 	override fun getLayoutId(): Int {
