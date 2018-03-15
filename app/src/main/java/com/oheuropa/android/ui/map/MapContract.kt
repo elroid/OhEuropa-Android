@@ -1,5 +1,6 @@
 package com.oheuropa.android.ui.map
 
+import com.google.android.gms.common.api.ResolvableApiException
 import com.oheuropa.android.model.Beacon
 import com.oheuropa.android.model.Coordinate
 import com.oheuropa.android.ui.base.BaseView
@@ -18,10 +19,12 @@ interface MapContract {
 		fun showBeacons(beacons: List<Beacon>)
 		fun showMyLocation(loc: Coordinate)
 		fun zoomTo(beacons: List<Beacon>, myLocation: Coordinate)
+		fun askForPermissions()
+		fun resolveApiIssue(ex: ResolvableApiException)
 	}
 
 	interface Presenter {
-		fun startBeaconListener()
+		fun start()
 		fun stop()
 	}
 }

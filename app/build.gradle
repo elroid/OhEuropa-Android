@@ -69,9 +69,12 @@ dependencies {
 
     // UI libs /////////////////////////////////////////////////////////////////////////////////////
     implementation 'com.github.ittianyu:BottomNavigationViewEx:1.2.4'
+    implementation 'com.karumi:dexter:4.2.0'
 
     // Back-end libs ///////////////////////////////////////////////////////////////////////////////
     implementation 'com.daasuu:EasingInterpolator:1.0.0' //for audio fade interpolators
+    implementation "com.google.android.gms:play-services-maps:$gmsVersion"
+    implementation "com.google.android.gms:play-services-location:$gmsVersion"
 
     //retrofit
     implementation "com.squareup.retrofit2:retrofit:$retrofitVersion"
@@ -93,7 +96,6 @@ dependencies {
     // Android support libs
     implementation "com.android.support:appcompat-v7:$supportLibraryVersion"
     implementation "com.android.support:design:$supportLibraryVersion"
-    implementation "com.google.android.gms:play-services-maps:$gmsVersion"
 
     // Kotlin
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlinVersion"

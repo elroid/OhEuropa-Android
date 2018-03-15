@@ -52,13 +52,13 @@ class BeaconWatcherTest : RoboelectricTest() {
 			on { followBeaconList() }.doReturn(listObs)
 		}
 
-		val beaconWatcher = BeaconWatcher(locator, dataManager)
+		val beaconWatcher = BeaconWatcher(dataManager)
 
 		//emit first location
 		locObs.onNext(startLoc)
 
 		//check that beacon1 is the closest
-		val testObserver = beaconWatcher.followBeaconLocation().test()
+		val testObserver = beaconWatcher.followBeaconLocation(locator).test()
 		val closestBeacon1 = testObserver.values()[0]
 		assertEquals(beacon1, closestBeacon1.beacons[0])
 

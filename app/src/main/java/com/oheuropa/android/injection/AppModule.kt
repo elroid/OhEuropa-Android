@@ -53,7 +53,7 @@ class AppModule {
 
 	@Singleton
 	@Provides
-	internal fun provideLocationProvider(): LocationComponent {
-		return LocationProvider()
+	internal fun provideLocationProvider(ctx: Context): LocationComponent {
+		return LocationProvider(ctx)
 	}
 }

@@ -1,6 +1,7 @@
 package com.oheuropa.android.domain
 
 import com.fernandocejas.frodo.annotation.RxLogObservable
+import com.github.ajalt.timberkt.d
 import com.oheuropa.android.data.DataManager
 import com.oheuropa.android.model.Beacon
 import com.oheuropa.android.model.BeaconLocation
@@ -21,21 +22,17 @@ import javax.inject.Inject
  *         Copyright (c) 2018 Elroid Ltd. All rights reserved.
  */
 class BeaconWatcher @Inject constructor(
-	private val locator: LocationComponent,
 	private val dataManager: DataManager
 ) {
 
-	private val beaconObservable: Observable<BeaconLocation> by lazy {
-		getBeaconLocationObservable(
+	@RxLogObservable
+	fun followBeaconLocation(locator: LocationComponent): Observable<BeaconLocation> {
+		d { "followBeaconLocation" }
+		return getBeaconLocationObservable(
 			dataManager.getTestBeaconList(),
 //			dataManager.followBeaconList(),
 			locator.locationListener()
 		)
-	}
-
-	@RxLogObservable
-	fun followBeaconLocation(): Observable<BeaconLocation> {
-		return beaconObservable
 	}
 
 	private fun getBeaconLocationObservable(
@@ -44,6 +41,7 @@ class BeaconWatcher @Inject constructor(
 		return Observable.combineLatest<List<Beacon>, Coordinate, BeaconLocation>(allBeacons,
 			currentLocation,
 			BiFunction<List<Beacon>, Coordinate, BeaconLocation> { beacons, location ->
+				//d { "got beacons($beacons) and location($location)" }
 				Collections.sort<Beacon>(beacons, BeaconDistanceComparator(location))
 				BeaconLocation(beacons, location)
 			})

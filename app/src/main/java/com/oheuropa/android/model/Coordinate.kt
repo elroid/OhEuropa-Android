@@ -15,15 +15,21 @@ import com.google.android.gms.maps.model.LatLng
 @Suppress("unused", "MemberVisibilityCanBePrivate")
 data class Coordinate(
 	val latitude: Double,
-	val longitude: Double
+	val longitude: Double,
+	val accuracy: Number = 0
 ) {
 	constructor(lat: Float, lon: Float) : this(lat.toDouble(), lon.toDouble())
+	constructor(loc:Location):this(loc.latitude, loc.longitude, loc.accuracy)
 
 	private val loc: Location by lazy {
 		val location = Location("generated")
 		location.latitude = latitude
 		location.longitude = longitude
 		location
+	}
+
+	fun isValid():Boolean{
+		return latitude != 0.toDouble() && longitude != 0.toDouble()
 	}
 
 	fun toLocation(): Location {

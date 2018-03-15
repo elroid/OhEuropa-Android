@@ -1,6 +1,7 @@
 package com.oheuropa.android.ui.map
 
 import com.oheuropa.android.domain.BeaconWatcher
+import com.oheuropa.android.domain.LocationComponent
 import dagger.Module
 import dagger.Provides
 
@@ -18,7 +19,8 @@ class MapModule {
 
 	@Provides
 	fun provideMapPresenter(mapView: MapContract.View,
-							beaconWatcher: BeaconWatcher): MapContract.Presenter {
-		return MapPresenter(mapView, beaconWatcher)
+							beaconWatcher: BeaconWatcher,
+							locator: LocationComponent): MapContract.Presenter {
+		return MapPresenter(mapView, beaconWatcher, locator)
 	}
 }

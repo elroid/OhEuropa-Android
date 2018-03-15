@@ -15,4 +15,7 @@
 	<string name="err_ok">OK</string>
 	<string name="err_quit">Quit</string>
 	<string name="err_unspecified">Sorry, an unspecified error occured.</string>
+	<string name="loc_justification">We need to access your location. We won\'t keep listening after you close the application.</string>
+	<string name="loc_ok">OK</string>
+	<string name="loc_quit">Quit</string>
 </resources>

@@ -1,7 +1,11 @@
 package com.oheuropa.android.ui.map
 
+import com.github.ajalt.timberkt.d
 import com.github.ajalt.timberkt.e
+import com.github.ajalt.timberkt.w
+import com.google.android.gms.common.api.ResolvableApiException
 import com.oheuropa.android.domain.BeaconWatcher
+import com.oheuropa.android.domain.LocationComponent
 import com.oheuropa.android.ui.base.BasePresenter
 import com.oheuropa.android.ui.base.SchedulersFacade
 
@@ -16,12 +20,20 @@ import com.oheuropa.android.ui.base.SchedulersFacade
  */
 class MapPresenter(
 	mapView: MapContract.View,
-	private val beaconWatcher: BeaconWatcher
-) : BasePresenter<MapContract.View>(mapView), MapContract.Presenter {
+	private val beaconWatcher: BeaconWatcher,
+	private val locator: LocationComponent
+) : BasePresenter<MapContract.View>(mapView), MapContract.Presenter, LocationComponent.LocationStartListener {
 
-	override fun startBeaconListener() {
-		addDisposable(beaconWatcher.followBeaconLocation()
-			.subscribeOn(SchedulersFacade.io())
+	override fun start() {
+		d { "MapPresenter.start" }
+		locator.start(this)
+
+	}
+
+	override fun onSuccess() {
+		d { "MapPresenter.onSuccess" }
+		addDisposable(beaconWatcher.followBeaconLocation(locator)
+			.subscribeOn(SchedulersFacade.ui())//do it on ui so the location listener gets called on correct thread
 			.observeOn(SchedulersFacade.ui())
 			.subscribe({
 				view.showBeacons(it.beacons)
@@ -31,5 +43,19 @@ class MapPresenter(
 				e(it)
 				view.showError(msg = it.message)
 			}))
+	}
+
+	override fun onPermissionsError(ex: SecurityException) {
+		w(ex){"onPermissionsError($ex)"}
+
+	}
+
+	override fun onApiError(ex: ResolvableApiException) {
+		view.resolveApiIssue(ex)
+	}
+
+	override fun onError(ex: Exception) {
+		e(ex) { "General error from LocationComponent" }
+		view.showError(msg = ex.message)
 	}
 }

@@ -28,7 +28,7 @@ abstract class BasePresenter<out V> constructor(val view:V){
 	 * Contains common cleanup actions needed for all presenters, if any.
 	 * Subclasses may override this.
 	 */
-	fun stop() {
+	open fun stop() {
 		disposables.clear()
 	}
 
