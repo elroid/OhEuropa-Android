@@ -11,9 +11,11 @@ import android.os.Build
 import androidx.net.toUri
 import com.daasuu.ei.Ease
 import com.daasuu.ei.EasingInterpolator
+import com.github.ajalt.timberkt.d
+import com.github.ajalt.timberkt.v
+import com.github.ajalt.timberkt.w
 import com.oheuropa.android.R
 import com.oheuropa.android.domain.AudioComponent
-import timber.log.Timber.*
 import javax.inject.Inject
 
 /**
@@ -40,7 +42,7 @@ class AudioPlayer @Inject constructor(ctx: Context) : AudioComponent {
 	}
 
 	override fun setState(state: AudioComponent.State) {
-		v("setState:%s", state)
+		v { "setState:$state" }
 		Thread().run {
 			when (state) {
 				AudioComponent.State.QUIET -> {
@@ -64,12 +66,12 @@ class AudioPlayer @Inject constructor(ctx: Context) : AudioComponent {
 	}
 
 	override fun activate() {
-		v("activate()")
+		v { "activate()" }
 		setState(AudioComponent.State.QUIET)
 	}
 
 	override fun deactivate() {
-		v("deactivate()")
+		v { "deactivate()" }
 		staticAudio.stop()
 		radioAudio.stop()
 	}
@@ -82,7 +84,7 @@ class AudioPlayer @Inject constructor(ctx: Context) : AudioComponent {
 		private var streamUrl: Uri = RADIO_STREAM_URL.toUri()
 
 		fun setStreamUrl(radioStreamUrl: String) {
-			v("setStreamUrl:%s", radioStreamUrl)
+			v { "setStreamUrl:$radioStreamUrl" }
 			streamUrl = radioStreamUrl.toUri()
 			mediaPlayer.setDataSource(ctx, streamUrl)
 			mediaPlayer.prepare()
@@ -156,14 +158,14 @@ class AudioPlayer @Inject constructor(ctx: Context) : AudioComponent {
 		}
 
 		private fun play(mediaPlayer: MediaPlayer) {
-			v("play(${name()})")
+			v { "play(${name()})" }
 			if (!prepared) {
 				try {
-					d("media player is stopped, preparing...")
+					d { "media player is stopped, preparing..." }
 					mediaPlayer.prepare()
 					prepared = true
 				} catch (e: Exception) {
-					w("Ignoring prepare error")
+					w{"Ignoring prepare error"}
 				}
 			}
 			mediaPlayer.start()
@@ -172,16 +174,16 @@ class AudioPlayer @Inject constructor(ctx: Context) : AudioComponent {
 
 		fun pause() {
 			if (mediaPlayer.isPlaying) {
-				v("pausing ${name()}")
+				v { "pausing ${name()}" }
 				mediaPlayer.pause()
 			} else {
-				v("no need to pause ${name()}")
+				v { "no need to pause ${name()}" }
 			}
 		}
 
 
 		fun fadeTo(targetVolume: Float) {
-			v("${name()}.fadeTo($targetVolume) from $volume")
+			v { "${name()}.fadeTo($targetVolume) from $volume" }
 			if (!mediaPlayer.isPlaying && targetVolume > 0)
 				play(mediaPlayer)
 			if (targetVolume != volume) {

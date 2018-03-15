@@ -1,6 +1,7 @@
 package com.oheuropa.android
 
 import android.app.Activity
+import com.github.ajalt.timberkt.Timber
 import android.app.Application
 import com.oheuropa.android.injection.DaggerAppComponent
 import dagger.android.AndroidInjector
@@ -30,6 +31,9 @@ class App : BaseApp(), HasActivityInjector {
 			.application(this)
 			.build()
 			.inject(this)
+
+		//todo create crashlytics debugtree before release
+		Timber.plant(Timber.DebugTree())
 	}
 
 	override fun activityInjector(): AndroidInjector<Activity> {

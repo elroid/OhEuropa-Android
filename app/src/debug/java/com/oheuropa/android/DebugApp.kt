@@ -1,11 +1,11 @@
 package com.oheuropa.android
 
 import android.app.Activity
+import com.github.ajalt.timberkt.Timber
 import com.oheuropa.android.injection.DaggerDebugAppComponent
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasActivityInjector
-import timber.log.Timber
 import javax.inject.Inject
 
 /**

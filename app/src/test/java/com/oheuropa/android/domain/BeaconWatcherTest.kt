@@ -1,5 +1,6 @@
 package com.oheuropa.android.domain
 
+import com.github.ajalt.timberkt.d
 import com.nhaarman.mockito_kotlin.doReturn
 import com.nhaarman.mockito_kotlin.mock
 import com.oheuropa.android.data.DataManager
@@ -8,7 +9,6 @@ import com.oheuropa.android.model.Coordinate
 import io.reactivex.Observable
 import io.reactivex.subjects.ReplaySubject
 import org.junit.Test
-import timber.log.Timber.d
 import kotlin.test.assertEquals
 
 /**
@@ -46,7 +46,7 @@ class BeaconWatcherTest : RoboelectricTest() {
 		val beaconList = listOf(beacon1, beacon2)
 		val listObs = Observable.just(beaconList)
 			.doOnNext({
-				d("Outputting beacons:$it")
+				d { "Outputting beacons:$it" }
 			})
 		val dataManager = mock<DataManager> {
 			on { followBeaconList() }.doReturn(listObs)

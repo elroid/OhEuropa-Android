@@ -2,12 +2,12 @@ package com.oheuropa.android.ui.test
 
 import android.os.Bundle
 import android.widget.Button
+import com.github.ajalt.timberkt.d
+import com.github.ajalt.timberkt.i
 import com.oheuropa.android.R
 import com.oheuropa.android.domain.AudioComponent
 import com.oheuropa.android.ui.base.BaseActivity
 import dagger.android.AndroidInjection
-import timber.log.Timber.d
-import timber.log.Timber.i
 import javax.inject.Inject
 
 /**
@@ -30,21 +30,21 @@ class TestKotlinActivity : BaseActivity() {
 		audioPlayer.setStreamUrl("https://streams.radio.co/s02776f249/listen")
 
 		findViewById<Button>(R.id.but1).setOnClickListener({
-			i("Playing static")
+			i { "Playing static" }
 			audioPlayer.setState(AudioComponent.State.STATIC)
 		})
 		findViewById<Button>(R.id.but2).setOnClickListener({
-			i("Playing static + stream")
+			i { "Playing static + stream" }
 			audioPlayer.setState(AudioComponent.State.STATIC_MIX)
 		})
 
 		findViewById<Button>(R.id.but3).setOnClickListener({
-			i("Playing stream")
+			i { "Playing stream" }
 			audioPlayer.setState(AudioComponent.State.SIGNAL)
 		})
 
 		findViewById<Button>(R.id.but4).setOnClickListener({
-			i("Playing silence")
+			i { "Playing silence" }
 			audioPlayer.setState(AudioComponent.State.QUIET)
 		})
 	}
@@ -52,7 +52,7 @@ class TestKotlinActivity : BaseActivity() {
 	override fun onResume() {
 		super.onResume()
 		audioPlayer.activate()
-		d("done with activate()")
+		d { "done with activate()" }
 	}
 
 	override fun onPause() {

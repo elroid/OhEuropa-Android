@@ -1,5 +1,6 @@
 package com.oheuropa.android.data
 
+import com.github.ajalt.timberkt.*
 import com.oheuropa.android.data.remote.OhEuropaApiService
 import com.oheuropa.android.model.Beacon
 import io.objectbox.BoxStore
@@ -7,7 +8,6 @@ import io.objectbox.rx.RxQuery
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.ObservableEmitter
-import timber.log.Timber.v
 import java.util.*
 import javax.inject.Inject
 
@@ -47,9 +47,9 @@ class DataManager @Inject constructor(
 				.map { it.data }//get beacons from parent object
 				.subscribe({
 					val beaconBox = boxStore.boxFor(Beacon::class.java)
-					v("Adding ${it.size} beacons to object box of size(${beaconBox.count()}): $it")
+					v{"Adding ${it.size} beacons to object box of size(${beaconBox.count()}): $it"}
 					beaconBox.put(it)
-					v("...done adding beacons, new size:${beaconBox.count()}")
+					v{"...done adding beacons, new size:${beaconBox.count()}"}
 					emitter.onComplete()
 				}, {
 					emitter.onError(it)
@@ -62,7 +62,7 @@ class DataManager @Inject constructor(
 			val beaconBox = boxStore.boxFor(Beacon::class.java)
 			val count = beaconBox.count()
 			if (count > 0) {
-				v("no update needed, we already have $count beacons")
+				v{"no update needed, we already have $count beacons"}
 				emitter.onComplete()
 			} else {
 				updateBeaconList()

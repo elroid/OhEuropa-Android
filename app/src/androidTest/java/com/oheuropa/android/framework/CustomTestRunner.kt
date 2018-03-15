@@ -8,8 +8,8 @@ import android.os.Bundle
 import android.os.IBinder
 import android.os.PowerManager
 import android.support.test.runner.AndroidJUnitRunner
+import com.github.ajalt.timberkt.d
 import com.github.ajalt.timberkt.e
-import timber.log.Timber.d
 
 /**
  * Tests can fail for other reasons than code, it´ because of the animations and espresso sync and
@@ -97,9 +97,9 @@ class CustomTestRunner : AndroidJUnitRunner() {
 				currentScales[i] = animationScale
 			}
 			setAnimationScales.invoke(windowManagerObj, arrayOf<Any>(currentScales))
-			d("Changed permissions of animations")
+			d { "Changed permissions of animations" }
 		} catch (e: Exception) {
-			e(e){"Could not change animation scale to $animationScale :'("}
+			e(e) { "Could not change animation scale to $animationScale :'(" }
 		}
 
 	}

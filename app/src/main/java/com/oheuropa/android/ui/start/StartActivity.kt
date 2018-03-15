@@ -2,6 +2,7 @@ package com.oheuropa.android.ui.start
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import com.github.ajalt.timberkt.w
 import com.oheuropa.android.BuildConfig
 import com.oheuropa.android.R
 import com.oheuropa.android.data.DataManager
@@ -10,7 +11,6 @@ import com.oheuropa.android.ui.base.SchedulersFacade
 import com.oheuropa.android.ui.map.MapActivity
 import dagger.android.AndroidInjection
 import kotlinx.android.synthetic.main.activity_start.*
-import timber.log.Timber
 import javax.inject.Inject
 
 /**
@@ -55,8 +55,8 @@ class StartActivity : BaseActivity() {
 			var result = pinfo.versionName
 			if (full) result += " (" + pinfo.versionCode + ")"
 			result
-		} catch (e: Exception) {
-			Timber.w(e)
+		} catch (ex: Exception) {
+			w(ex) { "Unable to get version" }
 			"--"
 		}
 	}

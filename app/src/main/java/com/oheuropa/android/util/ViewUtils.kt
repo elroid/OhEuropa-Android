@@ -1,7 +1,7 @@
 package com.oheuropa.android.util
 
 import android.content.res.Resources
-import timber.log.Timber.w
+import com.github.ajalt.timberkt.w
 
 /**
  *
@@ -21,8 +21,12 @@ class ViewUtils {
 		}
 
 		fun dpToPx(dp: Int): Int {
+			return Math.round(dpToPxF(dp.toFloat()))
+		}
+
+		fun dpToPxF(dp: Float): Float {
 			val density = Resources.getSystem().displayMetrics.density
-			return Math.round(dp * density)
+			return dp * density
 		}
 
 		fun getWidthAtHeight(w: Int, h: Int, newH: Int): Int {
@@ -46,8 +50,8 @@ class ViewUtils {
 				val w = Resources.getSystem().displayMetrics.widthPixels
 				val h = Resources.getSystem().displayMetrics.heightPixels
 				if (width) w else h
-			} catch (e: Exception) {
-				w(e, "Problem getting screen width - returning 0")
+			} catch (ex: Exception) {
+				w(ex) { "Problem getting screen width - returning 0"}
 				0
 			}
 		}

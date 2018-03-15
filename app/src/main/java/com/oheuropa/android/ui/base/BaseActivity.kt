@@ -4,8 +4,8 @@ import android.content.Context
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.widget.Toast
+import com.github.ajalt.timberkt.e
 import com.oheuropa.android.R
-import timber.log.Timber
 import java.security.InvalidParameterException
 
 /**
@@ -37,8 +37,8 @@ abstract class BaseActivity : AppCompatActivity(),BaseView {
 				builder.setMessage(R.string.err_unspecified)
 				try {
 					throw InvalidParameterException("No msg specified")
-				} catch (e: Exception) {
-					Timber.e(e)
+				} catch (ex: Exception) {
+					e { "Error: ${ex.message}" }
 				}
 			}
 		}

@@ -56,7 +56,6 @@ project.ext {
     rxKotlinVersion = "2.2.0"
     rxAndroidVersion = "2.0.1"
     rxRelayVersion = "2.0.0"
-    timberVersion = "4.6.0"
     retrofitVersion = "2.3.0"
     espressoVersion = "3.0.1"
     supportTestVersion = "1.0.1"

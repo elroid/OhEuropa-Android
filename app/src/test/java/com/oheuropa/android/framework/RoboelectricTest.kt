@@ -3,6 +3,7 @@ package com.oheuropa.android.framework
 import android.app.Application
 import android.content.Context
 import android.util.Log
+import com.github.ajalt.timberkt.Timber
 import com.oheuropa.android.BuildConfig
 import com.oheuropa.android.model.Beacon
 import com.oheuropa.android.model.Coordinate
@@ -12,7 +13,6 @@ import org.robolectric.RobolectricTestRunner
 import org.robolectric.RuntimeEnvironment
 import org.robolectric.annotation.Config
 import org.robolectric.shadows.ShadowLog
-import timber.log.Timber
 import java.io.File
 
 /**
