@@ -2,9 +2,11 @@ package com.oheuropa.android.injection
 
 import android.content.Context
 import com.oheuropa.android.data.AudioPlayer
+import com.oheuropa.android.data.local.CompassProvider
 import com.oheuropa.android.data.local.LocationProvider
 import com.oheuropa.android.data.remote.OhEuropaApiService
 import com.oheuropa.android.domain.AudioComponent
+import com.oheuropa.android.domain.CompassComponent
 import com.oheuropa.android.domain.LocationComponent
 import com.oheuropa.android.model.MyObjectBox
 import dagger.Module
@@ -55,5 +57,11 @@ class AppModule {
 	@Provides
 	internal fun provideLocationProvider(ctx: Context): LocationComponent {
 		return LocationProvider(ctx)
+	}
+
+	@Singleton
+	@Provides
+	internal fun provideCompassComponent(ctx: Context): CompassComponent {
+		return CompassProvider(ctx)
 	}
 }

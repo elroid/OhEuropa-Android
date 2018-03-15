@@ -1,6 +1,5 @@
 package com.oheuropa.android.domain
 
-import io.reactivex.Completable
 import io.reactivex.Flowable
 
 /**
@@ -14,7 +13,5 @@ import io.reactivex.Flowable
  */
 interface CompassComponent {
 
-	fun start(): Completable
-	fun stop(): Completable
 	fun listenToCompass(): Flowable<Float>
 }

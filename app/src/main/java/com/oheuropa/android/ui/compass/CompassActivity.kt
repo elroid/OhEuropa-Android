@@ -4,9 +4,13 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.WindowManager
+import com.github.ajalt.timberkt.i
 import com.oheuropa.android.R
-import com.oheuropa.android.ui.base.BaseActivity
+import com.oheuropa.android.domain.CompassComponent
 import com.oheuropa.android.ui.base.BottomNavActivity
+import dagger.android.AndroidInjection
+import io.reactivex.disposables.Disposable
+import javax.inject.Inject
 
 /**
  *
@@ -19,7 +23,7 @@ import com.oheuropa.android.ui.base.BottomNavActivity
  */
 
 
-class CompassActivity: BottomNavActivity() {
+class CompassActivity : BottomNavActivity() {
 
 	companion object {
 		fun createIntent(ctx: Context): Intent {
@@ -27,9 +31,28 @@ class CompassActivity: BottomNavActivity() {
 		}
 	}
 
+	@Inject lateinit var compass: CompassComponent
+	var disposable: Disposable? = null
+
 	override fun onCreate(savedInstanceState: Bundle?) {
+		AndroidInjection.inject(this)
 		super.onCreate(savedInstanceState)
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+	}
+
+	override fun onResume() {
+		super.onResume()
+		disposable = compass.listenToCompass()
+			.subscribe({
+				i { "Compass reading: $it" }
+			}, {
+				showError(msg = it.message)
+			})
+	}
+
+	override fun onPause() {
+		disposable?.dispose()
+		super.onPause()
 	}
 
 	override fun getLayoutId(): Int {

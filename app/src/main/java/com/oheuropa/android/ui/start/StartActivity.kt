@@ -8,6 +8,7 @@ import com.oheuropa.android.R
 import com.oheuropa.android.data.DataManager
 import com.oheuropa.android.ui.base.BaseActivity
 import com.oheuropa.android.ui.base.SchedulersFacade
+import com.oheuropa.android.ui.compass.CompassActivity
 import com.oheuropa.android.ui.map.MapActivity
 import dagger.android.AndroidInjection
 import kotlinx.android.synthetic.main.activity_start.*
@@ -44,8 +45,8 @@ class StartActivity : BaseActivity() {
 	}
 
 	private fun continueToFirstActivity() {
-		//startActivity(CompassActivity.createIntent(getCtx()))
-		startActivity(MapActivity.createIntent(getCtx()))
+		startActivity(CompassActivity.createIntent(getCtx()))
+//		startActivity(MapActivity.createIntent(getCtx()))
 		//startActivity(InfoActivity.createIntent(getCtx()))
 	}
 
