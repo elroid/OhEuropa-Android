@@ -25,18 +25,22 @@
 				<category android:name="android.intent.category.LAUNCHER"/>
 			</intent-filter>
 		</activity>
+
 		<activity
 			android:name=".ui.compass.CompassActivity"
 			android:screenOrientation="sensorPortrait"
+			android:theme="@style/AppTheme.Compass"
 			/>
-		<activity
-			android:name=".ui.info.InfoActivity"
-			android:screenOrientation="sensorPortrait"
-			/>
+
 		<activity
 			android:name=".ui.map.MapActivity"
 			android:screenOrientation="sensorPortrait"
 			android:theme="@style/AppTheme.Map"
+			/>
+
+		<activity
+			android:name=".ui.info.InfoActivity"
+			android:screenOrientation="sensorPortrait"
 			/>
 
 		<meta-data

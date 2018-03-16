@@ -16,19 +16,19 @@
 		>
 
 		<TextView
+			style="@style/Title"
 			android:layout_width="wrap_content"
 			android:layout_height="0dp"
 			android:layout_marginBottom="8dp"
 			android:layout_weight="1"
 			android:gravity="bottom"
 			android:text="@string/info_title"
-			style="@style/Title"
 			/>
 
 		<TextView
 			android:layout_width="wrap_content"
 			android:layout_height="0dp"
-			android:layout_weight="4"
+			android:layout_weight="5"
 			android:fontFamily="@font/nimbus_reg"
 			android:gravity="center_horizontal"
 			android:lineSpacingExtra="4dp"
@@ -44,8 +44,9 @@
 		<TextView
 			android:id="@+id/infoLink"
 			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_margin="16dp"
+			android:layout_height="0dp"
+			android:layout_weight="3"
+			android:gravity="center_vertical"
 			android:text="@string/info_web_text"
 			android:textColor="@color/text_light"
 			android:textSize="16sp"
@@ -58,5 +59,14 @@
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:layout_alignParentBottom="true"
+		/>
+
+	<ImageView
+		android:id="@+id/waves"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_above="@id/bottomNavigationView"
+		android:adjustViewBounds="true"
+		android:src="@drawable/info_white_waves"
 		/>
 </RelativeLayout>

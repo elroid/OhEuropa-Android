@@ -13,7 +13,7 @@
 		android:layout_height="wrap_content"
 		android:layout_centerVertical="true"
 		android:adjustViewBounds="true"
-		android:src="@drawable/white_waves"
+		android:src="@drawable/start_white_waves"
 		/>
 
 	<TextView

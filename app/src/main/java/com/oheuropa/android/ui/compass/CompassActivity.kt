@@ -2,7 +2,9 @@ package com.oheuropa.android.ui.compass
 
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
+import android.view.View
 import android.view.WindowManager
 import com.github.ajalt.timberkt.w
 import com.oheuropa.android.R
@@ -34,7 +36,17 @@ class CompassActivity : LocationEnabledActivity<CompassContract.Presenter>(), Co
 	override fun onCreate(savedInstanceState: Bundle?) {
 		AndroidInjection.inject(this)
 		super.onCreate(savedInstanceState)
+
+		//keep screen on while viewing the compass
 		window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+
+		//ensure layout goes under status bar
+		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+			window.decorView.systemUiVisibility =
+				View.SYSTEM_UI_FLAG_LAYOUT_STABLE or
+				View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or
+				View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
+
 	}
 
 	override fun displayNewReading(newBeaconReading: Float, newNorthReading: Float, newDistanceMeters: Int) {
