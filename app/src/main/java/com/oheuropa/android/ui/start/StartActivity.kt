@@ -48,6 +48,7 @@ class StartActivity : BaseActivity() {
 		startActivity(CompassActivity.createIntent(getCtx()))
 //		startActivity(MapActivity.createIntent(getCtx()))
 		//startActivity(InfoActivity.createIntent(getCtx()))
+		finish()
 	}
 
 	private fun getVersion(full: Boolean): String {

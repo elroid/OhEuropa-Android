@@ -1,12 +1,19 @@
 package com.oheuropa.android.ui.base
 
 import android.content.Context
+import android.os.Bundle
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.widget.Toast
 import com.github.ajalt.timberkt.e
+import com.github.ajalt.timberkt.v
 import com.oheuropa.android.R
+import com.oheuropa.android.data.event.AppQuitEvent
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 import java.security.InvalidParameterException
+
 
 /**
  *
@@ -18,6 +25,16 @@ import java.security.InvalidParameterException
  *         Copyright (c) 2018 Elroid Ltd. All rights reserved.
  */
 abstract class BaseActivity : AppCompatActivity(), BaseView {
+
+	override fun onCreate(savedInstanceState: Bundle?) {
+		super.onCreate(savedInstanceState)
+		EventBus.getDefault().register(this)
+	}
+
+	override fun onDestroy() {
+		EventBus.getDefault().unregister(this)
+		super.onDestroy()
+	}
 
 	override fun getCtx(): Context {
 		return this
@@ -51,7 +68,17 @@ abstract class BaseActivity : AppCompatActivity(), BaseView {
 	}
 
 	override fun quit() {
-		System.exit(0)
+		EventBus.getDefault().post(AppQuitEvent())
+	}
+
+	@Subscribe(threadMode = ThreadMode.MAIN)
+	fun onQuit(e: AppQuitEvent) {
+		v { "received $e on ${name()}" }
+		finish()
+	}
+
+	fun name(): String {
+		return javaClass.simpleName
 	}
 
 }
