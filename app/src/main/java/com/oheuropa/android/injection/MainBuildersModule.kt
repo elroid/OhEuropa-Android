@@ -1,6 +1,8 @@
 package com.oheuropa.android.injection
 
 import com.oheuropa.android.ui.compass.CompassActivity
+import com.oheuropa.android.ui.compass.CompassModule
+import com.oheuropa.android.ui.compass.CompassViewModule
 import com.oheuropa.android.ui.map.MapActivity
 import com.oheuropa.android.ui.map.MapModule
 import com.oheuropa.android.ui.map.MapViewModule
@@ -17,15 +19,16 @@ import dagger.android.ContributesAndroidInjector
  * @author <a href="mailto:e@elroid.com">Elliot Long</a>
  *         Copyright (c) 2018 Elroid Ltd. All rights reserved.
  */
+@Suppress("unused")
 @Module
 abstract class MainBuildersModule {
 
 	@ContributesAndroidInjector
 	abstract fun bindStartActivity(): StartActivity
 
-	@ContributesAndroidInjector
+	@ContributesAndroidInjector(modules = [(CompassViewModule::class), (CompassModule::class)])
 	abstract fun bindCompassActivity(): CompassActivity
 
-	@ContributesAndroidInjector(modules = arrayOf(MapViewModule::class, MapModule::class))
+	@ContributesAndroidInjector(modules = [(MapViewModule::class), (MapModule::class)])
 	internal abstract fun bindMapActivity(): MapActivity
 }

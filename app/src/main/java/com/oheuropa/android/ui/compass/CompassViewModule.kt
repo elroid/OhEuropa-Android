@@ -1,4 +1,4 @@
-package com.oheuropa.android.ui.map
+package com.oheuropa.android.ui.compass
 
 import dagger.Binds
 import dagger.Module
@@ -14,8 +14,8 @@ import dagger.Module
  */
 @Suppress("unused")
 @Module
-abstract class MapViewModule {
+abstract class CompassViewModule {
 
 	@Binds
-	abstract fun provideMapView(mapActivity:MapActivity):MapContract.View
+	abstract fun provideCompassView(mapActivity: CompassActivity): CompassContract.View
 }

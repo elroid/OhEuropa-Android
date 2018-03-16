@@ -4,12 +4,10 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.WindowManager
-import com.github.ajalt.timberkt.i
+import com.github.ajalt.timberkt.w
 import com.oheuropa.android.R
-import com.oheuropa.android.domain.CompassComponent
-import com.oheuropa.android.ui.base.BottomNavActivity
+import com.oheuropa.android.ui.base.LocationEnabledActivity
 import dagger.android.AndroidInjection
-import io.reactivex.disposables.Disposable
 import javax.inject.Inject
 
 /**
@@ -23,7 +21,7 @@ import javax.inject.Inject
  */
 
 
-class CompassActivity : BottomNavActivity() {
+class CompassActivity : LocationEnabledActivity<CompassContract.Presenter>(), CompassContract.View {
 
 	companion object {
 		fun createIntent(ctx: Context): Intent {
@@ -31,28 +29,24 @@ class CompassActivity : BottomNavActivity() {
 		}
 	}
 
-	@Inject lateinit var compass: CompassComponent
-	var disposable: Disposable? = null
+	@Inject override lateinit var presenter: CompassContract.Presenter
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		AndroidInjection.inject(this)
 		super.onCreate(savedInstanceState)
-		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+		window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 	}
 
-	override fun onResume() {
-		super.onResume()
-		disposable = compass.listenToCompass()
-			.subscribe({
-				i { "Compass reading: $it" }
-			}, {
-				showError(msg = it.message)
-			})
+	override fun displayNewReading(newBeaconReading: Float, newNorthReading: Float, newDistanceMeters: Int) {
+		w { "Not implemented: displayNewReading($newBeaconReading, $newNorthReading, $newDistanceMeters)" }
 	}
 
-	override fun onPause() {
-		disposable?.dispose()
-		super.onPause()
+	override fun showCompass() {
+		w { "Not implemented: showCompass()" }
+	}
+
+	override fun showSongInfo(songTitle: String, performerName: String) {
+		w { "Not implemented: showSongInfo($songTitle, $performerName)" }
 	}
 
 	override fun getLayoutId(): Int {

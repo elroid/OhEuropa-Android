@@ -1,6 +1,7 @@
-package com.oheuropa.android.ui.map
+package com.oheuropa.android.ui.compass
 
 import com.oheuropa.android.domain.BeaconWatcher
+import com.oheuropa.android.domain.CompassComponent
 import com.oheuropa.android.domain.LocationComponent
 import dagger.Module
 import dagger.Provides
@@ -15,12 +16,13 @@ import dagger.Provides
  *         Copyright (c) 2018 Elroid Ltd. All rights reserved.
  */
 @Module
-class MapModule {
+class CompassModule {
 
 	@Provides
-	fun provideMapPresenter(mapView: MapContract.View,
-							locator: LocationComponent,
-							beaconWatcher: BeaconWatcher): MapContract.Presenter {
-		return MapPresenter(mapView, locator, beaconWatcher)
+	fun provideCompassPresenter(mapView: CompassContract.View,
+								locator: LocationComponent,
+								beaconWatcher: BeaconWatcher,
+								compass: CompassComponent): CompassContract.Presenter {
+		return CompassPresenter(mapView, locator, beaconWatcher, compass)
 	}
 }

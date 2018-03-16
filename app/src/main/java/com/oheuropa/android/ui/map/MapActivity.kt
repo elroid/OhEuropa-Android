@@ -1,11 +1,7 @@
 package com.oheuropa.android.ui.map
 
-import android.Manifest
-import android.app.Activity
-import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
-import android.content.IntentSender
 import android.content.res.Resources
 import android.graphics.Bitmap
 import android.graphics.Canvas
@@ -20,22 +16,17 @@ import com.github.ajalt.timberkt.d
 import com.github.ajalt.timberkt.e
 import com.github.ajalt.timberkt.v
 import com.github.ajalt.timberkt.w
-import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
-import com.karumi.dexter.Dexter
-import com.karumi.dexter.MultiplePermissionsReport
-import com.karumi.dexter.PermissionToken
-import com.karumi.dexter.listener.PermissionRequest
-import com.karumi.dexter.listener.multi.MultiplePermissionsListener
 import com.oheuropa.android.R
+import com.oheuropa.android.data.local.DEFAULT_ZOOM
 import com.oheuropa.android.data.local.PrefsHelper
 import com.oheuropa.android.model.Beacon
 import com.oheuropa.android.model.Coordinate
-import com.oheuropa.android.ui.base.BottomNavActivity
+import com.oheuropa.android.ui.base.LocationEnabledActivity
 import com.oheuropa.android.util.ViewUtils.Companion.dpToPx
 import com.oheuropa.android.util.ViewUtils.Companion.dpToPxF
 import com.oheuropa.android.util.ViewUtils.Companion.getScreenWidth
@@ -51,10 +42,8 @@ import javax.inject.Inject
  * @author <a href="mailto:e@elroid.com">Elliot Long</a>
  *         Copyright (c) 2018 Elroid Ltd. All rights reserved.
  */
-const val REQUEST_CHECK_SETTINGS = 667
-const val DEF_ZOOM = 15f
-
-class MapActivity : BottomNavActivity(), OnMapReadyCallback, MapContract.View {
+class MapActivity : LocationEnabledActivity<MapContract.Presenter>()
+	, OnMapReadyCallback, MapContract.View {
 
 	companion object {
 		fun createIntent(ctx: Context): Intent {
@@ -62,11 +51,11 @@ class MapActivity : BottomNavActivity(), OnMapReadyCallback, MapContract.View {
 		}
 	}
 
-	@Inject lateinit var presenter: MapContract.Presenter
+	@Inject override lateinit var presenter: MapContract.Presenter
 	@Inject lateinit var prefs: PrefsHelper
 	private lateinit var map: GoogleMap
 
-	private var currentZoom: Float = DEF_ZOOM
+	private var currentZoom: Float = DEFAULT_ZOOM
 	private var currentCentre: LatLng? = null
 
 	override fun onCreate(savedInstanceState: Bundle?) {
@@ -113,8 +102,6 @@ class MapActivity : BottomNavActivity(), OnMapReadyCallback, MapContract.View {
 			val cu = CameraUpdateFactory.newLatLngZoom(centre.toLatLng(), zoom)
 			map.moveCamera(cu)
 		}
-
-		askForPermissions()
 	}
 
 	private fun applyMapStyle(map: GoogleMap) {
@@ -135,8 +122,8 @@ class MapActivity : BottomNavActivity(), OnMapReadyCallback, MapContract.View {
 		}
 	}
 
-	var meMarker: Marker? = null
-	var meCircle: Circle? = null
+	private var meMarker: Marker? = null
+	private var meCircle: Circle? = null
 	override fun showMyLocation(loc: Coordinate) {
 		//show blue dot
 		val opts = MarkerOptions()
@@ -150,14 +137,14 @@ class MapActivity : BottomNavActivity(), OnMapReadyCallback, MapContract.View {
 		meMarker = map.addMarker(opts)
 
 		//show accuracy circle
-		val copts = CircleOptions()
-		copts.fillColor(getColor(this, R.color.me_acc_fill))
-		copts.strokeColor(getColor(this, R.color.me_acc_stroke))
-		copts.strokeWidth(dpToPxF(1f))
-		copts.radius(loc.accuracy.toDouble())
-		copts.center(loc.toLatLng())
+		val circleOpts = CircleOptions()
+		circleOpts.fillColor(getColor(this, R.color.me_acc_fill))
+		circleOpts.strokeColor(getColor(this, R.color.me_acc_stroke))
+		circleOpts.strokeWidth(dpToPxF(1f))
+		circleOpts.radius(loc.accuracy.toDouble())
+		circleOpts.center(loc.toLatLng())
 		meCircle?.remove()
-		meCircle = map.addCircle(copts)
+		meCircle = map.addCircle(circleOpts)
 	}
 
 	private fun createBitmap(drawable: Drawable?, width: Int, height: Int): Bitmap {
@@ -179,48 +166,6 @@ class MapActivity : BottomNavActivity(), OnMapReadyCallback, MapContract.View {
 		val bounds = b.build()
 		val margin = getScreenWidth() / 4
 		map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, margin))
-	}
-
-	override fun askForPermissions() {
-		Dexter.withActivity(this)
-			.withPermissions(
-				Manifest.permission.ACCESS_FINE_LOCATION)
-			.withListener(object : MultiplePermissionsListener {
-				override fun onPermissionsChecked(report: MultiplePermissionsReport) {
-					presenter.start()
-				}
-
-				override fun onPermissionRationaleShouldBeShown(permissions: List<PermissionRequest>,
-																token: PermissionToken) {
-					AlertDialog.Builder(getCtx())
-						.setMessage(R.string.loc_justification)
-						.setPositiveButton(R.string.loc_ok) { _, _ -> token.continuePermissionRequest() }
-						.setNegativeButton(R.string.loc_quit) { _, _ -> quit() }
-						.create().show()
-				}
-			})
-			.check()
-	}
-
-	override fun resolveApiIssue(ex: ResolvableApiException) {
-		try {
-			// Show the dialog by calling startResolutionForResult(),
-			// and check the result in onActivityResult().
-			ex.startResolutionForResult(this@MapActivity, REQUEST_CHECK_SETTINGS)
-		} catch (sendEx: IntentSender.SendIntentException) {
-			w { "Send intent exception" }// Ignore the error.
-		}
-	}
-
-	override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-		d { "onActivityResult($requestCode, $resultCode, $data)" }
-		if (requestCode == REQUEST_CHECK_SETTINGS) {
-			if (resultCode == Activity.RESULT_OK)
-				presenter.start()
-			else
-				askForPermissions()
-		} else
-			super.onActivityResult(requestCode, resultCode, data)
 	}
 
 	override fun getLayoutId(): Int {

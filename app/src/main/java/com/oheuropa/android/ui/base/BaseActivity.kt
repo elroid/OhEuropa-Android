@@ -17,7 +17,7 @@ import java.security.InvalidParameterException
  * @author <a href="mailto:e@elroid.com">Elliot Long</a>
  *         Copyright (c) 2018 Elroid Ltd. All rights reserved.
  */
-abstract class BaseActivity : AppCompatActivity(),BaseView {
+abstract class BaseActivity : AppCompatActivity(), BaseView {
 
 	override fun getCtx(): Context {
 		return this
@@ -53,4 +53,5 @@ abstract class BaseActivity : AppCompatActivity(),BaseView {
 	override fun quit() {
 		System.exit(0)
 	}
+
 }

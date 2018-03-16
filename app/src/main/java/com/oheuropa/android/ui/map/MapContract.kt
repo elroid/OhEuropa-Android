@@ -1,9 +1,9 @@
 package com.oheuropa.android.ui.map
 
-import com.google.android.gms.common.api.ResolvableApiException
 import com.oheuropa.android.model.Beacon
 import com.oheuropa.android.model.Coordinate
-import com.oheuropa.android.ui.base.BaseView
+import com.oheuropa.android.ui.base.LocationEnabledPres
+import com.oheuropa.android.ui.base.LocationEnabledView
 
 /**
  *
@@ -15,16 +15,11 @@ import com.oheuropa.android.ui.base.BaseView
  *         Copyright (c) 2018 Elroid Ltd. All rights reserved.
  */
 interface MapContract {
-	interface View : BaseView {
+	interface View : LocationEnabledView {
 		fun showBeacons(beacons: List<Beacon>)
 		fun showMyLocation(loc: Coordinate)
 		fun zoomTo(beacons: List<Beacon>, myLocation: Coordinate)
-		fun askForPermissions()
-		fun resolveApiIssue(ex: ResolvableApiException)
 	}
 
-	interface Presenter {
-		fun start()
-		fun stop()
-	}
+	interface Presenter : LocationEnabledPres
 }

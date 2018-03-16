@@ -15,14 +15,13 @@ import io.reactivex.Observable
  */
 interface LocationComponent {
 
-	interface LocationStartListener{
-		fun onSuccess()
-		fun onPermissionsError(ex:SecurityException)
+	interface LocationStartListener {
+		fun onConnected()
 		fun onApiError(ex: ResolvableApiException)
 		fun onError(ex: Exception)
 	}
 
-	fun start(listener:LocationStartListener)
+	fun start(listener: LocationStartListener)
 	fun stop()
 
 	fun locationListener(): Observable<Coordinate>

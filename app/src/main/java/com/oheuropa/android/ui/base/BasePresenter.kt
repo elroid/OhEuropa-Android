@@ -1,19 +1,20 @@
 package com.oheuropa.android.ui.base
 
+import com.github.ajalt.timberkt.d
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 
 
 /**
  *
- * Class: com.oheuropa.android.ui.base.BasePreenter
+ * Class: com.oheuropa.android.ui.base.BasePresenter
  * Project: OhEuropa-Android
  * Created Date: 14/03/2018 12:54
  *
  * @author <a href="mailto:e@elroid.com">Elliot Long</a>
  *         Copyright (c) 2018 Elroid Ltd. All rights reserved.
  */
-abstract class BasePresenter<out V> constructor(val view:V){
+abstract class BasePresenter<out V : BaseView> constructor(val view: V) : BasePres {
 
 	/*enum class RequestState {
 		IDLE,
@@ -24,15 +25,18 @@ abstract class BasePresenter<out V> constructor(val view:V){
 
 	private val disposables = CompositeDisposable()
 
+	abstract override fun start()
 	/**
 	 * Contains common cleanup actions needed for all presenters, if any.
 	 * Subclasses may override this.
 	 */
-	open fun stop() {
+	override fun stop() {
+		d { "stop(): clearing disposables" }
 		disposables.clear()
 	}
 
-	protected fun addDisposable(disposable: Disposable) {
+	override fun addDisposable(disposable: Disposable) {
+		d { "addDisposable($disposable)" }
 		disposables.add(disposable)
 	}
 }

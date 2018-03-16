@@ -38,7 +38,7 @@ class LocationProvider constructor(private val ctx: Context) : LocationComponent
 			val client: SettingsClient = LocationServices.getSettingsClient(ctx)
 			val task = client.checkLocationSettings(builder.build())
 			task.addOnSuccessListener { settingsResponse ->
-				d { "task.onSuccess: $settingsResponse" }
+				d { "task.onConnected: $settingsResponse" }
 				// All location settings are satisfied. Go nuts.
 				locationObserver = Observable.create({ e: ObservableEmitter<Coordinate> ->
 
@@ -62,10 +62,10 @@ class LocationProvider constructor(private val ctx: Context) : LocationComponent
 							locationCallback, null)
 
 					} catch (e: SecurityException) {
-						wtf (e) { "ignoring security exception (why hasn't this already been handled?)" }
+						wtf(e) { "ignoring security exception (why hasn't this already been handled?)" }
 					}
 				})
-				listener.onSuccess()
+				listener.onConnected()
 			}
 
 			task.addOnFailureListener { exception ->
@@ -75,9 +75,9 @@ class LocationProvider constructor(private val ctx: Context) : LocationComponent
 				} else
 					listener.onError(exception)
 			}
-		} catch (ex: SecurityException) {
-			w(ex) { "SecurityException" }
-			listener.onPermissionsError(ex)
+		} catch (ex: Exception) {
+			w(ex) { "Exception" }
+			listener.onError(ex)
 		}
 	}
 

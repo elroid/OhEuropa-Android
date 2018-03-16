@@ -11,14 +11,14 @@
 	<color name="text_light">@color/white</color>
 	<color name="status_bg_trans">#00000000</color>
 	<color name="status_bg_opaque">#66000000</color>
-	<color name="me_fill">#ff4588ef</color>
+	<color name="me_fill">@color/blue</color>
 	<color name="me_stroke">#eeffffff</color>
 	<color name="me_acc_stroke">#663333ff</color>
 	<color name="me_acc_fill">#3366cccc</color>
 
 	<!--palette-->
 	<color name="peach">#ffffd7a6</color>
-	<color name="blue">#ff1e8cab</color>
+	<color name="blue">#ff4aa2b8</color>
 	<color name="black">#ff212121</color>
 	<color name="white">#ffffffff</color>
 
