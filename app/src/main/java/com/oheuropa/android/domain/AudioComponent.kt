@@ -15,7 +15,6 @@ interface AudioComponent {
 	enum class State {
 		QUIET, STATIC, STATIC_MIX, SIGNAL
 	}
-	fun setStreamUrl(radioStreamUrl: String)
 
 	fun setState(state: AudioComponent.State)
 

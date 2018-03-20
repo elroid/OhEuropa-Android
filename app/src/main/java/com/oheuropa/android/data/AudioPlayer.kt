@@ -6,7 +6,6 @@ import android.content.Context
 import android.media.AudioAttributes
 import android.media.AudioManager
 import android.media.MediaPlayer
-import android.net.Uri
 import android.os.Build
 import androidx.net.toUri
 import com.daasuu.ei.Ease
@@ -15,8 +14,11 @@ import com.github.ajalt.timberkt.d
 import com.github.ajalt.timberkt.v
 import com.github.ajalt.timberkt.w
 import com.oheuropa.android.R
-import com.oheuropa.android.domain.AudioComponent
+import com.oheuropa.android.domain.*
+import com.oheuropa.android.domain.AudioComponent.State.*
+import com.oheuropa.android.util.ViewUtils
 import javax.inject.Inject
+import kotlin.math.roundToInt
 
 /**
  *
@@ -27,39 +29,30 @@ import javax.inject.Inject
  * @author <a href="mailto:e@elroid.com">Elliot Long</a>
  *         Copyright (c) 2018 Elroid Ltd. All rights reserved.
  */
-const val FADE_DURATION_MS = 5000.toLong()
-const val RADIO_STREAM_URL = "https://streams.radio.co/s02776f249/listen"
-const val MAX_VOLUME = 100.toDouble()
-const val MIN_VOLUME_INTERVAL_MS = 250
-
 class AudioPlayer @Inject constructor(ctx: Context) : AudioComponent {
 
 	private val staticAudio = StaticAudio(ctx)
 	private val radioAudio = RadioAudio(ctx)
 
-	override fun setStreamUrl(radioStreamUrl: String) {
-		radioAudio.setStreamUrl(radioStreamUrl)
-	}
-
 	override fun setState(state: AudioComponent.State) {
 		v { "setState:$state" }
 		Thread().run {
 			when (state) {
-				AudioComponent.State.QUIET -> {
-					staticAudio.fadeTo(0f)
-					radioAudio.fadeTo(0f)
+				QUIET -> {
+					staticAudio.fadeTo(VOL_MIN)
+					radioAudio.fadeTo(VOL_MIN)
 				}
-				AudioComponent.State.STATIC -> {
-					staticAudio.fadeTo(75f)
-					radioAudio.fadeTo(0f)
+				STATIC -> {
+					staticAudio.fadeTo(VOL_MAX_STATIC)
+					radioAudio.fadeTo(VOL_MIN)
 				}
-				AudioComponent.State.STATIC_MIX -> {
-					staticAudio.fadeTo(75f)
-					radioAudio.fadeTo(15f)
+				STATIC_MIX -> {
+					staticAudio.fadeTo(VOL_MAX_STATIC)
+					radioAudio.fadeTo(VOL_MIN_RADIO)
 				}
-				AudioComponent.State.SIGNAL -> {
-					staticAudio.fadeTo(0f)
-					radioAudio.fadeTo(75f)
+				SIGNAL -> {
+					staticAudio.fadeTo(VOL_MIN)
+					radioAudio.fadeTo(VOL_MAX_RADIO)
 				}
 			}
 		}
@@ -72,33 +65,26 @@ class AudioPlayer @Inject constructor(ctx: Context) : AudioComponent {
 
 	override fun deactivate() {
 		v { "deactivate()" }
-		staticAudio.stop()
-		radioAudio.stop()
+		staticAudio.stopAfterFade()
+		radioAudio.stopAfterFade()
 	}
 
 	class RadioAudio(ctx: Context) : Audio(ctx) {
 		override fun createMediaPlayer(): MediaPlayer {
-			return MediaPlayer()
-		}
-
-		private var streamUrl: Uri = RADIO_STREAM_URL.toUri()
-
-		fun setStreamUrl(radioStreamUrl: String) {
-			v { "setStreamUrl:$radioStreamUrl" }
-			streamUrl = radioStreamUrl.toUri()
-			mediaPlayer.setDataSource(ctx, streamUrl)
-			mediaPlayer.prepare()
+			val mp = MediaPlayer.create(ctx, RADIO_STREAM_URL.toUri())
 			prepared = true
+			return mp
 		}
 
 		override fun name(): String {
-			return "RadioAudio"
+			return "RadioAudio: $mediaPlayer"
 		}
 	}
 
 	class StaticAudio(ctx: Context) : Audio(ctx) {
 		override fun createMediaPlayer(): MediaPlayer {
 			val mediaPlayer = MediaPlayer.create(ctx, R.raw.noise)
+			prepared = true
 			mediaPlayer.isLooping = true
 			return mediaPlayer
 		}
@@ -109,7 +95,7 @@ class AudioPlayer @Inject constructor(ctx: Context) : AudioComponent {
 	}
 
 	abstract class Audio constructor(val ctx: Context) {
-		private var volume = 0f
+		private var volume = 0
 			set(vol) {
 				val newVol = 1 - (Math.log(MAX_VOLUME - volume) / Math.log(MAX_VOLUME)).toFloat()
 				mediaPlayer.setVolume(newVol, newVol)
@@ -121,7 +107,6 @@ class AudioPlayer @Inject constructor(ctx: Context) : AudioComponent {
 
 		private fun createAudioPlayer(): MediaPlayer {
 			val mediaPlayer = createMediaPlayer()
-			prepared = true
 			setType(mediaPlayer)
 			/*mediaPlayer.setOnCompletionListener { Timber.d("${name()} complete") }
 			mediaPlayer.setOnInfoListener { _, what, extra ->
@@ -138,11 +123,21 @@ class AudioPlayer @Inject constructor(ctx: Context) : AudioComponent {
 		abstract fun createMediaPlayer(): MediaPlayer
 		abstract fun name(): String
 
-		fun stop() {
+		private fun stop() {
 			mediaPlayer.stop()
 			prepared = false
 			volumeAnimator?.cancel()
-			volume = 0f
+			volume = 0
+		}
+
+		fun stopAfterFade() {
+			if (volume > 0f) {
+				fadeTo(0)
+				ViewUtils.handler().postDelayed({
+					stop()
+				}, FADE_DURATION_MS)
+			} else
+				stop()
 		}
 
 		private fun setType(mediaPlayer: MediaPlayer) {
@@ -161,13 +156,22 @@ class AudioPlayer @Inject constructor(ctx: Context) : AudioComponent {
 			v { "play(${name()})" }
 			if (!prepared) {
 				try {
-					d { "media player is stopped, preparing..." }
-					mediaPlayer.prepare()
-					prepared = true
+					d { "media player is stopped(playing:${mediaPlayer.isPlaying}), preparing..." }
+					mediaPlayer.setOnPreparedListener({ mp ->
+						prepared = true
+						onPrepared(mp)
+					})
+					mediaPlayer.prepareAsync()
 				} catch (e: Exception) {
-					w{"Ignoring prepare error"}
+					w { "Ignoring prepare error" }
+					onPrepared(mediaPlayer)
 				}
-			}
+			} else
+				onPrepared(mediaPlayer)
+		}
+
+		private fun onPrepared(mediaPlayer: MediaPlayer) {
+			d { "onPrepared(${name()})" }
 			mediaPlayer.start()
 			mediaPlayer.setVolume(0f, 0f)
 		}
@@ -182,41 +186,43 @@ class AudioPlayer @Inject constructor(ctx: Context) : AudioComponent {
 		}
 
 
-		fun fadeTo(targetVolume: Float) {
+		fun fadeTo(targetVolume: Int) {
 			v { "${name()}.fadeTo($targetVolume) from $volume" }
 			if (!mediaPlayer.isPlaying && targetVolume > 0)
 				play(mediaPlayer)
 			if (targetVolume != volume) {
-				if (volumeAnimator != null) {
-					volumeAnimator?.cancel()
+				ViewUtils.handler().post {
+					if (volumeAnimator != null) {
+						volumeAnimator?.cancel()
+					}
+					volumeAnimator = ValueAnimator.ofFloat(volume.toFloat(), targetVolume.toFloat())
+					volumeAnimator?.duration = FADE_DURATION_MS
+					volumeAnimator?.interpolator = EasingInterpolator(Ease.SINE_IN_OUT)
+					volumeAnimator?.addUpdateListener { animation ->
+						throttleVolume(animation.animatedValue as Float)
+					}
+					volumeAnimator?.addListener(object : Animator.AnimatorListener {
+						var cancelled = false
+						override fun onAnimationStart(animation: Animator?) {
+							//Timber.i("animation started on ${name()}")
+							cancelled = false
+						}
+
+						override fun onAnimationEnd(animation: Animator?) {
+							//Timber.i("fade finished to target:$targetVolume on ${name()} with cancelled:$cancelled")
+							if (targetVolume == 0 && !cancelled)
+								pause()
+						}
+
+						override fun onAnimationCancel(animation: Animator?) {
+							//Timber.w("animation cancelled on ${name()}")
+							cancelled = true
+						}
+
+						override fun onAnimationRepeat(animation: Animator?) {}
+					})
+					volumeAnimator?.start()
 				}
-				volumeAnimator = ValueAnimator.ofFloat(volume, targetVolume)
-				volumeAnimator?.duration = FADE_DURATION_MS
-				volumeAnimator?.interpolator = EasingInterpolator(Ease.SINE_IN_OUT)
-				volumeAnimator?.addUpdateListener { animation ->
-					throttleVolume(animation.animatedValue as Float)
-				}
-				volumeAnimator?.addListener(object : Animator.AnimatorListener {
-					var cancelled = false
-					override fun onAnimationStart(animation: Animator?) {
-						//Timber.i("animation started on ${name()}")
-						cancelled = false
-					}
-
-					override fun onAnimationEnd(animation: Animator?) {
-						//Timber.i("fade finished to target:$targetVolume on ${name()} with cancelled:$cancelled")
-						if (targetVolume == 0f && !cancelled)
-							pause()
-					}
-
-					override fun onAnimationCancel(animation: Animator?) {
-						//Timber.w("animation cancelled on ${name()}")
-						cancelled = true
-					}
-
-					override fun onAnimationRepeat(animation: Animator?) {}
-				})
-				volumeAnimator?.start()
 			}
 		}
 
@@ -226,7 +232,7 @@ class AudioPlayer @Inject constructor(ctx: Context) : AudioComponent {
 			val now = System.currentTimeMillis()
 			if (now > lastUpdate + MIN_VOLUME_INTERVAL_MS) {
 				//Timber.d("Setting ${name()} vol: $vol")
-				volume = vol
+				volume = vol.roundToInt()
 				lastUpdate = now
 			}
 		}
