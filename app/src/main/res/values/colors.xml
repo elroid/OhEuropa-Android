@@ -27,9 +27,9 @@
 	<!--<color name="grad_color_top">#ffffd7a6</color>-->
 	<!--<color name="tab_bg_color">#ff212121</color>-->
 	<!--<color name="tab_bg_color_sel">#ff26a8ca</color>-->
-	<!--<color name="compass_active">#fffad7a6</color>-->
-	<!--<color name="compass_inactive">#ff26a8ca</color>-->
-	<!--<color name="line">#ff4c4c4c</color>-->
+	<color name="compass_active">#fffad7a6</color>
+	<color name="compass_inactive">#ff26a8ca</color>
+	<color name="line">#ff4c4c4c</color>
 
 	<!--debug-->
 	<color name="debug0">#00000000</color>

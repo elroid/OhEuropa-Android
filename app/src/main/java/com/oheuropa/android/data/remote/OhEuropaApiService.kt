@@ -1,5 +1,6 @@
 package com.oheuropa.android.data.remote
 
+import com.oheuropa.android.model.AudioStatusResponse
 import com.oheuropa.android.model.GetPlacesResponse
 import io.reactivex.Single
 import retrofit2.http.GET
@@ -17,4 +18,7 @@ interface OhEuropaApiService {
 
 	@GET("getdata.php?getplaces")
 	fun getBeacons(): Single<GetPlacesResponse>
+
+	@GET("https://public.radio.co/stations/s02776f249/status")
+	fun getAudioStatus(): Single<AudioStatusResponse>
 }

@@ -24,8 +24,10 @@ class MapPresenter(
 
 	override fun onConnected() {
 		d { "MapPresenter.onConnected" }
+		super.onConnected()
+
 		addDisposable(beaconWatcher.followBeaconLocation(locator)
-			.subscribeOn(SchedulersFacade.ui())//do it on ui - location listener complains otherwise
+			.subscribeOn(SchedulersFacade.io())
 			.observeOn(SchedulersFacade.ui())
 			.subscribe({
 				view.showBeacons(it.beacons)

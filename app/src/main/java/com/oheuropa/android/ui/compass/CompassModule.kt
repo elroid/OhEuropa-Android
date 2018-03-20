@@ -1,5 +1,6 @@
 package com.oheuropa.android.ui.compass
 
+import com.oheuropa.android.data.remote.OhEuropaApiService
 import com.oheuropa.android.domain.BeaconWatcher
 import com.oheuropa.android.domain.CompassComponent
 import com.oheuropa.android.domain.LocationComponent
@@ -22,7 +23,8 @@ class CompassModule {
 	fun provideCompassPresenter(mapView: CompassContract.View,
 								locator: LocationComponent,
 								beaconWatcher: BeaconWatcher,
-								compass: CompassComponent): CompassContract.Presenter {
-		return CompassPresenter(mapView, locator, beaconWatcher, compass)
+								compass: CompassComponent,
+								apiService: OhEuropaApiService): CompassContract.Presenter {
+		return CompassPresenter(mapView, locator, beaconWatcher, compass, apiService)
 	}
 }

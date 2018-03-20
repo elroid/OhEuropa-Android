@@ -13,10 +13,10 @@ import com.oheuropa.android.ui.base.LocationEnabledView
  *         Copyright (c) 2018 Elroid Ltd. All rights reserved.
  */
 interface CompassContract {
+
 	interface View : LocationEnabledView {
-		fun displayNewReading(newBeaconReading: Float, newNorthReading: Float, newDistanceMeters: Int)
-		fun showCompass()
-		fun showSongInfo(songTitle: String, performerName: String)
+		fun showNewReading(newNorthReading: Float, newBeaconReading: Float, newDistanceMeters: Int)
+		fun showSongInfo(performerName: String, songTitle: String)
 	}
 
 	interface Presenter : LocationEnabledPres

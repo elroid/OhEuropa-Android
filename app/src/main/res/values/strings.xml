@@ -7,15 +7,21 @@
 
 	<string name="info_title">OH EUROPA</string>
 	<string name="info_body">This compass and map directs you to beacons placed throughout Europe transmitting an ever-evolving library of love songs. These love songs are being collected by two British artists Gemma Paintin and James Stenhouse as they travel over 30,000km, from the northern most tip of Norway to the southern coast of Greece, and everywhere in between. As they travel they invite the people they meet to sing for them inside their motorhome.\n\nWhen you arrive at a beacon your compass will automatically pick up the transmission and play the songs through your device. Good luck!</string>
-	<string name="info_web_text">OHEUROPA.COM</string>
+	<string name="info_web_text">oheuropa.com</string>
 	<string name="info_web_link">http://oheuropa.com</string>
 	<string
 		name="err_beacon_conn">Connection failed (%s). Please check your internet connection.</string>
 	<string name="err_title">Oops!</string>
 	<string name="err_ok">OK</string>
 	<string name="err_quit">Quit</string>
-	<string name="err_unspecified">Sorry, an unspecified error occured.</string>
+	<string name="err_unspecified">Sorry, an unspecified error occurred.</string>
 	<string name="loc_justification">We need to access your location. We won\'t keep listening after you close the application.</string>
 	<string name="loc_ok">OK</string>
 	<string name="loc_quit">Quit</string>
+	<string name="finding_beacon">finding nearest beacon…</string>
+	<string name="beacon_dist">%s metres</string>
+	<string name="singing">%1$s \nsinging \"%2$s\"</string>
+	<string name="notification_title">Listening…</string>
+	<string name="notification_msg">Oh Europa is listening for nearby beacons</string>
+	<string name="notification_stop">Stop listening</string>
 </resources>

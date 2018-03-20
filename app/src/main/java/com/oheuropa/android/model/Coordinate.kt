@@ -19,7 +19,7 @@ data class Coordinate(
 	val accuracy: Number = 0
 ) {
 	constructor(lat: Float, lon: Float) : this(lat.toDouble(), lon.toDouble())
-	constructor(loc:Location):this(loc.latitude, loc.longitude, loc.accuracy)
+	constructor(loc: Location) : this(loc.latitude, loc.longitude, loc.accuracy)
 
 	private val loc: Location by lazy {
 		val location = Location("generated")
@@ -28,7 +28,7 @@ data class Coordinate(
 		location
 	}
 
-	fun isValid():Boolean{
+	fun isValid(): Boolean {
 		return latitude != 0.toDouble() && longitude != 0.toDouble()
 	}
 
@@ -41,10 +41,12 @@ data class Coordinate(
 	}
 
 	fun getDistanceMeters(loc: Coordinate): Float {
-		return getDistanceMeters(loc.toLocation())
+		return toLocation().distanceTo(loc.toLocation())
 	}
 
-	fun getDistanceMeters(loc: Location): Float {
-		return toLocation().distanceTo(loc)
+	fun getDistanceAndBearing(other: Coordinate): Pair<Float, Float> {
+		val results = FloatArray(3)
+		Location.distanceBetween(latitude, longitude, other.latitude, other.longitude, results)
+		return Pair(results[0], results[1])
 	}
 }

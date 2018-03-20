@@ -9,6 +9,30 @@ package com.oheuropa.android.model
  * @author <a href="mailto:e@elroid.com">Elliot Long</a>
  *         Copyright (c) 2018 Elroid Ltd. All rights reserved.
  */
-data class BeaconLocation(
-	val beacons: List<Beacon>, val myLocation: Coordinate
-)
+data class BeaconLocation(val beacons: List<Beacon>, val myLocation: Coordinate) {
+	fun getDistanceAndBearing(): Pair<Float, Float> {
+		if (beacons.isEmpty()) return Pair(0f, 0f)
+		return myLocation.getDistanceAndBearing(beacons[0].getCoordinate())
+	}
+
+	enum class CircleState {
+		CENTRE, INNER, OUTER, NONE
+	}
+
+	fun getCircleState(): CircleState {
+		if (!beacons.isEmpty()) {
+			val beacon = beacons[0]
+			val dist = getDistanceAndBearing().first
+			when {
+				dist < beacon.centerradius -> return CircleState.CENTRE
+				dist < beacon.innerradius -> return CircleState.INNER
+				dist < beacon.outerradius -> return CircleState.OUTER
+			}
+		}
+		return CircleState.NONE
+	}
+
+	override fun toString(): String {
+		return "BeaconLocation: dist(${getDistanceAndBearing().first}) state(${getCircleState()})"
+	}
+}

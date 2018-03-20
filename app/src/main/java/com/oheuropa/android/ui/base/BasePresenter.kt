@@ -35,8 +35,9 @@ abstract class BasePresenter<out V : BaseView> constructor(val view: V) : BasePr
 		disposables.clear()
 	}
 
-	override fun addDisposable(disposable: Disposable) {
+	override fun addDisposable(disposable: Disposable): Disposable {
 		d { "addDisposable($disposable)" }
 		disposables.add(disposable)
+		return disposable
 	}
 }

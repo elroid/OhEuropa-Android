@@ -14,5 +14,5 @@ import io.reactivex.disposables.Disposable
 interface BasePres {
 	fun start()
 	fun stop()
-	fun addDisposable(disposable: Disposable)
+	fun addDisposable(disposable: Disposable):Disposable
 }

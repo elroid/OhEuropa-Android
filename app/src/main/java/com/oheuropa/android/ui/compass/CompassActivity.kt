@@ -6,10 +6,12 @@ import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.view.WindowManager
-import com.github.ajalt.timberkt.w
+import com.github.ajalt.timberkt.d
 import com.oheuropa.android.R
 import com.oheuropa.android.ui.base.LocationEnabledActivity
+import com.oheuropa.android.util.ViewUtils
 import dagger.android.AndroidInjection
+import kotlinx.android.synthetic.main.activity_compass.*
 import javax.inject.Inject
 
 /**
@@ -41,24 +43,33 @@ class CompassActivity : LocationEnabledActivity<CompassContract.Presenter>(), Co
 		window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 
 		//ensure layout goes under status bar
-		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
 			window.decorView.systemUiVisibility =
 				View.SYSTEM_UI_FLAG_LAYOUT_STABLE or
 				View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or
 				View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
 
+		//adjust compass size to screenWidth
+		val sw = ViewUtils.getScreenWidth()
+		ViewUtils.setDimensions(compassView, sw, sw)
 	}
 
-	override fun displayNewReading(newBeaconReading: Float, newNorthReading: Float, newDistanceMeters: Int) {
-		w { "Not implemented: displayNewReading($newBeaconReading, $newNorthReading, $newDistanceMeters)" }
+	override fun showNewReading(newNorthReading: Float, newBeaconReading: Float, newDistanceMeters: Int) {
+		//d { "showNewReading($newNorthReading, $newBeaconReading, $newDistanceMeters)" }
+		runOnUiThread {
+			compassView.compassEnabled = true
+			compassView.setAngles(newNorthReading, newBeaconReading)
+			val dist = "" + newDistanceMeters
+			statusText.text = getString(R.string.beacon_dist, dist)
+		}
 	}
 
-	override fun showCompass() {
-		w { "Not implemented: showCompass()" }
-	}
-
-	override fun showSongInfo(songTitle: String, performerName: String) {
-		w { "Not implemented: showSongInfo($songTitle, $performerName)" }
+	override fun showSongInfo(performerName: String, songTitle: String) {
+		d { "showSongInfo($songTitle, $performerName" }
+		runOnUiThread {
+			compassView.compassEnabled = false
+			statusText.text = getString(R.string.singing, performerName, songTitle)
+		}
 	}
 
 	override fun getLayoutId(): Int {
