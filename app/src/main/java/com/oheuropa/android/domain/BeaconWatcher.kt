@@ -24,15 +24,14 @@ import javax.inject.Inject
 class BeaconWatcher @Inject constructor(
 	private val dataManager: DataManager
 ) {
-
 	@RxLogObservable
 	fun followBeaconLocation(locator: LocationComponent): Observable<BeaconLocation> {
 		d { "followBeaconLocation" }
-		return getBeaconLocationObservable(
-			dataManager.getTestBeaconList(),
-//			dataManager.followBeaconList(),
-			locator.locationListener()
-		)
+		val beaconObservable = when(USE_MOCK_BEACON_LOCATIONS) {
+			true -> dataManager.getTestBeaconList()
+			false -> dataManager.followBeaconList()
+		}
+		return getBeaconLocationObservable(beaconObservable, locator.locationListener())
 	}
 
 	private fun getBeaconLocationObservable(

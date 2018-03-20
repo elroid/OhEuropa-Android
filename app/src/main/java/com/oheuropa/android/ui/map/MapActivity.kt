@@ -22,8 +22,8 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
 import com.oheuropa.android.R
-import com.oheuropa.android.data.local.DEFAULT_ZOOM
 import com.oheuropa.android.data.local.PrefsHelper
+import com.oheuropa.android.domain.DEFAULT_MAP_ZOOM
 import com.oheuropa.android.model.Beacon
 import com.oheuropa.android.model.Coordinate
 import com.oheuropa.android.ui.base.LocationEnabledActivity
@@ -55,7 +55,7 @@ class MapActivity : LocationEnabledActivity<MapContract.Presenter>()
 	@Inject lateinit var prefs: PrefsHelper
 	private lateinit var map: GoogleMap
 
-	private var currentZoom: Float = DEFAULT_ZOOM
+	private var currentZoom: Float = DEFAULT_MAP_ZOOM
 	private var currentCentre: LatLng? = null
 
 	override fun onCreate(savedInstanceState: Bundle?) {
