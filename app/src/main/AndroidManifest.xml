@@ -48,6 +48,7 @@
 			android:value="@string/google_maps_key"
 			/>
 
+		<service android:name=".data.local.AudioService"/>
 	</application>
 
 </manifest>

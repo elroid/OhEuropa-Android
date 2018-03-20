@@ -11,6 +11,10 @@ import com.github.ajalt.timberkt.d
 import com.github.ajalt.timberkt.w
 import com.google.android.gms.common.api.ResolvableApiException
 import com.oheuropa.android.R
+import com.oheuropa.android.data.local.AudioService
+import com.oheuropa.android.domain.LocationComponent
+import com.oheuropa.android.domain.REQUEST_CHECK_SETTINGS
+import com.oheuropa.android.domain.REQUEST_PERMISSIONS
 
 /**
  *
@@ -23,9 +27,6 @@ import com.oheuropa.android.R
  */
 abstract class LocationEnabledActivity<Pres : LocationEnabledPres>
 	: BottomNavActivity(), LocationEnabledView {
-
-	private val REQUEST_CHECK_SETTINGS = 667
-	private val REQUEST_PERMISSIONS = 668
 
 	abstract var presenter: Pres
 
@@ -78,5 +79,15 @@ abstract class LocationEnabledActivity<Pres : LocationEnabledPres>
 		} catch (sendEx: IntentSender.SendIntentException) {
 			w { "Send intent exception" }// Ignore the error.
 		}
+	}
+
+	private var audioConnection: AudioService.Companion.AudioConnection? = null
+	override fun startAudioService(locator: LocationComponent) {
+		audioConnection = AudioService.bindService(this)
+	}
+
+	override fun onStop() {
+		audioConnection?.unbind(this)
+		super.onStop()
 	}
 }

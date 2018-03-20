@@ -26,6 +26,10 @@ abstract class LocationEnabledPresenter<out V : LocationEnabledView>(
 		}
 	}
 
+	override fun onConnected() {
+		view.startAudioService(locator)
+	}
+
 	override fun onApiError(ex: ResolvableApiException) {
 		w(ex) { "Api error" }
 		view.resolveApiIssue(ex)

@@ -1,5 +1,6 @@
 package com.oheuropa.android.injection
 
+import com.oheuropa.android.data.local.AudioService
 import com.oheuropa.android.ui.compass.CompassActivity
 import com.oheuropa.android.ui.compass.CompassModule
 import com.oheuropa.android.ui.compass.CompassViewModule
@@ -31,4 +32,7 @@ abstract class MainBuildersModule {
 
 	@ContributesAndroidInjector(modules = [(MapViewModule::class), (MapModule::class)])
 	internal abstract fun bindMapActivity(): MapActivity
+
+	@ContributesAndroidInjector
+	abstract fun bindAudioService(): AudioService
 }

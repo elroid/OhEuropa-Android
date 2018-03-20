@@ -18,10 +18,10 @@ import javax.inject.Inject
  * @author <a href="mailto:e@elroid.com">Elliot Long</a>
  *         Copyright (c) 2018 Elroid Ltd. All rights reserved.
  */
-class App : BaseApp(), HasActivityInjector {
+class App : BaseApp(), HasActivityInjector, HasServiceInjector {
 
-	@Inject
-	lateinit var dispatchingActivityInjector: DispatchingAndroidInjector<Activity>
+	@Inject lateinit var dispatchingActivityInjector: DispatchingAndroidInjector<Activity>
+	@Inject lateinit var dispatchingServiceInjector: DispatchingAndroidInjector<Service>
 
 	override fun onCreate() {
 		super.onCreate()
@@ -38,5 +38,9 @@ class App : BaseApp(), HasActivityInjector {
 
 	override fun activityInjector(): AndroidInjector<Activity> {
 		return dispatchingActivityInjector
+	}
+
+	override fun serviceInjector(): AndroidInjector<Service> {
+		return dispatchingServiceInjector
 	}
 }

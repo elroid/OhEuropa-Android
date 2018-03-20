@@ -1,11 +1,13 @@
 package com.oheuropa.android
 
 import android.app.Activity
+import android.app.Service
 import com.github.ajalt.timberkt.Timber
 import com.oheuropa.android.injection.DaggerDebugAppComponent
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasActivityInjector
+import dagger.android.HasServiceInjector
 import javax.inject.Inject
 
 /**
@@ -17,10 +19,10 @@ import javax.inject.Inject
  * @author <a href="mailto:e@elroid.com">Elliot Long</a>
  *         Copyright (c) 2018 Elroid Ltd. All rights reserved.
  */
-class DebugApp : BaseApp(), HasActivityInjector {
+class DebugApp : BaseApp(), HasActivityInjector, HasServiceInjector {
 
-	@Inject
-	lateinit var dispatchingActivityInjector: DispatchingAndroidInjector<Activity>
+	@Inject lateinit var dispatchingActivityInjector: DispatchingAndroidInjector<Activity>
+	@Inject lateinit var dispatchingServiceInjector: DispatchingAndroidInjector<Service>
 
 	override fun onCreate() {
 		super.onCreate()
@@ -36,5 +38,9 @@ class DebugApp : BaseApp(), HasActivityInjector {
 
 	override fun activityInjector(): AndroidInjector<Activity> {
 		return dispatchingActivityInjector
+	}
+
+	override fun serviceInjector(): AndroidInjector<Service> {
+		return dispatchingServiceInjector
 	}
 }

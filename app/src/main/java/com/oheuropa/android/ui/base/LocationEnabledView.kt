@@ -1,6 +1,7 @@
 package com.oheuropa.android.ui.base
 
 import com.google.android.gms.common.api.ResolvableApiException
+import com.oheuropa.android.domain.LocationComponent
 
 /**
  *
@@ -16,4 +17,5 @@ interface LocationEnabledView : BaseView {
 	fun requestLocationPermission()
 	fun showLocationPermissionExplanation()
 	fun resolveApiIssue(ex: ResolvableApiException)
+	fun startAudioService(locator:LocationComponent)
 }
