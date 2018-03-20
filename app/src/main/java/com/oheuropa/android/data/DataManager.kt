@@ -35,7 +35,7 @@ class DataManager @Inject constructor(
 	fun getTestBeaconList(): Observable<List<Beacon>> {
 		return Observable.create({ it: ObservableEmitter<List<Beacon>> ->
 			val beacons2 = ArrayList<Beacon>(2)
-			beacons2.add(Beacon(name = "ChocFactory", id = 10, lat = 51.468002f, lng = -2.552165f))
+			beacons2.add(Beacon(name = "ChocFactory", id = 10, lat = 51.468260f, lng = -2.554214f))
 			beacons2.add(Beacon(name = "StreetEnd", id = 10, lat = 51.469125f, lng = -2.550244f))
 			it.onNext(beacons2)
 		})

@@ -7,7 +7,9 @@ import com.github.ajalt.timberkt.wtf
 import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.*
 import com.oheuropa.android.domain.LocationComponent
+import com.oheuropa.android.domain.USE_MOCK_USER_LOCATION
 import com.oheuropa.android.model.Coordinate
+import com.oheuropa.android.util.ViewUtils
 import io.reactivex.Observable
 import io.reactivex.ObservableEmitter
 
@@ -27,11 +29,10 @@ class LocationProvider constructor(private val ctx: Context) : LocationComponent
 	private lateinit var locationCallback: LocationCallback
 
 	override fun start(listener: LocationComponent.LocationStartListener) {
-		d { "start()" }
 		try {
 			val locationRequest = LocationRequest().apply {
-				interval = 5000
-				fastestInterval = 1000
+				interval = 1000
+				fastestInterval = 100
 				priority = LocationRequest.PRIORITY_HIGH_ACCURACY
 			}
 			val builder = LocationSettingsRequest.Builder().addLocationRequest(locationRequest)
@@ -40,31 +41,14 @@ class LocationProvider constructor(private val ctx: Context) : LocationComponent
 			task.addOnSuccessListener { settingsResponse ->
 				d { "task.onConnected: $settingsResponse" }
 				// All location settings are satisfied. Go nuts.
-				locationObserver = Observable.create({ e: ObservableEmitter<Coordinate> ->
-
-					try {
-						fusedLocationClient.lastLocation.addOnSuccessListener {
-							d { "got last location: $it" }
-							e.onNext(Coordinate(it))
-						}
-
-						locationCallback = object : LocationCallback() {
-							override fun onLocationResult(locationResult: LocationResult?) {
-								locationResult ?: return
-								d { "got location result: $locationResult" }
-								for (location in locationResult.locations) {
-									e.onNext(Coordinate(location))
-								}
-							}
-						}
-						d { "requesting location updates..." }
-						fusedLocationClient.requestLocationUpdates(locationRequest,
-							locationCallback, null)
-
-					} catch (e: SecurityException) {
-						wtf(e) { "ignoring security exception (why hasn't this already been handled?)" }
+				locationObserver = when (USE_MOCK_USER_LOCATION) {
+					false -> createLocationObserver(locationRequest)
+					true -> {
+						//todo debug test methods
+						createWanderTest()
+						//createStandListenTest()
 					}
-				})
+				}
 				listener.onConnected()
 			}
 
@@ -89,19 +73,89 @@ class LocationProvider constructor(private val ctx: Context) : LocationComponent
 	override fun locationListener(): Observable<Coordinate> {
 		return locationObserver ?: throw IllegalStateException("You must call start first")
 	}
-	/*override fun locationListener(): Observable<Coordinate> {
-		//todo placeholder output
-		return Observable.create({
-			it.onNext(Coordinate(51.46858, -2.551146, 30))
-			Thread.sleep(2000)
-			it.onNext(Coordinate(51.46858, -2.551146, 20))
-			*//*Thread.sleep(2000)
-			it.onNext(Coordinate(51.46858, -2.551146, 10))
-			Thread.sleep(2000)
-			it.onNext(Coordinate(51.45858, -2.561146, 50))
-			Thread.sleep(2000)
-			it.onNext(Coordinate(51.45858, -2.561146, 20))*//*
 
+	private fun createLocationObserver(locationRequest: LocationRequest): Observable<Coordinate> {
+		return Observable.create({ e: ObservableEmitter<Coordinate> ->
+
+			try {
+				fusedLocationClient.lastLocation.addOnSuccessListener {
+					d { "got last location: $it" }
+					e.onNext(Coordinate(it))
+				}
+
+				locationCallback = object : LocationCallback() {
+					override fun onLocationResult(locationResult: LocationResult?) {
+						locationResult ?: return
+						d { "got location result: $locationResult" }
+						for (location in locationResult.locations) {
+							e.onNext(Coordinate(location))
+						}
+					}
+				}
+				d { "requesting location updates..." }
+				ViewUtils.handler().post {
+					fusedLocationClient.requestLocationUpdates(locationRequest,
+						locationCallback, null)
+				}
+
+			} catch (e: SecurityException) {
+				wtf(e) { "ignoring security exception (why hasn't this already been handled?)" }
+			}
 		})
-	}*/
+	}
+
+	@Suppress("unused")
+	private fun createWanderTest(): Observable<Coordinate> {
+		return Observable.create({ e ->
+			Thread({
+				val streetEnd = Coordinate(51.469002, -2.550491)
+				val chocEnd = Coordinate(51.468641, -2.551070)
+				val steps = 16
+				val delayMs = 2000L
+				val coordinateList = split(chocEnd, streetEnd, steps)
+				coordinateList.addAll(split(streetEnd, chocEnd, steps))
+
+				while (!e.isDisposed) {
+					coordinateList.forEach {
+						if (!e.isDisposed) {
+							e.onNext(it)
+							Thread.sleep(delayMs)
+						}
+					}
+				}
+			}).start()
+		})
+	}
+
+	@Suppress("unused")
+	private fun createStandListenTest(): Observable<Coordinate> {
+		return Observable.create({ e ->
+			Thread({
+				val streetEnd = Coordinate(51.469002, -2.550491)
+				e.onNext(streetEnd)
+			}).start()
+		})
+	}
+
+	private fun split(start: Coordinate, end: Coordinate, steps: Int): MutableList<Coordinate> {
+		val lats = split(start.latitude, end.latitude, steps)
+		val longs = split(start.longitude, end.longitude, steps)
+		val result = mutableListOf<Coordinate>()
+		for (i in 0 until steps) {
+			result.add(Coordinate(lats[i], longs[i]))
+		}
+		return result
+	}
+
+	private fun split(start: Double, end: Double, steps: Int): DoubleArray {
+		val diff = end - start
+		val increment = diff / steps
+		val result = DoubleArray(steps)
+		var current = start
+		for (i in 0 until steps) {
+			result[i] = current
+			current += increment
+		}
+		return result
+	}
 }
