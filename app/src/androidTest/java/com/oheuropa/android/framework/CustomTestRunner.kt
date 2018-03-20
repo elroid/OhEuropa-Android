@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.os.IBinder
 import android.os.PowerManager
 import android.support.test.runner.AndroidJUnitRunner
+import androidx.content.systemService
 import com.github.ajalt.timberkt.d
 import com.github.ajalt.timberkt.e
 
@@ -56,13 +57,13 @@ class CustomTestRunner : AndroidJUnitRunner() {
 	}
 
 	private fun keepSceenAwake(app: Context, name: String) {
-		val power = app.getSystemService(Context.POWER_SERVICE) as PowerManager
+		val power: PowerManager = app.systemService()
 		power.newWakeLock(PowerManager.FULL_WAKE_LOCK or PowerManager.ACQUIRE_CAUSES_WAKEUP or PowerManager.ON_AFTER_RELEASE, name)
 			.acquire()
 	}
 
 	private fun unlockScreen(app: Context, name: String) {
-		val keyguard = app.getSystemService(Context.KEYGUARD_SERVICE) as KeyguardManager
+		val keyguard: KeyguardManager = app.systemService()
 		keyguard.newKeyguardLock(name).disableKeyguard()
 	}
 

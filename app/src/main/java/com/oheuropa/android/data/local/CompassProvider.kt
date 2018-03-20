@@ -27,6 +27,8 @@ import java.util.concurrent.Callable
 class CompassProvider constructor(ctx: Context) : CompassComponent {
 
 	private val sensorManager: SensorManager = ctx.getSystemService(SENSOR_SERVICE) as SensorManager
+	//this is lovely but breaks the build on kitkat and below...
+	//private val sensorManager: SensorManager = ctx.systemService()
 
 	override fun listenToCompass(): Flowable<Float> {
 		return if (sensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR) != null)
@@ -39,7 +41,7 @@ class CompassProvider constructor(ctx: Context) : CompassComponent {
 	 * Uses Sensor.TYPE_ROTATION_VECTOR which should be used if available
 	 */
 	private class RotationObservable constructor(mgr: SensorManager) : SensorObservable(mgr) {
-		override val type = Sensor.TYPE_ROTATION_VECTOR
+		override val sensorType = Sensor.TYPE_ROTATION_VECTOR
 
 		override fun convertToDegrees(eventValues: FloatArray): Float {
 			val rotationV = FloatArray(16)
@@ -55,7 +57,7 @@ class CompassProvider constructor(ctx: Context) : CompassComponent {
 	 */
 	private class OrientationObservable constructor(mgr: SensorManager) : SensorObservable(mgr) {
 		@Suppress("DEPRECATION") //yes we know...
-		override val type = Sensor.TYPE_ORIENTATION
+		override val sensorType = Sensor.TYPE_ORIENTATION
 
 		override fun convertToDegrees(eventValues: FloatArray): Float {
 			return eventValues[0]
@@ -64,12 +66,11 @@ class CompassProvider constructor(ctx: Context) : CompassComponent {
 
 	private abstract class SensorObservable(mgr: SensorManager) {
 
-		//Sensor type
-		internal abstract val type: Int
+		internal abstract val sensorType: Int
 
 		internal abstract fun convertToDegrees(eventValues: FloatArray): Float
 
-		var callable: Callable<Sensor> = Callable { mgr.getDefaultSensor(type) }
+		var callable: Callable<Sensor> = Callable { mgr.getDefaultSensor(sensorType) }
 
 		private var listener: Listener? = null
 
