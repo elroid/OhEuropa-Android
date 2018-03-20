@@ -16,6 +16,10 @@ import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.moshi.MoshiConverterFactory
 import javax.inject.Singleton
+import okhttp3.Cache
+import okhttp3.OkHttpClient
+
+
 
 /**
  *
@@ -32,12 +36,21 @@ class AppModule {
 
 	@Singleton
 	@Provides
-	internal fun provideApi(): OhEuropaApiService {
+	internal fun provideApi(ctx: Context): OhEuropaApiService {
+		val cacheSize = 5 * 1024 * 1024L // 5 MB
+		val cache = Cache(ctx.cacheDir, cacheSize)
+
+		val okHttpClient = OkHttpClient.Builder()
+			.cache(cache)
+			.build()
+
 		val retrofit = Retrofit.Builder()
 			.baseUrl("http://oheuropa.com/api/")
+			.client(okHttpClient)
 			.addConverterFactory(MoshiConverterFactory.create())
 			.addCallAdapterFactory(RxJava2CallAdapterFactory.create())
 			.build()
+
 		return retrofit.create(OhEuropaApiService::class.java)
 	}
 
