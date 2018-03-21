@@ -10,6 +10,8 @@ package com.oheuropa.android.domain
  *         Copyright (c) 2018 Elroid Ltd. All rights reserved.
  */
 
+const val SPLASH_WAIT_SECONDS = 2
+
 const val DEFAULT_MAP_ZOOM = 15f
 const val FADE_DURATION_MS = 5000.toLong()
 const val RADIO_STREAM_URL = "https://streams.radio.co/s02776f249/listen"

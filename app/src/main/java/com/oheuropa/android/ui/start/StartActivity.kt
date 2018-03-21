@@ -6,10 +6,10 @@ import com.github.ajalt.timberkt.w
 import com.oheuropa.android.BuildConfig
 import com.oheuropa.android.R
 import com.oheuropa.android.data.DataManager
+import com.oheuropa.android.domain.SPLASH_WAIT_SECONDS
 import com.oheuropa.android.ui.base.BaseActivity
 import com.oheuropa.android.ui.base.SchedulersFacade
 import com.oheuropa.android.ui.compass.CompassActivity
-import com.oheuropa.android.ui.map.MapActivity
 import dagger.android.AndroidInjection
 import kotlinx.android.synthetic.main.activity_start.*
 import javax.inject.Inject
@@ -27,6 +27,8 @@ class StartActivity : BaseActivity() {
 
 	@Inject lateinit var dataManager: DataManager
 
+	val start = System.currentTimeMillis()
+
 	@SuppressLint("SetTextI18n")
 	override fun onCreate(savedInstanceState: Bundle?) {
 		AndroidInjection.inject(this)
@@ -39,7 +41,11 @@ class StartActivity : BaseActivity() {
 			.subscribeOn(SchedulersFacade.io())
 			.observeOn(SchedulersFacade.ui())
 			.subscribe(
-				{ continueToFirstActivity() },
+				{
+					delayUntil(SPLASH_WAIT_SECONDS, Runnable {
+						continueToFirstActivity()
+					})
+				},
 				{ showError(msg = getString(R.string.err_beacon_conn, it.message), fatal = true) })
 
 	}
@@ -47,15 +53,21 @@ class StartActivity : BaseActivity() {
 	private fun continueToFirstActivity() {
 		startActivity(CompassActivity.createIntent(getCtx()))
 //		startActivity(MapActivity.createIntent(getCtx()))
-		//startActivity(InfoActivity.createIntent(getCtx()))
+//		startActivity(InfoActivity.createIntent(getCtx()))
 		finish()
+	}
+
+	private fun delayUntil(secondsToWait: Int, action: Runnable) {
+		val elapsed = System.currentTimeMillis() - start
+		val timeLeft = Math.max(0, secondsToWait * 1000 - elapsed)
+		version.postDelayed(action, timeLeft)
 	}
 
 	private fun getVersion(full: Boolean): String {
 		return try {
-			val pinfo = packageManager.getPackageInfo(packageName, 0)
-			var result = pinfo.versionName
-			if (full) result += " (" + pinfo.versionCode + ")"
+			val packageInfo = packageManager.getPackageInfo(packageName, 0)
+			var result = packageInfo.versionName
+			if (full) result += " (" + packageInfo.versionCode + ")"
 			result
 		} catch (ex: Exception) {
 			w(ex) { "Unable to get version" }

@@ -3,10 +3,12 @@ package com.oheuropa.android
 import android.app.Activity
 import com.github.ajalt.timberkt.Timber
 import android.app.Application
+import android.app.Service
 import com.oheuropa.android.injection.DaggerAppComponent
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasActivityInjector
+import dagger.android.HasServiceInjector
 import javax.inject.Inject
 
 /**
