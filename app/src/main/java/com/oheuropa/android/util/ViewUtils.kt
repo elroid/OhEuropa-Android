@@ -7,6 +7,7 @@ import android.support.annotation.Dimension
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AbsListView
+import com.github.ajalt.timberkt.v
 import com.github.ajalt.timberkt.w
 
 
@@ -86,6 +87,36 @@ class ViewUtils {
 				params.height = height
 			}
 			view.requestLayout()
+		}
+
+		fun fade(fadeIn: Boolean, view: View, fadeDurationMs: Int = 250) {
+			v { "fade($fadeIn, $view, $fadeDurationMs" }
+			if (fadeIn) {
+				if (view.visibility == View.VISIBLE && view.alpha == 1f) {
+					v { "No need to fade in: visible(${view.visibility}/alpha(${view.alpha}) object: $view" }
+				} else {
+					view.animate().alpha(1f)
+						.setDuration(fadeDurationMs.toLong())
+						.withStartAction {
+							if(view.visibility != View.VISIBLE){
+								view.visibility = View.VISIBLE
+								view.alpha = 0f
+							}
+						}
+						.start()
+				}
+			} else {
+				if (view.visibility != View.VISIBLE || view.alpha == 0f) {
+					v { "No need to fade out: visible(${view.visibility}/alpha(${view.alpha}) object: $view" }
+				} else {
+					view.animate().alpha(0f)
+						.setDuration(fadeDurationMs.toLong())
+						.withStartAction {
+							v { "start" }
+						}
+						.start()
+				}
+			}
 		}
 	}
 }

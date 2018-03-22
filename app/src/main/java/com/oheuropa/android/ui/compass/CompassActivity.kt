@@ -51,13 +51,27 @@ class CompassActivity : LocationEnabledActivity<CompassContract.Presenter>(), Co
 
 		//adjust compass size to screenWidth
 		val sw = ViewUtils.getScreenWidth()
-		ViewUtils.setDimensions(compassView, sw, sw)
+		ViewUtils.setDimensions(compassFrame, sw, sw)
+	}
+
+	private var showingCompass = true
+	private val COMPASS_FADE_MS = 1000
+	private fun checkCompassVisibility(showCompass:Boolean){
+		if(showingCompass && !showCompass){
+			//hide compass
+			ViewUtils.fade(false, compassView, COMPASS_FADE_MS)
+		}
+		else if(!showingCompass && showCompass){
+			//show compass
+			ViewUtils.fade(true, compassView, COMPASS_FADE_MS)
+		}
+		showingCompass = showCompass
 	}
 
 	override fun showNewReading(newNorthReading: Float, newBeaconReading: Float, newDistanceMeters: Int) {
 		//d { "showNewReading($newNorthReading, $newBeaconReading, $newDistanceMeters)" }
 		runOnUiThread {
-			compassView.compassEnabled = true
+			checkCompassVisibility(true)
 			compassView.setAngles(newNorthReading, newBeaconReading)
 			val dist = "" + newDistanceMeters
 			statusText.text = getString(R.string.beacon_dist, dist)
@@ -67,7 +81,7 @@ class CompassActivity : LocationEnabledActivity<CompassContract.Presenter>(), Co
 	override fun showSongInfo(performerName: String, songTitle: String) {
 		d { "showSongInfo($songTitle, $performerName" }
 		runOnUiThread {
-			compassView.compassEnabled = false
+			checkCompassVisibility(false)
 			statusText.text = getString(R.string.singing, performerName, songTitle)
 		}
 	}

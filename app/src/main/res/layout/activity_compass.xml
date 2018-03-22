@@ -29,12 +29,25 @@
 			android:layout_weight="1"
 			/>
 
-		<!--compass-->
-		<com.oheuropa.android.ui.compass.CompassView
-			android:id="@+id/compassView"
+		<!--compass views-->
+		<FrameLayout
+			android:id="@+id/compassFrame"
 			android:layout_width="360dp"
 			android:layout_height="360dp"
-			/>
+			>
+
+			<com.oheuropa.android.ui.compass.CompassWaveView
+				android:id="@+id/compassWaveView"
+				android:layout_width="match_parent"
+				android:layout_height="match_parent"
+				/>
+
+			<com.oheuropa.android.ui.compass.CompassView
+				android:id="@+id/compassView"
+				android:layout_width="match_parent"
+				android:layout_height="match_parent"
+				/>
+		</FrameLayout>
 
 		<!--text-centered-->
 		<LinearLayout

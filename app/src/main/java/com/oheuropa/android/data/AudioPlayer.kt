@@ -187,7 +187,7 @@ class AudioPlayer @Inject constructor(ctx: Context) : AudioComponent {
 
 
 		fun fadeTo(targetVolume: Int) {
-			v { "${name()}.fadeTo($targetVolume) from $volume" }
+			//v { "${name()}.fadeTo($targetVolume) from $volume" }
 			if (!mediaPlayer.isPlaying && targetVolume > 0)
 				play(mediaPlayer)
 			if (targetVolume != volume) {
