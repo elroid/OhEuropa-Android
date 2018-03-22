@@ -25,6 +25,7 @@ const val TRACK_NAME_UPDATE_DELAY_MS = 10000L
 
 const val USE_MOCK_BEACON_LOCATIONS = true
 const val USE_MOCK_USER_LOCATION = true
+const val USE_MOCK_COMPASS_READINGS = false
 
 const val VOL_MAX_STATIC = 75
 const val VOL_MAX_RADIO = 75

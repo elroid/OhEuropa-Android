@@ -27,6 +27,7 @@ class CompassView constructor(context: Context, attrs: AttributeSet? = null) : V
 	private val outerPaint = Paint()
 	private val innerPaint = Paint()
 	private val trianglePaint = Paint()
+	private val tickPaint = Paint()
 	private val northPaint = Paint()
 	private val bitmapPaint = Paint()
 	private val north = "N"
@@ -43,6 +44,8 @@ class CompassView constructor(context: Context, attrs: AttributeSet? = null) : V
 		innerPaint.color = ContextCompat.getColor(getContext(), R.color.compass_inactive)
 		trianglePaint.color = ContextCompat.getColor(getContext(), R.color.white)
 		trianglePaint.strokeWidth = dpToPxF(2f)
+		tickPaint.color = ContextCompat.getColor(getContext(), R.color.white)
+		tickPaint.strokeWidth = dpToPxF(3f)
 		northPaint.color = ContextCompat.getColor(getContext(), R.color.white)
 
 		northPaint.textSize = dpToPxF(25f)
@@ -84,6 +87,7 @@ class CompassView constructor(context: Context, attrs: AttributeSet? = null) : V
 		this.northAngle = northAngle
 		this.beaconAngle = beaconAngle
 		invalidate()
+		//todo add interpolator to smooth movement
 	}
 
 	var compassEnabled: Boolean = true
@@ -97,6 +101,9 @@ class CompassView constructor(context: Context, attrs: AttributeSet? = null) : V
 
 		try {
 			if (canvas == null) return
+			if (xCentre == 0f) return
+
+			drawBaselineCircles(canvas)
 
 			if (compassEnabled)
 				drawCompass(canvas)
@@ -109,80 +116,94 @@ class CompassView constructor(context: Context, attrs: AttributeSet? = null) : V
 		}
 	}
 
-	private fun drawWaves(canvas: Canvas) {
-		val xCentre = measuredWidth / 2f
-		val yCentre = measuredHeight / 2f
+	private var xCentre = 0f
+	private var yCentre = 0f
+	private var outerRadius = 0f
+	private var innerRadius = 0f
+	private var arrowBLX = 0f
+	private var arrowBY = 0f
+	private var arrowTY = 0f
+	private var arrowBRX = 0f
+	private var tickStartY = 0f
+	private var tickEndY = 0f
 
-		val outerRadius = measuredWidth * percentOuter / 2
-		val innerRadius = measuredWidth * percentInner / 2
+	override fun onSizeChanged(measuredWidth: Int, measuredHeight: Int, oldw: Int, oldh: Int) {
+		super.onSizeChanged(measuredWidth, measuredHeight, oldw, oldh)
+		//centre
+		xCentre = measuredWidth / 2f
+		yCentre = measuredHeight / 2f
 
-		//draw ring
-		canvas.drawCircle(xCentre, yCentre, outerRadius, innerPaint)
+		//circles
+		outerRadius = measuredWidth * percentOuter / 2
+		innerRadius = measuredWidth * percentInner / 2
 
-		//draw inner circle
-		canvas.drawCircle(xCentre, yCentre, innerRadius, outerPaint)
-
-		if (wavesBitmap == null) {
-			if (bigWavesBmp != null) {
-				val w = innerRadius.toInt() * 2
-				val h = ViewUtils.getHeightAtWidth(bigWavesBmp!!.width, bigWavesBmp!!.height, w)
-				val resizedBitmap = getResizedBitmap(bigWavesBmp!!, w, h)
-				if (tintColour != null)
-					wavesBitmap = tintImage(resizedBitmap, tintColour!!)
-			}
-		}
-		//draw waves
-		canvas.drawBitmap(wavesBitmap, xCentre - innerRadius, innerRadius / 2, bitmapPaint)
-
-	}
-
-	private fun drawCompass(canvas: Canvas) {
-
-		val xCentre = measuredWidth / 2f
-		val yCentre = measuredHeight / 2f
-
-		val outerRadius = measuredWidth * percentOuter / 2
-		val innerRadius = measuredWidth * percentInner / 2
-
-		//outer (beacon) group
-		canvas.save()
-		canvas.rotate(beaconAngle, xCentre, yCentre)
-
-		//draw arrow
+		//arrow
 		val arrowWidth = measuredWidth / 15
 		val arrowHeight = measuredWidth / 15
 		val arrowDist = measuredWidth / 2.4f
-		val blx = xCentre - arrowWidth / 2
-		val by = yCentre - arrowDist
-		val ty = yCentre - arrowDist - arrowHeight
-		val brx = xCentre + arrowWidth / 2
-		canvas.drawLine(blx, by, xCentre, ty, trianglePaint)//BL-T
-		canvas.drawLine(xCentre, ty, brx, by, trianglePaint)//T-BR
-		canvas.drawLine(brx, by, blx, by, trianglePaint)//BR-BL
+		arrowBLX = xCentre - arrowWidth / 2
+		arrowBY = yCentre - arrowDist
+		arrowTY = yCentre - arrowDist - arrowHeight
+		arrowBRX = xCentre + arrowWidth / 2
 
-		//draw ring
-		canvas.drawCircle(xCentre, yCentre, outerRadius, outerPaint)
+		//ticks
+		val tickLength = measuredWidth / 40
+		val tickDist = innerRadius
+		tickStartY = yCentre - tickDist
+		tickEndY = tickStartY - tickLength
 
-		//draw ticks
+		//waves image
+		if (bigWavesBmp != null) {
+			val w = innerRadius.toInt() * 2
+			val h = ViewUtils.getHeightAtWidth(bigWavesBmp!!.width, bigWavesBmp!!.height, w)
+			val resizedBitmap = getResizedBitmap(bigWavesBmp!!, w, h)
+			if (tintColour != null)
+				wavesBitmap = tintImage(resizedBitmap, tintColour!!)
+		}
+	}
 
-		//done
-		canvas.restore()
-
-		//inner (compass) group
-		canvas.save()
-		canvas.rotate(northAngle, xCentre, yCentre)
+	private fun drawBaselineCircles(canvas: Canvas) {
+		val outer = when (compassEnabled) {
+			true -> outerPaint
+			false -> innerPaint
+		}
+		val inner = when (compassEnabled) {
+			true -> innerPaint
+			false -> outerPaint
+		}
+		//draw outer circle (ring)
+		canvas.drawCircle(xCentre, yCentre, outerRadius, outer)
 
 		//draw inner circle
-		canvas.drawCircle(xCentre, yCentre, innerRadius, innerPaint)
+		canvas.drawCircle(xCentre, yCentre, innerRadius, inner)
+	}
 
+	private fun drawWaves(canvas: Canvas) {
+		if (wavesBitmap != null)//draw waves
+			canvas.drawBitmap(wavesBitmap, xCentre - innerRadius, innerRadius / 2, bitmapPaint)
+	}
+
+	private fun drawCompass(canvas: Canvas) {
+		//outer group (points to beacon)////////////////////////////////////////////////////////////
+		canvas.save()
+		canvas.rotate(beaconAngle, xCentre, yCentre)
+		//draw arrow
+		canvas.drawLine(arrowBLX, arrowBY, xCentre, arrowTY, trianglePaint)//BL-T
+		canvas.drawLine(xCentre, arrowTY, arrowBRX, arrowBY, trianglePaint)//T-BR
+		canvas.drawLine(arrowBRX, arrowBY, arrowBLX, arrowBY, trianglePaint)//BR-BL
+		//draw ticks
+		for (i in 0 until 360 step 10) {
+			canvas.rotate(10f, xCentre, yCentre)
+			canvas.drawLine(xCentre, tickStartY, xCentre, tickEndY, tickPaint)
+		}
+		canvas.restore()
+
+		//inner group (points to north)/////////////////////////////////////////////////////////////
+		canvas.save()
+		canvas.rotate(northAngle, xCentre, yCentre)
 		//draw north
 		val northDist = measuredWidth / 3.8f
 		canvas.drawText(north, xCentre - northWidth / 2, yCentre - northDist, northPaint)
-
-		//guide
-		//canvas.drawLine(xCentre, yCentre, xCentre, northDist + arrowWidth, trianglePaint)
-
-		//all done
 		canvas.restore()
 	}
 }

@@ -6,7 +6,10 @@ import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
+import com.github.ajalt.timberkt.d
 import com.oheuropa.android.domain.CompassComponent
+import com.oheuropa.android.domain.USE_MOCK_COMPASS_READINGS
+import com.oheuropa.android.util.GenUtils.Companion.limit360
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
 import io.reactivex.FlowableEmitter
@@ -31,10 +34,27 @@ class CompassProvider constructor(ctx: Context) : CompassComponent {
 	//private val sensorManager: SensorManager = ctx.systemService()
 
 	override fun listenToCompass(): Flowable<Float> {
-		return if (sensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR) != null)
+		@Suppress("ConstantConditionIf")
+		return if (USE_MOCK_COMPASS_READINGS)
+			mockCompassFlowable()
+		else if (sensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR) != null)
 			RotationObservable(sensorManager).flow()
 		else
 			OrientationObservable(sensorManager).flow()
+	}
+
+	private fun mockCompassFlowable(): Flowable<Float> {
+		return Flowable.create({ e: FlowableEmitter<Float> ->
+			d { "creating flowable" }
+			var curr = 0f
+			val STEP = 20f
+			while (!e.isCancelled) {
+				Thread.sleep(250)
+				val increment = limit360((Math.random().toFloat() * STEP - STEP / 2))
+				curr += increment
+				e.onNext(curr)
+			}
+		}, BackpressureStrategy.LATEST)
 	}
 
 	/**

@@ -12,6 +12,7 @@ import com.oheuropa.android.model.BeaconLocation
 import com.oheuropa.android.model.BeaconLocation.CircleState.CENTRE
 import com.oheuropa.android.ui.base.LocationEnabledPresenter
 import com.oheuropa.android.ui.base.SchedulersFacade
+import com.oheuropa.android.util.GenUtils.Companion.limit360
 import io.reactivex.Observable
 import io.reactivex.disposables.Disposable
 import kotlin.math.roundToInt
@@ -135,12 +136,5 @@ class CompassPresenter(
 			}, {
 				view.showError(msg = it.message)
 			}))
-	}
-
-	private fun limit360(bearing: Float): Float {
-		var result = bearing
-		while (result < 0) result += 360
-		while (result >= 360) result -= 360
-		return result
 	}
 }
