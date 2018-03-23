@@ -40,3 +40,23 @@
 
 #Dagger2
 -dontwarn com.google.errorprone.annotations.*
+
+#EventBus
+-keepattributes *Annotation*
+-keepclassmembers class * {
+    @org.greenrobot.eventbus.Subscribe <methods>;
+}
+-keep enum org.greenrobot.eventbus.ThreadMode { *; }
+
+# Only required if you use AsyncExecutor
+-keepclassmembers class * extends org.greenrobot.eventbus.util.ThrowableFailureEvent {
+    <init>(java.lang.Throwable);
+}
+
+#fixes fro moshi/kotlin: https://github.com/square/moshi/issues/345
+-dontwarn org.jetbrains.annotations.**
+-keep class kotlin.Metadata { *; }
+-keepclassmembers class com.oheuropa.android.model.** {
+  <init>(...);
+  <fields>;
+}

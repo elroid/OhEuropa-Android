@@ -1,9 +1,9 @@
 package com.oheuropa.android
 
 import android.app.Activity
-import com.github.ajalt.timberkt.Timber
-import android.app.Application
 import android.app.Service
+import com.evernote.android.job.JobManager
+import com.github.ajalt.timberkt.Timber
 import com.oheuropa.android.injection.DaggerAppComponent
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector

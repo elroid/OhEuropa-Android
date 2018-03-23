@@ -50,26 +50,31 @@ abstract class BaseActivity : AppCompatActivity(), BaseView {
 	}
 
 	override fun showError(msgId: Int, msg: String?, fatal: Boolean) {
-		val builder = AlertDialog.Builder(this)
-		builder.setTitle(R.string.err_title)
-		when {
-			msgId != 0 -> builder.setMessage(msgId)
-			msg != null -> builder.setMessage(msg)
-			else -> {
-				builder.setMessage(R.string.err_unspecified)
-				try {
-					throw InvalidParameterException("No msg specified")
-				} catch (ex: Exception) {
-					e { "Error: ${ex.message}" }
+		v { "showError($msgId, $msg, $fatal)" }
+		try {
+			val builder = AlertDialog.Builder(this)
+			builder.setTitle(R.string.err_title)
+			when {
+				msgId != 0 -> builder.setMessage(msgId)
+				msg != null -> builder.setMessage(msg)
+				else -> {
+					builder.setMessage(R.string.err_unspecified)
+					try {
+						throw InvalidParameterException("No msg specified")
+					} catch (ex: Exception) {
+						e { "Error: ${ex.message}" }
+					}
 				}
 			}
-		}
 
-		if (fatal)
-			builder.setPositiveButton(R.string.err_quit) { _, _ -> quit() }
-		else
-			builder.setPositiveButton(R.string.err_ok) { dialog, _ -> dialog.dismiss() }
-		builder.create().show()
+			if (fatal)
+				builder.setPositiveButton(R.string.err_quit) { _, _ -> quit() }
+			else
+				builder.setPositiveButton(R.string.err_ok) { dialog, _ -> dialog.dismiss() }
+			builder.create().show()
+		} catch (ex: Throwable) {
+			e(ex) { "Error showing an error!" }
+		}
 	}
 
 	override fun quit() {
