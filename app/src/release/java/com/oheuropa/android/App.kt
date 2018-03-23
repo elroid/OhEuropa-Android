@@ -25,6 +25,9 @@ class App : BaseApp(), HasActivityInjector, HasServiceInjector {
 	@Inject lateinit var dispatchingActivityInjector: DispatchingAndroidInjector<Activity>
 	@Inject lateinit var dispatchingServiceInjector: DispatchingAndroidInjector<Service>
 
+	@Suppress("unused")//inject here so will re-schedule after reboot
+	@Inject lateinit var jobManager: JobManager
+
 	override fun onCreate() {
 		super.onCreate()
 

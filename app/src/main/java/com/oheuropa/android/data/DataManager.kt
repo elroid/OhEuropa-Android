@@ -1,6 +1,7 @@
 package com.oheuropa.android.data
 
 import com.github.ajalt.timberkt.*
+import com.oheuropa.android.data.job.RefreshBeaconsJob
 import com.oheuropa.android.data.remote.OhEuropaApiService
 import com.oheuropa.android.model.Beacon
 import io.objectbox.BoxStore
@@ -41,15 +42,15 @@ class DataManager @Inject constructor(
 		})
 	}
 
-	private fun updateBeaconList(): Completable {
+	fun updateBeaconList(): Completable {
 		return Completable.create { emitter ->
 			apiService.getBeacons()
 				.map { it.data }//get beacons from parent object
 				.subscribe({
 					val beaconBox = boxStore.boxFor(Beacon::class.java)
-					v{"Adding ${it.size} beacons to object box of size(${beaconBox.count()}): $it"}
+					v{"RefreshBeaconsJob-Adding ${it.size} beacons to object box of size(${beaconBox.count()}): $it"}
 					beaconBox.put(it)
-					v{"...done adding beacons, new size:${beaconBox.count()}"}
+					v{"RefreshBeaconsJob-...done adding beacons, new size:${beaconBox.count()}"}
 					emitter.onComplete()
 				}, {
 					emitter.onError(it)
@@ -64,6 +65,7 @@ class DataManager @Inject constructor(
 			if (count > 0) {
 				v{"no update needed, we already have $count beacons"}
 				emitter.onComplete()
+				RefreshBeaconsJob.schedule()
 			} else {
 				updateBeaconList()
 					.subscribe({ emitter.onComplete() }, { emitter.onError(it) })

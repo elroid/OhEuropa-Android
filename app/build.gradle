@@ -8,6 +8,12 @@ apply plugin: 'com.akaita.android.easylauncher'
 
 android {
     compileSdkVersion 27
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
     defaultConfig {
         applicationId "com.oheuropa.android"
         minSdkVersion 16
@@ -51,7 +57,7 @@ kapt {
 
 project.ext {
     supportLibraryVersion = "27.1.0"
-    daggerVersion = "2.13"
+    daggerVersion = "2.14.1"
     butterKnifeVersion = "8.8.1"
     rxKotlinVersion = "2.2.0"
     rxAndroidVersion = "2.0.1"
@@ -61,7 +67,7 @@ project.ext {
     supportTestVersion = "1.0.1"
     kotshiVersion = "1.0.0"
     objectboxRxVersion = "0.9.8"
-    gmsVersion = "11.8.0"
+    gmsVersion = "12.0.0"
 }
 
 dependencies {
@@ -69,13 +75,14 @@ dependencies {
 
     // UI libs /////////////////////////////////////////////////////////////////////////////////////
     implementation 'com.github.ittianyu:BottomNavigationViewEx:1.2.4'
-    compile 'org.greenrobot:eventbus:3.0.0'
-    compile 'com.android.support.constraint:constraint-layout:1.0.2'
+    implementation 'org.greenrobot:eventbus:3.0.0'
+    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
 
     // Back-end libs ///////////////////////////////////////////////////////////////////////////////
     implementation 'com.daasuu:EasingInterpolator:1.0.0' //for audio fade interpolators
     implementation "com.google.android.gms:play-services-maps:$gmsVersion"
     implementation "com.google.android.gms:play-services-location:$gmsVersion"
+    implementation 'com.evernote:android-job:1.2.5'
 
     //retrofit
     implementation "com.squareup.retrofit2:retrofit:$retrofitVersion"

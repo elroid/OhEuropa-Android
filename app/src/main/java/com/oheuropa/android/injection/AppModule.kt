@@ -1,7 +1,10 @@
 package com.oheuropa.android.injection
 
+import android.app.Application
 import android.content.Context
+import com.evernote.android.job.JobManager
 import com.oheuropa.android.data.AudioPlayer
+import com.oheuropa.android.data.job.BackgroundJobCreator
 import com.oheuropa.android.data.local.CompassProvider
 import com.oheuropa.android.data.local.LocationProvider
 import com.oheuropa.android.data.remote.OhEuropaApiService
@@ -76,5 +79,12 @@ class AppModule {
 	@Provides
 	internal fun provideCompassComponent(ctx: Context): CompassComponent {
 		return CompassProvider(ctx)
+	}
+
+	@Singleton
+	@Provides
+	fun provideJobManager(ctx: Context, jobCreator: BackgroundJobCreator) : JobManager {
+		JobManager.create(ctx).addJobCreator(jobCreator)
+		return JobManager.instance()
 	}
 }

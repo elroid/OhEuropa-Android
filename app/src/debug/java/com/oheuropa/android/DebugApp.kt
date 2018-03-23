@@ -2,6 +2,7 @@ package com.oheuropa.android
 
 import android.app.Activity
 import android.app.Service
+import com.evernote.android.job.JobManager
 import com.github.ajalt.timberkt.Timber
 import com.oheuropa.android.injection.DaggerDebugAppComponent
 import dagger.android.AndroidInjector
@@ -23,6 +24,9 @@ class DebugApp : BaseApp(), HasActivityInjector, HasServiceInjector {
 
 	@Inject lateinit var dispatchingActivityInjector: DispatchingAndroidInjector<Activity>
 	@Inject lateinit var dispatchingServiceInjector: DispatchingAndroidInjector<Service>
+
+	@Suppress("unused")//inject here so will re-schedule after reboot
+	@Inject lateinit var jobManager: JobManager
 
 	override fun onCreate() {
 		super.onCreate()
