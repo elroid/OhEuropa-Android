@@ -12,6 +12,7 @@ import com.oheuropa.android.ui.base.LocationEnabledActivity
 import com.oheuropa.android.util.ViewUtils
 import dagger.android.AndroidInjection
 import kotlinx.android.synthetic.main.activity_compass.*
+import java.text.NumberFormat
 import javax.inject.Inject
 
 /**
@@ -73,7 +74,8 @@ class CompassActivity : LocationEnabledActivity<CompassContract.Presenter>(), Co
 		runOnUiThread {
 			checkCompassVisibility(true)
 			compassView.setAngles(newNorthReading, newBeaconReading)
-			val dist = "" + newDistanceMeters
+			val nf = NumberFormat.getIntegerInstance()
+			val dist = nf.format(newDistanceMeters)
 			statusText.text = getString(R.string.beacon_dist, dist)
 		}
 	}
