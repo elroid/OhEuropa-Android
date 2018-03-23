@@ -7,6 +7,7 @@
 	>
 
 	<include
+		android:id="@+id/bottomNavigationView"
 		layout="@layout/bottom_navigation"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
@@ -20,13 +21,6 @@
 		android:layout_height="match_parent"
 		android:layout_above="@id/bottomNavigationView"
 		tools:context="com.oheuropa.android.ui.map.MapActivity"
-		/>
-
-	<View
-		android:layout_width="match_parent"
-		android:layout_height="28dp"
-		android:layout_alignParentTop="true"
-		android:background="@drawable/status_gradient_bg"
 		/>
 
 </RelativeLayout>

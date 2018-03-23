@@ -65,10 +65,6 @@ class MapActivity : LocationEnabledActivity<MapContract.Presenter>()
 		//keep screen on while viewing the map
 		window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 
-		//ensure map goes under status bar
-		window.decorView.systemUiVisibility =
-			View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-
 		val mapFragment = supportFragmentManager
 			.findFragmentById(R.id.mapFragment) as SupportMapFragment
 		mapFragment.getMapAsync(this)

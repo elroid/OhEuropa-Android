@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.Bundle
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
+import android.view.WindowManager
 import android.widget.Toast
 import com.github.ajalt.timberkt.e
 import com.github.ajalt.timberkt.v
@@ -28,6 +29,10 @@ abstract class BaseActivity : AppCompatActivity(), BaseView {
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
+
+		//ensure app is shown fullscreen
+		window.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
+
 		EventBus.getDefault().register(this)
 	}
 
