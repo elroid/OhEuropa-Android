@@ -6,7 +6,7 @@ import android.os.Bundle
 import androidx.net.toUri
 import com.oheuropa.android.R
 import com.oheuropa.android.ui.base.BottomNavActivity
-import kotlinx.android.synthetic.main.activity_info.*
+import kotlinx.android.synthetic.main.info_waves.*
 
 /**
  *
