@@ -22,17 +22,23 @@ class MapPresenter(
 	private val beaconWatcher: BeaconWatcher
 ) : LocationEnabledPresenter<MapContract.View>(mapView, locator), MapContract.Presenter {
 
+	var mapInitialised = false
+
 	override fun onConnected() {
 		d { "MapPresenter.onConnected" }
 		super.onConnected()
+		mapInitialised = false
 
 		addDisposable(beaconWatcher.followBeaconLocation(locator)
 			.subscribeOn(SchedulersFacade.io())
 			.observeOn(SchedulersFacade.ui())
 			.subscribe({
-				view.showBeacons(it.beacons)
 				view.showMyLocation(it.myLocation)
-				view.zoomTo(it.beacons, it.myLocation)
+				if (!mapInitialised) {
+					view.showBeacons(it.beacons)
+					view.zoomTo(it.beacons, it.myLocation)
+					mapInitialised = true
+				}
 			}, {
 				e(it)
 				view.showError(msg = it.message)

@@ -27,7 +27,6 @@ import com.oheuropa.android.domain.DEFAULT_MAP_ZOOM
 import com.oheuropa.android.model.Beacon
 import com.oheuropa.android.model.Coordinate
 import com.oheuropa.android.ui.base.LocationEnabledActivity
-import com.oheuropa.android.util.ViewUtils.Companion.dpToPx
 import com.oheuropa.android.util.ViewUtils.Companion.dpToPxF
 import com.oheuropa.android.util.ViewUtils.Companion.getScreenWidth
 import dagger.android.AndroidInjection
@@ -95,6 +94,9 @@ class MapActivity : LocationEnabledActivity<MapContract.Presenter>()
 			d { "recording idle zoom($currentZoom) and pos($currentCentre)" }
 		}
 
+		//remove popup directions
+		map.uiSettings.isMapToolbarEnabled = false
+
 		//apply state if we have it
 		val (centre, zoom) = prefs.restoreMapCentre()
 		if (centre.isValid()) {
@@ -118,8 +120,17 @@ class MapActivity : LocationEnabledActivity<MapContract.Presenter>()
 
 	override fun showBeacons(beacons: List<Beacon>) {
 		beacons.iterator().forEach {
-			map.addMarker(MarkerOptions().position(it.getCoordinate().toLatLng()))
+			showBeaconLocation(it.getCoordinate())
 		}
+	}
+
+	private fun showBeaconLocation(loc: Coordinate) {
+		val opts = MarkerOptions()
+		opts.position(loc.toLatLng())
+		opts.icon(createIcon(R.drawable.beacon_marker))
+		opts.anchor(0.5f, 0.5f)
+		opts.flat(true)
+		map.addMarker(opts)
 	}
 
 	private var meMarker: Marker? = null
@@ -128,9 +139,7 @@ class MapActivity : LocationEnabledActivity<MapContract.Presenter>()
 		//show blue dot
 		val opts = MarkerOptions()
 		opts.position(loc.toLatLng())
-		val drawable = getDrawable(getCtx(), R.drawable.me_marker)
-		val icon = createBitmap(drawable, dpToPx(18), dpToPx(18))
-		opts.icon(BitmapDescriptorFactory.fromBitmap(icon))
+		opts.icon(createIcon(R.drawable.me_marker))
 		opts.anchor(0.5f, 0.5f)
 		opts.flat(true)
 		meMarker?.remove()
@@ -147,13 +156,32 @@ class MapActivity : LocationEnabledActivity<MapContract.Presenter>()
 		meCircle = map.addCircle(circleOpts)
 	}
 
-	private fun createBitmap(drawable: Drawable?, width: Int, height: Int): Bitmap {
+	val bitMap = mutableMapOf<Int, BitmapDescriptor>()
+	private fun createIcon(drawableResId: Int): BitmapDescriptor {
+		if (bitMap.containsKey(drawableResId))
+			return bitMap.getValue(drawableResId)
+
+		val drawable = getDrawable(getCtx(), drawableResId)
+			?: throw IllegalArgumentException("Drawable is null")
+		val bitmap = createBitmap(drawable)
+		val canvas = Canvas(bitmap)
+		drawable.setBounds(0, 0, canvas.width, canvas.height)
+		drawable.draw(canvas)
+		val icon = createBitmap(drawable)
+		val descriptor = BitmapDescriptorFactory.fromBitmap(icon)
+		bitMap.put(drawableResId, descriptor)
+		return descriptor
+	}
+
+	private fun createBitmap(drawable: Drawable): Bitmap {
 		if (drawable is BitmapDrawable)
 			return drawable.bitmap
-		val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+
+		val bitmap = Bitmap.createBitmap(drawable.intrinsicWidth, drawable.intrinsicHeight,
+			Bitmap.Config.ARGB_8888)
 		val canvas = Canvas(bitmap)
-		drawable?.setBounds(0, 0, canvas.width, canvas.height)
-		drawable?.draw(canvas)
+		drawable.setBounds(0, 0, canvas.width, canvas.height)
+		drawable.draw(canvas)
 		return bitmap
 	}
 

@@ -109,11 +109,12 @@ class LocationProvider constructor(private val ctx: Context) : LocationComponent
 		return Observable.create({ e ->
 			Thread({
 				val streetEnd = Coordinate(51.469002, -2.550491)
-				val chocEnd = Coordinate(51.468641, -2.551070)
+				//val chocEnd = Coordinate(51.468641, -2.551070)
+				val cemeteryGate = Coordinate(51.468296, -2.554005)
 				val steps = 16
 				val delayMs = 2000L
-				val coordinateList = split(chocEnd, streetEnd, steps)
-				coordinateList.addAll(split(streetEnd, chocEnd, steps))
+				val coordinateList = split(cemeteryGate, streetEnd, steps)
+				coordinateList.addAll(split(streetEnd, cemeteryGate, steps))
 
 				while (!e.isDisposed) {
 					coordinateList.forEach {
@@ -141,9 +142,7 @@ class LocationProvider constructor(private val ctx: Context) : LocationComponent
 		val lats = split(start.latitude, end.latitude, steps)
 		val longs = split(start.longitude, end.longitude, steps)
 		val result = mutableListOf<Coordinate>()
-		for (i in 0 until steps) {
-			result.add(Coordinate(lats[i], longs[i]))
-		}
+		(0 until steps).mapTo(result) { Coordinate(lats[it], longs[it], Math.random()*50) }
 		return result
 	}
 
