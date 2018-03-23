@@ -24,8 +24,8 @@ class CompassWaveView constructor(context: Context, attrs: AttributeSet? = null)
 	override fun getOuterCircleColour() = R.color.compass_inactive
 	override fun getInnerCircleColour() = R.color.compass_active
 
-	override fun onSizeChanged(measuredWidth: Int, measuredHeight: Int, oldWidth: Int, oldh: Int) {
-		super.onSizeChanged(measuredWidth, measuredHeight, oldWidth, oldh)
+	override fun onSizeChanged(measuredWidth: Int, measuredHeight: Int, oldWidth: Int, oldHeight: Int) {
+		super.onSizeChanged(measuredWidth, measuredHeight, oldWidth, oldHeight)
 
 		//retrieve, resize and tint waves image
 		val bigWavesBmp = BitmapFactory.decodeResource(resources, R.drawable.compass_inner_waves)

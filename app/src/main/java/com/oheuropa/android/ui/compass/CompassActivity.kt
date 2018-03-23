@@ -49,10 +49,6 @@ class CompassActivity : LocationEnabledActivity<CompassContract.Presenter>(), Co
 				View.SYSTEM_UI_FLAG_LAYOUT_STABLE or
 				View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or
 				View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
-
-		//adjust compass size to screenWidth
-		val sw = ViewUtils.getScreenWidth()
-		ViewUtils.setDimensions(compassFrame, sw, sw)
 	}
 
 	private var showingCompass = true
@@ -81,7 +77,7 @@ class CompassActivity : LocationEnabledActivity<CompassContract.Presenter>(), Co
 	}
 
 	override fun showSongInfo(performerName: String, songTitle: String) {
-		d { "showSongInfo($songTitle, $performerName" }
+		//d { "showSongInfo($songTitle, $performerName" }
 		runOnUiThread {
 			checkCompassVisibility(false)
 			statusText.text = getString(R.string.singing, performerName, songTitle)

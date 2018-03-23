@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:id="@+id/compassWaves"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	tools:showIn="@layout/activity_compass"
+	>
+
+	<ImageView
+		android:id="@+id/waves"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_alignParentTop="true"
+		android:adjustViewBounds="true"
+		android:src="@drawable/compass_white_waves"
+		/>
+
+	<!--top left bubble-->
+	<android.support.constraint.Guideline
+		android:id="@+id/left_left_guideline"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:orientation="vertical"
+		app:layout_constraintGuide_percent=".15"
+		/>
+
+	<android.support.constraint.Guideline
+		android:id="@+id/left_bottom_guideline"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:orientation="horizontal"
+		app:layout_constraintGuide_percent=".13"
+		/>
+
+	<ImageView
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		app:layout_constraintLeft_toLeftOf="@+id/left_left_guideline"
+		app:layout_constraintTop_toTopOf="@+id/left_bottom_guideline"
+		app:srcCompat="@drawable/bubble_blue"
+		/>
+
+	<!--bottom left bubble-->
+	<android.support.constraint.Guideline
+		android:id="@+id/bl_left_guideline"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:orientation="vertical"
+		app:layout_constraintGuide_percent=".04"
+		/>
+
+	<android.support.constraint.Guideline
+		android:id="@+id/bl_top_guideline"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:orientation="horizontal"
+		app:layout_constraintGuide_percent=".72"
+		/>
+
+	<ImageView
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		app:layout_constraintLeft_toLeftOf="@+id/bl_left_guideline"
+		app:layout_constraintTop_toTopOf="@+id/bl_top_guideline"
+		app:srcCompat="@drawable/bubble_blue"
+		/>
+
+	<!--right bubble-->
+	<android.support.constraint.Guideline
+		android:id="@+id/r_right_guideline"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:orientation="vertical"
+		app:layout_constraintGuide_percent=".97"
+		/>
+
+	<android.support.constraint.Guideline
+		android:id="@+id/r_top_guideline"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:orientation="horizontal"
+		app:layout_constraintGuide_percent=".23"
+		/>
+
+	<ImageView
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		app:layout_constraintRight_toRightOf="@+id/r_right_guideline"
+		app:layout_constraintTop_toTopOf="@+id/r_top_guideline"
+		app:srcCompat="@drawable/bubble_blue"
+		/>
+</android.support.constraint.ConstraintLayout>
