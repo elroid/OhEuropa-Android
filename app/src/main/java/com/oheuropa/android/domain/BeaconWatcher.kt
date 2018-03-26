@@ -1,7 +1,6 @@
 package com.oheuropa.android.domain
 
 import com.fernandocejas.frodo.annotation.RxLogObservable
-import com.github.ajalt.timberkt.d
 import com.oheuropa.android.data.DataManager
 import com.oheuropa.android.model.Beacon
 import com.oheuropa.android.model.BeaconLocation
@@ -26,8 +25,7 @@ class BeaconWatcher @Inject constructor(
 ) {
 	@RxLogObservable
 	fun followBeaconLocation(locator: LocationComponent): Observable<BeaconLocation> {
-		d { "followBeaconLocation" }
-		val beaconObservable = when(USE_MOCK_BEACON_LOCATIONS) {
+		val beaconObservable = when (USE_MOCK_BEACON_LOCATIONS) {
 			true -> dataManager.getTestBeaconList()
 			false -> dataManager.followBeaconList()
 		}

@@ -50,6 +50,7 @@ class BeaconWatcherTest : RoboelectricTest() {
 			})
 		val dataManager = mock<DataManager> {
 			on { followBeaconList() }.doReturn(listObs)
+			on { getTestBeaconList() }.doReturn(listObs)
 		}
 
 		val beaconWatcher = BeaconWatcher(dataManager)

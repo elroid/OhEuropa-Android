@@ -23,7 +23,13 @@ data class AudioStatusResponse(val current_track: TrackInfo) {
 			try {
 				val firstQuote = title.indexOf("\"")
 				val secondQuote = title.lastIndexOf("\"")
-				return title.substring(firstQuote + 1, secondQuote).trim()
+				if(firstQuote != -1 && secondQuote != -1)
+					return title.substring(firstQuote + 1, secondQuote).trim()
+				else {
+					//look for anything agfter "singing"
+					val sg = "singing"
+					return title.substring(title.indexOf(sg)+sg.length).trim()
+				}
 			} catch (ex: Exception) {
 				w(ex) { "Error parsing song title from $title" }
 			}

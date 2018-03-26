@@ -21,14 +21,21 @@ import kotlin.test.assertTrue
 class AudioStatusResponseTest : RoboelectricTest() {
 
 	private val james = AudioStatusResponse(current_track = AudioStatusResponse.TrackInfo("James Stenhouse - singing \"City Lights\""))
+	private val luke = AudioStatusResponse(current_track = AudioStatusResponse.TrackInfo("Luke Emery - singing Lovers and Friends"))
+	private val lukas = AudioStatusResponse(current_track = AudioStatusResponse.TrackInfo("Lukus Robbins - singing Landslide "))
+
 
 	@Test
 	fun testTitle(){
 		assertEquals("City Lights", james.current_track.getSongTitle())
+		assertEquals("Lovers and Friends", luke.current_track.getSongTitle())
+		assertEquals("Landslide", lukas.current_track.getSongTitle())
 	}
 
 	@Test
 	fun testPerformer(){
 		assertEquals("James Stenhouse", james.current_track.getPerformerName())
+		assertEquals("Luke Emery", luke.current_track.getPerformerName())
+		assertEquals("Lukus Robbins", lukas.current_track.getPerformerName())
 	}
 }
