@@ -5,6 +5,7 @@ import com.github.ajalt.timberkt.v
 import com.github.ajalt.timberkt.w
 import com.oheuropa.android.data.job.RefreshBeaconsJob
 import com.oheuropa.android.data.remote.OhEuropaApiService
+import com.oheuropa.android.domain.Constants
 import com.oheuropa.android.domain.USE_MOCK_BEACON_LOCATIONS
 import com.oheuropa.android.model.Beacon
 import io.objectbox.BoxStore
@@ -32,6 +33,7 @@ class DataManager @Inject constructor(
 
 	fun followBeaconList(): Observable<List<Beacon>> {
 		return when (USE_MOCK_BEACON_LOCATIONS) {
+		return when (Constants.isDebug(USE_MOCK_BEACON_LOCATIONS)) {
 			false -> {
 				val beaconBox = boxStore.boxFor(Beacon::class.java)
 				val query = beaconBox.query().build()

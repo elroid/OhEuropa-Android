@@ -7,6 +7,7 @@ import com.github.ajalt.timberkt.w
 import com.github.ajalt.timberkt.wtf
 import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.*
+import com.oheuropa.android.domain.Constants
 import com.oheuropa.android.domain.LocationComponent
 import com.oheuropa.android.domain.USE_MOCK_USER_LOCATION
 import com.oheuropa.android.model.Coordinate
@@ -64,7 +65,7 @@ class LocationProvider constructor(private val ctx: Context) : LocationComponent
 	}
 
 	private fun createLocationObserver(): Observable<Coordinate> {
-		return when (USE_MOCK_USER_LOCATION) {
+		return when (Constants.isDebug(USE_MOCK_USER_LOCATION)) {
 			true -> {
 				createWanderTest()//test user wandering back and forth
 				//createStandListenTest()//tes user listening in centre

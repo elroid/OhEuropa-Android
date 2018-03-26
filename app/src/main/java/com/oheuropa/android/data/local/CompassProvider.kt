@@ -8,6 +8,7 @@ import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import com.github.ajalt.timberkt.d
 import com.oheuropa.android.domain.CompassComponent
+import com.oheuropa.android.domain.Constants
 import com.oheuropa.android.domain.USE_MOCK_COMPASS_READINGS
 import com.oheuropa.android.util.GenUtils.Companion.limit360
 import io.reactivex.BackpressureStrategy
@@ -35,7 +36,7 @@ class CompassProvider constructor(ctx: Context) : CompassComponent {
 
 	override fun listenToCompass(): Flowable<Float> {
 		@Suppress("ConstantConditionIf")
-		return if (USE_MOCK_COMPASS_READINGS)
+		return if (Constants.isDebug(USE_MOCK_COMPASS_READINGS))
 			mockCompassFlowable()
 		else if (sensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR) != null)
 			RotationObservable(sensorManager).flow()

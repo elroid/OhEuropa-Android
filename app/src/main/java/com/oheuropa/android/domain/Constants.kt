@@ -1,5 +1,7 @@
 package com.oheuropa.android.domain
 
+import com.oheuropa.android.BuildConfig
+
 /**
  *
  * Class: com.oheuropa.android.domain.Constants
@@ -23,11 +25,21 @@ const val REQUEST_PERMISSIONS = 668
 
 const val TRACK_NAME_UPDATE_DELAY_MS = 10000L
 
-const val USE_MOCK_BEACON_LOCATIONS = true
-const val USE_MOCK_USER_LOCATION = true
-const val USE_MOCK_COMPASS_READINGS = false
-
 const val VOL_MAX_STATIC = 75
 const val VOL_MAX_RADIO = 75
 const val VOL_MIN_RADIO = 15
 const val VOL_MIN = 0
+
+//Debug constants - to only have an effect on debug builds - by using Constants.isDebug(*)
+const val USE_MOCK_BEACON_LOCATIONS = true
+const val USE_MOCK_USER_LOCATION = true
+const val USE_MOCK_COMPASS_READINGS = false
+const val LOG_HTTP = true
+
+class Constants{
+	companion object {
+		fun isDebug(constant:Boolean):Boolean{
+			return constant && BuildConfig.DEBUG
+		}
+	}
+}
