@@ -1,6 +1,5 @@
 package com.oheuropa.android.injection
 
-import android.app.Application
 import android.content.Context
 import com.evernote.android.job.JobManager
 import com.oheuropa.android.data.AudioPlayer
@@ -17,13 +16,12 @@ import com.oheuropa.android.model.MyObjectBox
 import dagger.Module
 import dagger.Provides
 import io.objectbox.BoxStore
+import okhttp3.Cache
+import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.moshi.MoshiConverterFactory
 import javax.inject.Singleton
-import okhttp3.Cache
-import okhttp3.OkHttpClient
-
 
 
 /**
@@ -65,7 +63,6 @@ class AppModule {
 		return MyObjectBox.builder().androidContext(ctx).build()
 	}
 
-	@Singleton
 	@Provides
 	internal fun provideAudioComponent(ctx: Context): AudioComponent {
 		return AudioPlayer(ctx)
@@ -85,13 +82,13 @@ class AppModule {
 
 	@Singleton
 	@Provides
-	internal fun provideBeaconWatcher(dataManager: DataManager, locator:LocationComponent): BeaconWatcher {
+	internal fun provideBeaconWatcher(dataManager: DataManager, locator: LocationComponent): BeaconWatcher {
 		return BeaconWatcher(dataManager, locator)
 	}
 
 	@Singleton
 	@Provides
-	fun provideJobManager(ctx: Context, jobCreator: BackgroundJobCreator) : JobManager {
+	fun provideJobManager(ctx: Context, jobCreator: BackgroundJobCreator): JobManager {
 		JobManager.create(ctx).addJobCreator(jobCreator)
 		return JobManager.instance()
 	}

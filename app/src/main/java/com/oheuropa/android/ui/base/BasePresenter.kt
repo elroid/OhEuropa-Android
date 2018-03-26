@@ -1,6 +1,6 @@
 package com.oheuropa.android.ui.base
 
-import com.github.ajalt.timberkt.d
+import com.github.ajalt.timberkt.v
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 
@@ -31,12 +31,11 @@ abstract class BasePresenter<out V : BaseView> constructor(val view: V) : BasePr
 	 * Subclasses may override this.
 	 */
 	override fun stop() {
-		d { "stop(): clearing disposables" }
+		v { "stop(): clearing disposables" }
 		disposables.clear()
 	}
 
 	override fun addDisposable(disposable: Disposable): Disposable {
-		d { "addDisposable($disposable)" }
 		disposables.add(disposable)
 		return disposable
 	}

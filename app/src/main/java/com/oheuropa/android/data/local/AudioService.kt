@@ -11,6 +11,7 @@ import android.os.IBinder
 import com.github.ajalt.timberkt.d
 import com.github.ajalt.timberkt.e
 import com.github.ajalt.timberkt.i
+import com.github.ajalt.timberkt.v
 import com.oheuropa.android.domain.AudioComponent
 import com.oheuropa.android.domain.AudioComponent.State.*
 import com.oheuropa.android.domain.BeaconWatcher
@@ -31,7 +32,7 @@ import javax.inject.Inject
  * @author <a href="mailto:e@elroid.com">Elliot Long</a>
  *         Copyright (c) 2018 Elroid Ltd. All rights reserved.
  */
-class AudioService : Service() {
+class  AudioService : Service() {
 
 	@Inject lateinit var audioComponent: AudioComponent
 	@Inject lateinit var beaconWatcher: BeaconWatcher
@@ -56,12 +57,12 @@ class AudioService : Service() {
 
 		class AudioConnection : ServiceConnection {
 			override fun onServiceConnected(name: ComponentName, binder: IBinder) {
-				d { "onServiceConnected($name, $binder)" }
+				v { "onServiceConnected($name, $binder)" }
 				boundActivities++
 			}
 
 			override fun onServiceDisconnected(name: ComponentName?) {
-				d { "onServiceDisconnected($name)" }
+				v { "onServiceDisconnected($name)" }
 				boundActivities--
 			}
 
@@ -83,7 +84,7 @@ class AudioService : Service() {
 	}
 
 	override fun onBind(intent: Intent?): IBinder {
-		d { "onBind: $intent" }
+		v { "onBind: $intent" }
 		return binder
 	}
 
@@ -102,7 +103,7 @@ class AudioService : Service() {
 
 
 	private fun reactTo(beaconLocation: BeaconLocation) {
-		i { "got new BeaconLocation: $beaconLocation" }
+		v { "got new BeaconLocation: $beaconLocation" }
 		when (beaconLocation.getCircleState()) {
 			CENTRE -> audioComponent.setState(SIGNAL)
 			INNER -> audioComponent.setState(STATIC_MIX)
@@ -110,17 +111,17 @@ class AudioService : Service() {
 			NONE -> {
 				audioComponent.setState(QUIET)
 				if (boundActivities == 0) {
-					i { "out of range, and no bound activities, so stop listening" }
+					v { "out of range, and no bound activities, so stop listening" }
 					stopSelf()
 				} else {
-					i { "out of range, but we have $boundActivities bound activities, so keep listening" }
+					v { "out of range, but we have $boundActivities bound activities, so keep listening" }
 				}
 			}
 		}
 	}
 
 	override fun onDestroy() {
-		i { "service destroyed" }
+		v { "service destroyed" }
 		audioComponent.deactivate()
 		beaconListener?.dispose()
 		super.onDestroy()

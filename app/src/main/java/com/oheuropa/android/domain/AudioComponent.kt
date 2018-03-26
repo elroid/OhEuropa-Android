@@ -16,7 +16,7 @@ interface AudioComponent {
 		QUIET, STATIC, STATIC_MIX, SIGNAL
 	}
 
-	fun setState(state: AudioComponent.State)
+	fun setState(newState: AudioComponent.State)
 
 	fun activate()
 

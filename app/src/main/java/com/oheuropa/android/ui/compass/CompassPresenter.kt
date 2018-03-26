@@ -1,8 +1,7 @@
 package com.oheuropa.android.ui.compass
 
-import com.github.ajalt.timberkt.d
 import com.github.ajalt.timberkt.e
-import com.github.ajalt.timberkt.i
+import com.github.ajalt.timberkt.v
 import com.oheuropa.android.data.remote.OhEuropaApiService
 import com.oheuropa.android.domain.BeaconWatcher
 import com.oheuropa.android.domain.CompassComponent
@@ -40,14 +39,13 @@ class CompassPresenter(
 
 
 	private fun getTrackName() {
-		d { "getTrackName..." }
 		addDisposable(apiService.getAudioStatus()
 			.subscribeOn(SchedulersFacade.io())
 			.observeOn(SchedulersFacade.io())
 			.subscribe({
 				performerName = it.current_track.getPerformerName()
 				songTitle = it.current_track.getSongTitle()
-				d { "got new song title($songTitle) and performer($performerName)" }
+				v { "got new song title($songTitle) and performer($performerName)" }
 				if (beaconLocation?.getCircleState() == BeaconLocation.CircleState.CENTRE) {
 					view.showSongInfo(performerName, songTitle)
 				}
@@ -77,7 +75,7 @@ class CompassPresenter(
 
 	private fun stopActiveNamePolling() {
 		if (namePollDisposable != null) {
-			d { "stopActiveNamePolling, disposable:$namePollDisposable" }
+			v { "stopActiveNamePolling, disposable:$namePollDisposable" }
 			namePollDisposable?.dispose()
 			namePollDisposable = null
 		}
@@ -100,7 +98,7 @@ class CompassPresenter(
 			.subscribeOn(SchedulersFacade.io())
 			.observeOn(SchedulersFacade.io())
 			.subscribe({
-				i { "got new BeaconLocation: $it" }
+				v { "got new BeaconLocation: $it" }
 				beaconLocation = it
 				checkStatus()
 			}, {

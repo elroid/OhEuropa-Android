@@ -33,29 +33,32 @@ class AudioPlayer @Inject constructor(ctx: Context) : AudioComponent {
 
 	private val staticAudio = StaticAudio(ctx)
 	private val radioAudio = RadioAudio(ctx)
+	private var currentState = QUIET
 
-	override fun setState(state: AudioComponent.State) {
-		v { "setState:$state" }
-		Thread().run {
-			when (state) {
-				QUIET -> {
-					staticAudio.fadeTo(VOL_MIN)
-					radioAudio.fadeTo(VOL_MIN)
+	override fun setState(newState: AudioComponent.State) {
+		v { "setState:$newState" }
+		if (currentState != newState)
+			Thread().run {
+				when (newState) {
+					QUIET -> {
+						staticAudio.fadeTo(VOL_MIN)
+						radioAudio.fadeTo(VOL_MIN)
+					}
+					STATIC -> {
+						staticAudio.fadeTo(VOL_MAX_STATIC)
+						radioAudio.fadeTo(VOL_MIN)
+					}
+					STATIC_MIX -> {
+						staticAudio.fadeTo(VOL_MAX_STATIC)
+						radioAudio.fadeTo(VOL_MIN_RADIO)
+					}
+					SIGNAL -> {
+						staticAudio.fadeTo(VOL_MIN)
+						radioAudio.fadeTo(VOL_MAX_RADIO)
+					}
 				}
-				STATIC -> {
-					staticAudio.fadeTo(VOL_MAX_STATIC)
-					radioAudio.fadeTo(VOL_MIN)
-				}
-				STATIC_MIX -> {
-					staticAudio.fadeTo(VOL_MAX_STATIC)
-					radioAudio.fadeTo(VOL_MIN_RADIO)
-				}
-				SIGNAL -> {
-					staticAudio.fadeTo(VOL_MIN)
-					radioAudio.fadeTo(VOL_MAX_RADIO)
-				}
+				currentState = newState
 			}
-		}
 	}
 
 	override fun activate() {
@@ -71,13 +74,14 @@ class AudioPlayer @Inject constructor(ctx: Context) : AudioComponent {
 
 	class RadioAudio(ctx: Context) : Audio(ctx) {
 		override fun createMediaPlayer(): MediaPlayer {
+			v { "creating radio player" }
 			val mp = MediaPlayer.create(ctx, RADIO_STREAM_URL.toUri())
 			prepared = true
 			return mp
 		}
 
 		override fun name(): String {
-			return "RadioAudio: $mediaPlayer"
+			return "RadioAudio"//: $mediaPlayer"
 		}
 	}
 
@@ -98,7 +102,12 @@ class AudioPlayer @Inject constructor(ctx: Context) : AudioComponent {
 		private var volume = 0
 			set(vol) {
 				val newVol = 1 - (Math.log(MAX_VOLUME - volume) / Math.log(MAX_VOLUME)).toFloat()
-				mediaPlayer.setVolume(newVol, newVol)
+				try {
+					//if(mediaPlayer.isPlaying)
+					mediaPlayer.setVolume(newVol, newVol)
+				} catch (e: Exception) {
+					w { "Unable to set volume, media player is not in correct currentState" }
+				}
 				field = vol
 			}
 		protected val mediaPlayer: MediaPlayer by lazy { createAudioPlayer() }
@@ -106,8 +115,7 @@ class AudioPlayer @Inject constructor(ctx: Context) : AudioComponent {
 		private var volumeAnimator: ValueAnimator? = null
 
 		private fun createAudioPlayer(): MediaPlayer {
-			val mediaPlayer = createMediaPlayer()
-			setType(mediaPlayer)
+			return createMediaPlayer()
 			/*mediaPlayer.setOnCompletionListener { Timber.d("${name()} complete") }
 			mediaPlayer.setOnInfoListener { _, what, extra ->
 				Timber.d("${name()} info: what($what) extra($extra)")
@@ -116,18 +124,21 @@ class AudioPlayer @Inject constructor(ctx: Context) : AudioComponent {
 			mediaPlayer.setOnErrorListener { _, what, extra ->
 				Timber.d("${name()} error: what($what) extra($extra)")
 				true
-			}*/
-			return mediaPlayer
+			}
+			return mediaPlayer*/
 		}
 
 		abstract fun createMediaPlayer(): MediaPlayer
 		abstract fun name(): String
 
 		private fun stop() {
+			d { "stopping audio..." }
 			mediaPlayer.stop()
+			mediaPlayer.reset()
 			prepared = false
 			volumeAnimator?.cancel()
 			volume = 0
+			mediaPlayer.release()
 		}
 
 		fun stopAfterFade() {
@@ -135,7 +146,7 @@ class AudioPlayer @Inject constructor(ctx: Context) : AudioComponent {
 				fadeTo(0)
 				ViewUtils.handler().postDelayed({
 					stop()
-				}, FADE_DURATION_MS)
+				}, (FADE_DURATION_MS * 1.1).toLong())
 			} else
 				stop()
 		}
@@ -156,11 +167,12 @@ class AudioPlayer @Inject constructor(ctx: Context) : AudioComponent {
 			v { "play(${name()})" }
 			if (!prepared) {
 				try {
-					d { "media player is stopped(playing:${mediaPlayer.isPlaying}), preparing..." }
+					v { "media player is stopped(playing:${mediaPlayer.isPlaying}), preparing..." }
 					mediaPlayer.setOnPreparedListener({ mp ->
 						prepared = true
 						onPrepared(mp)
 					})
+					setType(mediaPlayer)
 					mediaPlayer.prepareAsync()
 				} catch (e: Exception) {
 					w { "Ignoring prepare error" }
@@ -171,9 +183,10 @@ class AudioPlayer @Inject constructor(ctx: Context) : AudioComponent {
 		}
 
 		private fun onPrepared(mediaPlayer: MediaPlayer) {
-			d { "onPrepared(${name()})" }
+			v { "onPrepared(${name()})" }
 			mediaPlayer.start()
 			mediaPlayer.setVolume(0f, 0f)
+
 		}
 
 		fun pause() {
@@ -187,7 +200,7 @@ class AudioPlayer @Inject constructor(ctx: Context) : AudioComponent {
 
 
 		fun fadeTo(targetVolume: Int) {
-			//v { "${name()}.fadeTo($targetVolume) from $volume" }
+			v { "${name()}.fadeTo($targetVolume) from $volume" }
 			if (!mediaPlayer.isPlaying && targetVolume > 0)
 				play(mediaPlayer)
 			if (targetVolume != volume) {
@@ -231,7 +244,7 @@ class AudioPlayer @Inject constructor(ctx: Context) : AudioComponent {
 		private fun throttleVolume(vol: Float) {
 			val now = System.currentTimeMillis()
 			if (now > lastUpdate + MIN_VOLUME_INTERVAL_MS) {
-				//Timber.d("Setting ${name()} vol: $vol")
+				//v { "Setting ${name()} vol: $vol" }
 				volume = vol.roundToInt()
 				lastUpdate = now
 			}
