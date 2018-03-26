@@ -29,7 +29,7 @@ class MapPresenter(
 		super.onConnected()
 		mapInitialised = false
 
-		addDisposable(beaconWatcher.followBeaconLocation(locator)
+		addDisposable(beaconWatcher.followBeaconLocation()
 			.subscribeOn(SchedulersFacade.io())
 			.observeOn(SchedulersFacade.ui())
 			.subscribe({

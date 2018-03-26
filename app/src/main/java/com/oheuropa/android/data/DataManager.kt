@@ -2,8 +2,10 @@ package com.oheuropa.android.data
 
 import com.fernandocejas.frodo.annotation.RxLogObservable
 import com.github.ajalt.timberkt.v
+import com.github.ajalt.timberkt.w
 import com.oheuropa.android.data.job.RefreshBeaconsJob
 import com.oheuropa.android.data.remote.OhEuropaApiService
+import com.oheuropa.android.domain.USE_MOCK_BEACON_LOCATIONS
 import com.oheuropa.android.model.Beacon
 import io.objectbox.BoxStore
 import io.objectbox.rx.RxQuery
@@ -29,18 +31,21 @@ class DataManager @Inject constructor(
 ) {
 
 	fun followBeaconList(): Observable<List<Beacon>> {
-		val beaconBox = boxStore.boxFor(Beacon::class.java)
-		val query = beaconBox.query().build()
-		return RxQuery.observable(query)
-	}
-
-	fun getTestBeaconList(): Observable<List<Beacon>> {
-		return Observable.create({ it: ObservableEmitter<List<Beacon>> ->
-			val beacons2 = ArrayList<Beacon>(2)
-			beacons2.add(Beacon(name = "ChocFactory", id = 10, lat = 51.468260f, lng = -2.554214f))
-			beacons2.add(Beacon(name = "StreetEnd", id = 10, lat = 51.469125f, lng = -2.550244f))
-			it.onNext(beacons2)
-		})
+		return when (USE_MOCK_BEACON_LOCATIONS) {
+			false -> {
+				val beaconBox = boxStore.boxFor(Beacon::class.java)
+				val query = beaconBox.query().build()
+				RxQuery.observable(query)
+			}
+			true -> {
+				Observable.create({ it: ObservableEmitter<List<Beacon>> ->
+					val beacons2 = ArrayList<Beacon>(2)
+					beacons2.add(Beacon(name = "ChocFactory", id = 10, lat = 51.468260f, lng = -2.554214f))
+					beacons2.add(Beacon(name = "StreetEnd", id = 10, lat = 51.469125f, lng = -2.550244f))
+					it.onNext(beacons2)
+				})
+			}
+		}
 	}
 
 	@RxLogObservable

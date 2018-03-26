@@ -12,7 +12,6 @@ import com.github.ajalt.timberkt.w
 import com.google.android.gms.common.api.ResolvableApiException
 import com.oheuropa.android.R
 import com.oheuropa.android.data.local.AudioService
-import com.oheuropa.android.domain.LocationComponent
 import com.oheuropa.android.domain.REQUEST_CHECK_SETTINGS
 import com.oheuropa.android.domain.REQUEST_PERMISSIONS
 
@@ -82,7 +81,7 @@ abstract class LocationEnabledActivity<Pres : LocationEnabledPres>
 	}
 
 	private var audioConnection: AudioService.Companion.AudioConnection? = null
-	override fun startAudioService(locator: LocationComponent) {
+	override fun startAudioService() {
 		audioConnection = AudioService.bindService(this)
 	}
 

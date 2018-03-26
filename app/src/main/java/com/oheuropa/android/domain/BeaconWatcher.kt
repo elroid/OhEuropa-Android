@@ -1,6 +1,8 @@
 package com.oheuropa.android.domain
 
 import com.fernandocejas.frodo.annotation.RxLogObservable
+import com.github.ajalt.timberkt.i
+import com.github.ajalt.timberkt.v
 import com.oheuropa.android.data.DataManager
 import com.oheuropa.android.model.Beacon
 import com.oheuropa.android.model.BeaconLocation
@@ -8,7 +10,6 @@ import com.oheuropa.android.model.Coordinate
 import io.reactivex.Observable
 import io.reactivex.functions.BiFunction
 import java.util.*
-import javax.inject.Inject
 
 
 /**
@@ -20,27 +21,31 @@ import javax.inject.Inject
  * @author <a href="mailto:e@elroid.com">Elliot Long</a>
  *         Copyright (c) 2018 Elroid Ltd. All rights reserved.
  */
-class BeaconWatcher @Inject constructor(
-	private val dataManager: DataManager
+class BeaconWatcher constructor(
+	private val dataManager: DataManager,
+	private val locator: LocationComponent
 ) {
 	@RxLogObservable
-	fun followBeaconLocation(locator: LocationComponent): Observable<BeaconLocation> {
-		val beaconObservable = when (USE_MOCK_BEACON_LOCATIONS) {
-			true -> dataManager.getTestBeaconList()
-			false -> dataManager.followBeaconList()
-		}
-		return getBeaconLocationObservable(beaconObservable, locator.locationListener())
+	fun followBeaconLocation(): Observable<BeaconLocation> {
+		return beaconLocationObservable
 	}
 
-	private fun getBeaconLocationObservable(
-		allBeacons: Observable<List<Beacon>>,
-		currentLocation: Observable<Coordinate>): Observable<BeaconLocation> {
+	private val beaconLocationObservable: Observable<BeaconLocation> by lazy {
+		createBeaconLocationObservable()
+	}
+
+	private fun createBeaconLocationObservable(): Observable<BeaconLocation> {
+		i { "CREATING beaconObservable" }
+		val allBeacons = dataManager.followBeaconList()
+		val currentLocation = locator.locationListener()
 		return Observable.combineLatest<List<Beacon>, Coordinate, BeaconLocation>(allBeacons,
 			currentLocation,
 			BiFunction<List<Beacon>, Coordinate, BeaconLocation> { beacons, location ->
 				//d { "got beacons($beacons) and location($location)" }
 				Collections.sort<Beacon>(beacons, BeaconDistanceComparator(location))
-				BeaconLocation(beacons, location)
+				val result = BeaconLocation(beacons, location)
+				v { "broadcasting:$result" }
+				result
 			})
 	}
 

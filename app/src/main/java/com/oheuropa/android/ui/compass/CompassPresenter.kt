@@ -96,7 +96,7 @@ class CompassPresenter(
 		checkStatus()
 
 		//watch beacons and keep beaconLocation var updated
-		addDisposable(beaconWatcher.followBeaconLocation(locator)
+		addDisposable(beaconWatcher.followBeaconLocation()
 			.subscribeOn(SchedulersFacade.io())
 			.observeOn(SchedulersFacade.io())
 			.subscribe({

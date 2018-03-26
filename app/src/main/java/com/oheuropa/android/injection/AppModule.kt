@@ -4,11 +4,13 @@ import android.app.Application
 import android.content.Context
 import com.evernote.android.job.JobManager
 import com.oheuropa.android.data.AudioPlayer
+import com.oheuropa.android.data.DataManager
 import com.oheuropa.android.data.job.BackgroundJobCreator
 import com.oheuropa.android.data.local.CompassProvider
 import com.oheuropa.android.data.local.LocationProvider
 import com.oheuropa.android.data.remote.OhEuropaApiService
 import com.oheuropa.android.domain.AudioComponent
+import com.oheuropa.android.domain.BeaconWatcher
 import com.oheuropa.android.domain.CompassComponent
 import com.oheuropa.android.domain.LocationComponent
 import com.oheuropa.android.model.MyObjectBox
@@ -71,7 +73,7 @@ class AppModule {
 
 	@Singleton
 	@Provides
-	internal fun provideLocationProvider(ctx: Context): LocationComponent {
+	internal fun provideLocationComponent(ctx: Context): LocationComponent {
 		return LocationProvider(ctx)
 	}
 
@@ -79,6 +81,12 @@ class AppModule {
 	@Provides
 	internal fun provideCompassComponent(ctx: Context): CompassComponent {
 		return CompassProvider(ctx)
+	}
+
+	@Singleton
+	@Provides
+	internal fun provideBeaconWatcher(dataManager: DataManager, locator:LocationComponent): BeaconWatcher {
+		return BeaconWatcher(dataManager, locator)
 	}
 
 	@Singleton

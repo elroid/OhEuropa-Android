@@ -2,6 +2,7 @@ package com.oheuropa.android.data.local
 
 import android.content.Context
 import com.github.ajalt.timberkt.d
+import com.github.ajalt.timberkt.v
 import com.github.ajalt.timberkt.w
 import com.github.ajalt.timberkt.wtf
 import com.google.android.gms.common.api.ResolvableApiException
@@ -12,6 +13,7 @@ import com.oheuropa.android.model.Coordinate
 import com.oheuropa.android.util.ViewUtils
 import io.reactivex.Observable
 import io.reactivex.ObservableEmitter
+import io.reactivex.disposables.Disposable
 
 /**
  *
@@ -25,30 +27,22 @@ import io.reactivex.ObservableEmitter
 class LocationProvider constructor(private val ctx: Context) : LocationComponent {
 
 	private var fusedLocationClient = LocationServices.getFusedLocationProviderClient(ctx)
-	private var locationObserver: Observable<Coordinate>? = null
-	private lateinit var locationCallback: LocationCallback
+	private val locationObserver: Observable<Coordinate> by lazy { createLocationObserver() }
+	private val locationRequest = LocationRequest.create().apply {
+		interval = 1000
+		fastestInterval = 100
+		priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+	}
 
 	override fun start(listener: LocationComponent.LocationStartListener) {
 		try {
-			val locationRequest = LocationRequest().apply {
-				interval = 1000
-				fastestInterval = 100
-				priority = LocationRequest.PRIORITY_HIGH_ACCURACY
-			}
+
 			val builder = LocationSettingsRequest.Builder().addLocationRequest(locationRequest)
 			val client: SettingsClient = LocationServices.getSettingsClient(ctx)
 			val task = client.checkLocationSettings(builder.build())
 			task.addOnSuccessListener { settingsResponse ->
 				d { "task.onConnected: $settingsResponse" }
 				// All location settings are satisfied. Go nuts.
-				locationObserver = when (USE_MOCK_USER_LOCATION) {
-					false -> createLocationObserver(locationRequest)
-					true -> {
-						//todo debug test methods
-						createWanderTest()
-						//createStandListenTest()
-					}
-				}
 				listener.onConnected()
 			}
 
@@ -65,56 +59,90 @@ class LocationProvider constructor(private val ctx: Context) : LocationComponent
 		}
 	}
 
-	override fun stop() {
-		d { "remove location updates" }
-		fusedLocationClient.removeLocationUpdates(locationCallback)
-	}
-
 	override fun locationListener(): Observable<Coordinate> {
-		return locationObserver ?: throw IllegalStateException("You must call start first")
+		return locationObserver
 	}
 
-	private fun createLocationObserver(locationRequest: LocationRequest): Observable<Coordinate> {
-		return Observable.create({ e: ObservableEmitter<Coordinate> ->
+	private fun createLocationObserver(): Observable<Coordinate> {
+		return when (USE_MOCK_USER_LOCATION) {
+			true -> {
+				createWanderTest()//test user wandering back and forth
+				//createStandListenTest()//tes user listening in centre
+			}
+			false -> {
+				LocationObservable(fusedLocationClient).observe(locationRequest)
+			}
+		}
+	}
 
-			try {
-				fusedLocationClient.lastLocation.addOnSuccessListener {
-					d { "got last location: $it" }
-					e.onNext(Coordinate(it))
-				}
+	private class LocationObservable constructor(
+		private val fusedLocationClient: FusedLocationProviderClient
+	) : Disposable {
+		val locationCallback: LocationCallback
+		var disposed = false
+		var e: ObservableEmitter<Coordinate>? = null
 
-				locationCallback = object : LocationCallback() {
-					override fun onLocationResult(locationResult: LocationResult?) {
-						locationResult ?: return
-						d { "got location result: $locationResult" }
-						for (location in locationResult.locations) {
-							e.onNext(Coordinate(location))
-						}
+		init {
+			v { "creating LocationObservable..." }
+			locationCallback = object : LocationCallback() {
+				override fun onLocationResult(locationResult: LocationResult?) {
+					locationResult ?: return
+					v { "got location result: $locationResult" }
+					for (location in locationResult.locations) {
+						onNext(Coordinate(location))
 					}
 				}
-				d { "requesting location updates..." }
-				ViewUtils.handler().post {
-					fusedLocationClient.requestLocationUpdates(locationRequest,
-						locationCallback, null)
-				}
-
-			} catch (e: SecurityException) {
-				wtf(e) { "ignoring security exception (why hasn't this already been handled?)" }
 			}
-		})
+		}
+
+		fun observe(locationRequest: LocationRequest): Observable<Coordinate> {
+			return Observable.create({ emitter: ObservableEmitter<Coordinate> ->
+				disposed = false
+				e = emitter
+				emitter.setDisposable(this)
+				try {
+					fusedLocationClient.lastLocation.addOnSuccessListener {
+						v { "got last location: $it" }
+						onNext(Coordinate(it))
+					}
+					v { "requesting location updates..." }
+					ViewUtils.handler().post {
+						fusedLocationClient.requestLocationUpdates(locationRequest,
+							locationCallback, null)
+					}
+				} catch (e: SecurityException) {
+					wtf(e) { "ignoring security exception (why hasn't this already been handled?)" }
+				}
+			})
+		}
+
+		fun onNext(coord: Coordinate) {
+			e?.onNext(coord)
+		}
+
+		override fun isDisposed(): Boolean {
+			return disposed
+		}
+
+		override fun dispose() {
+			v { "disposing locationObserver, stopping location provider(disposed:$disposed)..." }
+			if (!disposed)
+				fusedLocationClient.removeLocationUpdates(locationCallback)
+			disposed = true
+		}
 	}
 
 	@Suppress("unused")
 	private fun createWanderTest(): Observable<Coordinate> {
 		return Observable.create({ e ->
 			Thread({
-				val streetEnd = Coordinate(51.469002, -2.550491)
-				//val chocEnd = Coordinate(51.468641, -2.551070)
-				val cemeteryGate = Coordinate(51.468296, -2.554005)
+				val westEnd = Coordinate(51.469002, -2.550491)
+				val eastEnd = Coordinate(51.468641, -2.551070)//choc factory gate
+//				val eastEnd = Coordinate(51.468296, -2.554005)//cemetery gate
 				val steps = 16
 				val delayMs = 2000L
-				val coordinateList = split(cemeteryGate, streetEnd, steps)
-				coordinateList.addAll(split(streetEnd, cemeteryGate, steps))
+				val coordinateList = split(eastEnd, westEnd, steps)
+				coordinateList.addAll(split(westEnd, eastEnd, steps))
 
 				while (!e.isDisposed) {
 					coordinateList.forEach {
@@ -142,7 +170,7 @@ class LocationProvider constructor(private val ctx: Context) : LocationComponent
 		val lats = split(start.latitude, end.latitude, steps)
 		val longs = split(start.longitude, end.longitude, steps)
 		val result = mutableListOf<Coordinate>()
-		(0 until steps).mapTo(result) { Coordinate(lats[it], longs[it], Math.random()*50) }
+		(0 until steps).mapTo(result) { Coordinate(lats[it], longs[it], Math.random() * 50) }
 		return result
 	}
 

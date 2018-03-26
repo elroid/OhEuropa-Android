@@ -14,7 +14,6 @@ import com.github.ajalt.timberkt.i
 import com.oheuropa.android.domain.AudioComponent
 import com.oheuropa.android.domain.AudioComponent.State.*
 import com.oheuropa.android.domain.BeaconWatcher
-import com.oheuropa.android.domain.LocationComponent
 import com.oheuropa.android.model.BeaconLocation
 import com.oheuropa.android.model.BeaconLocation.CircleState.*
 import com.oheuropa.android.ui.base.SchedulersFacade
@@ -36,7 +35,6 @@ class AudioService : Service() {
 
 	@Inject lateinit var audioComponent: AudioComponent
 	@Inject lateinit var beaconWatcher: BeaconWatcher
-	@Inject lateinit var locator: LocationComponent
 
 	companion object {
 		var boundActivities = 0
@@ -92,7 +90,7 @@ class AudioService : Service() {
 
 	private fun startListening() {
 		audioComponent.activate()
-		beaconListener = beaconWatcher.followBeaconLocation(locator)
+		beaconListener = beaconWatcher.followBeaconLocation()
 			.subscribeOn(SchedulersFacade.io())
 			.observeOn(SchedulersFacade.io())
 			.subscribe({

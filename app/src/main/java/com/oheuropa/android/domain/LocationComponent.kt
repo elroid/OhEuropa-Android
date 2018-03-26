@@ -22,7 +22,5 @@ interface LocationComponent {
 	}
 
 	fun start(listener: LocationStartListener)
-	fun stop()
-
 	fun locationListener(): Observable<Coordinate>
 }
