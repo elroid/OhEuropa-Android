@@ -2,25 +2,25 @@ package com.oheuropa.android.injection
 
 import android.content.Context
 import com.evernote.android.job.JobManager
+import com.github.ajalt.timberkt.i
 import com.oheuropa.android.data.AudioPlayer
 import com.oheuropa.android.data.DataManager
 import com.oheuropa.android.data.job.BackgroundJobCreator
 import com.oheuropa.android.data.local.CompassProvider
 import com.oheuropa.android.data.local.LocationProvider
 import com.oheuropa.android.data.remote.OhEuropaApiService
-import com.oheuropa.android.domain.AudioComponent
-import com.oheuropa.android.domain.BeaconWatcher
-import com.oheuropa.android.domain.CompassComponent
-import com.oheuropa.android.domain.LocationComponent
+import com.oheuropa.android.domain.*
 import com.oheuropa.android.model.MyObjectBox
 import dagger.Module
 import dagger.Provides
 import io.objectbox.BoxStore
 import okhttp3.Cache
 import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.moshi.MoshiConverterFactory
+import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
 
@@ -40,16 +40,32 @@ class AppModule {
 	@Singleton
 	@Provides
 	internal fun provideApi(ctx: Context): OhEuropaApiService {
+
+		val okBuilder = OkHttpClient.Builder()
+
+		//add 5mb cache
 		val cacheSize = 5 * 1024 * 1024L // 5 MB
 		val cache = Cache(ctx.cacheDir, cacheSize)
+		okBuilder.cache(cache)
 
-		val okHttpClient = OkHttpClient.Builder()
-			.cache(cache)
-			.build()
+		//20s timeout
+		okBuilder.connectTimeout(20, TimeUnit.SECONDS)
+		okBuilder.writeTimeout(20, TimeUnit.SECONDS)
+		okBuilder.readTimeout(20, TimeUnit.SECONDS)
+
+		//add logging for debug builds
+		@Suppress("ConstantConditionIf")
+		if (Constants.isDebug(LOG_HTTP)) {
+			val logging = HttpLoggingInterceptor(HttpLoggingInterceptor.Logger { message ->
+				i { "OkHttp: $message" }
+			})
+			logging.level = HttpLoggingInterceptor.Level.BODY//Headers//BASIC
+			okBuilder.addInterceptor(logging)
+		}
 
 		val retrofit = Retrofit.Builder()
 			.baseUrl("http://oheuropa.com/api/")
-			.client(okHttpClient)
+			.client(okBuilder.build())
 			.addConverterFactory(MoshiConverterFactory.create())
 			.addCallAdapterFactory(RxJava2CallAdapterFactory.create())
 			.build()

@@ -83,6 +83,7 @@ dependencies {
     implementation "com.google.android.gms:play-services-maps:$gmsVersion"
     implementation "com.google.android.gms:play-services-location:$gmsVersion"
     implementation 'com.evernote:android-job:1.2.5'
+    implementation 'com.squareup.okhttp3:logging-interceptor:3.10.0'
 
     //retrofit
     implementation "com.squareup.retrofit2:retrofit:$retrofitVersion"

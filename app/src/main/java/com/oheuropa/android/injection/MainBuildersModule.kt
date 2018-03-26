@@ -8,6 +8,8 @@ import com.oheuropa.android.ui.map.MapActivity
 import com.oheuropa.android.ui.map.MapModule
 import com.oheuropa.android.ui.map.MapViewModule
 import com.oheuropa.android.ui.start.StartActivity
+import com.oheuropa.android.ui.start.StartModule
+import com.oheuropa.android.ui.start.StartViewModule
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 
@@ -24,13 +26,13 @@ import dagger.android.ContributesAndroidInjector
 @Module
 abstract class MainBuildersModule {
 
-	@ContributesAndroidInjector
+	@ContributesAndroidInjector(modules = [StartViewModule::class, StartModule::class])
 	abstract fun bindStartActivity(): StartActivity
 
-	@ContributesAndroidInjector(modules = [(CompassViewModule::class), (CompassModule::class)])
+	@ContributesAndroidInjector(modules = [CompassViewModule::class, CompassModule::class])
 	abstract fun bindCompassActivity(): CompassActivity
 
-	@ContributesAndroidInjector(modules = [(MapViewModule::class), (MapModule::class)])
+	@ContributesAndroidInjector(modules = [MapViewModule::class, MapModule::class])
 	internal abstract fun bindMapActivity(): MapActivity
 
 	@ContributesAndroidInjector

@@ -2,12 +2,13 @@ package com.oheuropa.android.data
 
 import com.fernandocejas.frodo.annotation.RxLogObservable
 import com.github.ajalt.timberkt.v
-import com.github.ajalt.timberkt.w
 import com.oheuropa.android.data.job.RefreshBeaconsJob
+import com.oheuropa.android.data.local.PrefsHelper
 import com.oheuropa.android.data.remote.OhEuropaApiService
 import com.oheuropa.android.domain.Constants
 import com.oheuropa.android.domain.USE_MOCK_BEACON_LOCATIONS
 import com.oheuropa.android.model.Beacon
+import com.oheuropa.android.model.UserRequest
 import io.objectbox.BoxStore
 import io.objectbox.rx.RxQuery
 import io.reactivex.Completable
@@ -28,11 +29,11 @@ import javax.inject.Inject
  */
 class DataManager @Inject constructor(
 	private val apiService: OhEuropaApiService,
-	private val boxStore: BoxStore
+	private val boxStore: BoxStore,
+	private val prefs: PrefsHelper
 ) {
 
 	fun followBeaconList(): Observable<List<Beacon>> {
-		return when (USE_MOCK_BEACON_LOCATIONS) {
 		return when (Constants.isDebug(USE_MOCK_BEACON_LOCATIONS)) {
 			false -> {
 				val beaconBox = boxStore.boxFor(Beacon::class.java)
@@ -80,5 +81,32 @@ class DataManager @Inject constructor(
 					.subscribe({ emitter.onComplete() }, { emitter.onError(it) })
 			}
 		}
+	}
+
+	fun ensureUserIdCreated(): Completable {
+		return Completable.create({ emitter ->
+			if (!prefs.hasUserId()) {
+				v { "creating user id..." }
+				val userId = UUID.randomUUID().toString()
+				uploadNewUserId(userId).subscribe({
+					prefs.setUserId(userId)
+					emitter.onComplete()
+				}, { emitter.onError(it) })
+			} else
+				v { "we already have a user id: ${prefs.getUserId()}" }
+			emitter.onComplete()
+		})
+	}
+
+	private fun uploadNewUserId(userid: String): Completable {
+		return apiService.uploadNewUserId(UserRequest(userid))
+	}
+
+
+	fun uploadUserInteraction(userid: String,
+							  placeId: String,
+							  zoneId: UserRequest.Zone,
+							  action: UserRequest.Action): Completable {
+		return apiService.uploadUserInteraction(UserRequest(userid, placeId, zoneId, action))
 	}
 }

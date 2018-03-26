@@ -10,12 +10,12 @@
 	<string name="info_web_text">oheuropa.com</string>
 	<string name="info_web_link">http://oheuropa.com</string>
 	<string
-		name="err_beacon_conn">Connection failed (%s). Please check your internet connection.</string>
+		name="err_beacon_conn">Connection failed%s. Please check your internet connection.</string>
 	<string name="err_title">Oops!</string>
 	<string name="err_ok">OK</string>
 	<string name="err_quit">Quit</string>
 	<string name="err_unspecified">Sorry, an unspecified error occurred.</string>
-	<string name="loc_justification">We need to access your location. We won\'t keep listening after you close the application.</string>
+	<string name="loc_justification">Oh Europa needs permission to access your location.\n\nWe won\'t store or transmit this information nor keep listening after you close the application.</string>
 	<string name="loc_ok">OK</string>
 	<string name="loc_quit">Quit</string>
 	<string name="finding_beacon">finding nearest beacon…</string>
