@@ -34,6 +34,7 @@ const val VOL_MIN = 0
 const val USE_MOCK_BEACON_LOCATIONS = true
 const val USE_MOCK_USER_LOCATION = true
 const val USE_MOCK_COMPASS_READINGS = false
+const val USE_MOCK_INTERACTION_EVENTS = true
 const val LOG_HTTP = true
 
 class Constants{

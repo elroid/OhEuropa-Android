@@ -10,6 +10,7 @@ import com.oheuropa.android.data.local.PrefsHelper
 import com.oheuropa.android.data.remote.OhEuropaApiService
 import com.oheuropa.android.domain.Constants
 import com.oheuropa.android.domain.USE_MOCK_BEACON_LOCATIONS
+import com.oheuropa.android.domain.USE_MOCK_INTERACTION_EVENTS
 import com.oheuropa.android.model.Beacon
 import com.oheuropa.android.model.BeaconLocation
 import com.oheuropa.android.model.UserRequest
@@ -93,10 +94,16 @@ class DataManager @Inject constructor(
 			if (!prefs.hasUserId()) {
 				v { "creating user id..." }
 				val userId = UUID.randomUUID().toString()
-				createUserIdInteraction(userId).subscribe({
-					prefs.setUserId(userId)
+				if (Constants.isDebug(USE_MOCK_INTERACTION_EVENTS)) {
+					i { "(not)uploading UserId($userId)" }
 					emitter.onComplete()
-				}, { emitter.onError(it) })
+				} else {
+					v { "upload UserId($userId)" }
+					createUserIdInteraction(userId).subscribe({
+						prefs.setUserId(userId)
+						emitter.onComplete()
+					}, { emitter.onError(it) })
+				}
 			} else
 				v { "we already have a user id: ${prefs.getUserId()}" }
 			emitter.onComplete()
@@ -111,16 +118,21 @@ class DataManager @Inject constructor(
 	fun uploadUserInteraction(placeId: String,
 							  circleState: BeaconLocation.CircleState,
 							  action: UserRequest.Action) {
-		d { "(not)uploadUserInteraction($placeId, $circleState, $action)" }
+
 		//todo upload in background with a queue?
-		createUserInteraction(placeId, circleState, action)
-			.subscribeOn(SchedulersFacade.io())
-			.observeOn(SchedulersFacade.io())
-			.subscribe({
-				i { "user interaction uploaded" }
-			}, {
-				e(it) { "Error uploading user interaction" }
-			})
+		if (Constants.isDebug(USE_MOCK_INTERACTION_EVENTS))
+			i { "(not)uploadUserInteraction($placeId, $circleState, $action)" }
+		else {
+			d { "uploadUserInteraction($placeId, $circleState, $action)" }
+			createUserInteraction(placeId, circleState, action)
+				.subscribeOn(SchedulersFacade.io())
+				.observeOn(SchedulersFacade.io())
+				.subscribe({
+					i { "user interaction uploaded" }
+				}, {
+					e(it) { "Error uploading user interaction" }
+				})
+		}
 	}
 
 	private fun createUserInteraction(placeId: String,
