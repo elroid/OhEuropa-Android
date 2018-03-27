@@ -32,7 +32,12 @@ data class BeaconLocation(val beacons: List<Beacon>, val myLocation: Coordinate)
 		return CircleState.NONE
 	}
 
+	fun getPlaceId(): String {
+		return beacons.getOrNull(0)?.placeid ?: ""
+	}
+
 	override fun toString(): String {
-		return "BeaconLocation: dist(${getDistanceAndBearing().first}) state(${getCircleState()})"
+		return "BeaconLocation: placeid(${getPlaceId()}) dist(${getDistanceAndBearing().first}) " +
+			"state(${getCircleState()})"
 	}
 }

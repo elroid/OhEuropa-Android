@@ -22,4 +22,15 @@ data class UserRequest(
 
 	enum class Zone { C, O, I }
 	enum class Action { Exited, Entered }
+
+	companion object {
+		fun map(circleState: BeaconLocation.CircleState): Zone? {
+			return when (circleState) {
+				BeaconLocation.CircleState.CENTRE -> Zone.C
+				BeaconLocation.CircleState.INNER -> Zone.I
+				BeaconLocation.CircleState.OUTER -> Zone.O
+				else -> null
+			}
+		}
+	}
 }

@@ -10,13 +10,14 @@ import android.os.Binder
 import android.os.IBinder
 import com.github.ajalt.timberkt.d
 import com.github.ajalt.timberkt.e
-import com.github.ajalt.timberkt.i
 import com.github.ajalt.timberkt.v
+import com.oheuropa.android.data.DataManager
 import com.oheuropa.android.domain.AudioComponent
 import com.oheuropa.android.domain.AudioComponent.State.*
 import com.oheuropa.android.domain.BeaconWatcher
 import com.oheuropa.android.model.BeaconLocation
 import com.oheuropa.android.model.BeaconLocation.CircleState.*
+import com.oheuropa.android.model.UserRequest
 import com.oheuropa.android.ui.base.SchedulersFacade
 import dagger.android.AndroidInjection
 import io.reactivex.disposables.Disposable
@@ -32,10 +33,13 @@ import javax.inject.Inject
  * @author <a href="mailto:e@elroid.com">Elliot Long</a>
  *         Copyright (c) 2018 Elroid Ltd. All rights reserved.
  */
-class  AudioService : Service() {
+class AudioService : Service() {
 
 	@Inject lateinit var audioComponent: AudioComponent
 	@Inject lateinit var beaconWatcher: BeaconWatcher
+	@Inject lateinit var dataManager: DataManager
+
+	private var currentState: BeaconLocation.CircleState = NONE
 
 	companion object {
 		var boundActivities = 0
@@ -95,15 +99,16 @@ class  AudioService : Service() {
 			.subscribeOn(SchedulersFacade.io())
 			.observeOn(SchedulersFacade.io())
 			.subscribe({
-				reactTo(it)
+				v { "got new BeaconLocation: $it" }
+				reactAudio(it)
+				reactAnalytics(it)
 			}, {
 				e(it) { "Error in beacon watcher" }
 			})
 	}
 
 
-	private fun reactTo(beaconLocation: BeaconLocation) {
-		v { "got new BeaconLocation: $beaconLocation" }
+	private fun reactAudio(beaconLocation: BeaconLocation) {
 		when (beaconLocation.getCircleState()) {
 			CENTRE -> audioComponent.setState(SIGNAL)
 			INNER -> audioComponent.setState(STATIC_MIX)
@@ -114,10 +119,27 @@ class  AudioService : Service() {
 					v { "out of range, and no bound activities, so stop listening" }
 					stopSelf()
 				} else {
-					v { "out of range, but we have $boundActivities bound activities, so keep listening" }
+					v { "out of range, but $boundActivities bound activities, so keep listening" }
 				}
 			}
 		}
+	}
+
+	private fun reactAnalytics(beaconLocation: BeaconLocation) {
+		val newState = beaconLocation.getCircleState()
+		if (newState != currentState) {
+			d { "recording state change from $currentState to $newState" }
+			val id = beaconLocation.getPlaceId()
+			if (currentState != NONE) {
+				//record exit change
+				dataManager.uploadUserInteraction(id, currentState, UserRequest.Action.Exited)
+			}
+			if (newState != NONE) {
+				//record enter change
+				dataManager.uploadUserInteraction(id, newState, UserRequest.Action.Entered)
+			}
+		}
+		currentState = newState
 	}
 
 	override fun onDestroy() {

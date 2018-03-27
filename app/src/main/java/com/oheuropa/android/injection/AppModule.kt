@@ -2,7 +2,9 @@ package com.oheuropa.android.injection
 
 import android.content.Context
 import com.evernote.android.job.JobManager
+import com.github.ajalt.timberkt.d
 import com.github.ajalt.timberkt.i
+import com.github.ajalt.timberkt.v
 import com.oheuropa.android.data.AudioPlayer
 import com.oheuropa.android.data.DataManager
 import com.oheuropa.android.data.job.BackgroundJobCreator
@@ -56,11 +58,17 @@ class AppModule {
 		//add logging for debug builds
 		@Suppress("ConstantConditionIf")
 		if (Constants.isDebug(LOG_HTTP)) {
-			val logging = HttpLoggingInterceptor(HttpLoggingInterceptor.Logger { message ->
+			val verboseLog = HttpLoggingInterceptor(HttpLoggingInterceptor.Logger { message ->
+				v { "OkHttp: $message" }
+			})
+			verboseLog.level = HttpLoggingInterceptor.Level.BODY//Headers//
+			okBuilder.addInterceptor(verboseLog)
+
+			val infoLog = HttpLoggingInterceptor(HttpLoggingInterceptor.Logger { message ->
 				i { "OkHttp: $message" }
 			})
-			logging.level = HttpLoggingInterceptor.Level.BODY//Headers//BASIC
-			okBuilder.addInterceptor(logging)
+			infoLog.level = HttpLoggingInterceptor.Level.BASIC
+			okBuilder.addInterceptor(infoLog)
 		}
 
 		val retrofit = Retrofit.Builder()

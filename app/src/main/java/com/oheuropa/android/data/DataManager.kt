@@ -1,6 +1,9 @@
 package com.oheuropa.android.data
 
 import com.fernandocejas.frodo.annotation.RxLogObservable
+import com.github.ajalt.timberkt.d
+import com.github.ajalt.timberkt.e
+import com.github.ajalt.timberkt.i
 import com.github.ajalt.timberkt.v
 import com.oheuropa.android.data.job.RefreshBeaconsJob
 import com.oheuropa.android.data.local.PrefsHelper
@@ -8,7 +11,9 @@ import com.oheuropa.android.data.remote.OhEuropaApiService
 import com.oheuropa.android.domain.Constants
 import com.oheuropa.android.domain.USE_MOCK_BEACON_LOCATIONS
 import com.oheuropa.android.model.Beacon
+import com.oheuropa.android.model.BeaconLocation
 import com.oheuropa.android.model.UserRequest
+import com.oheuropa.android.ui.base.SchedulersFacade
 import io.objectbox.BoxStore
 import io.objectbox.rx.RxQuery
 import io.reactivex.Completable
@@ -43,8 +48,8 @@ class DataManager @Inject constructor(
 			true -> {
 				Observable.create({ it: ObservableEmitter<List<Beacon>> ->
 					val beacons2 = ArrayList<Beacon>(2)
-					beacons2.add(Beacon(name = "ChocFactory", id = 10, lat = 51.468260f, lng = -2.554214f))
-					beacons2.add(Beacon(name = "StreetEnd", id = 10, lat = 51.469125f, lng = -2.550244f))
+					beacons2.add(Beacon(name = "ChocFactory", placeid = "ChocFact", id = 10, lat = 51.468260f, lng = -2.554214f))
+					beacons2.add(Beacon(name = "StreetEnd", placeid = "StreetEnd", id = 11, lat = 51.469125f, lng = -2.550244f))
 					it.onNext(beacons2)
 				})
 			}
@@ -88,7 +93,7 @@ class DataManager @Inject constructor(
 			if (!prefs.hasUserId()) {
 				v { "creating user id..." }
 				val userId = UUID.randomUUID().toString()
-				uploadNewUserId(userId).subscribe({
+				createUserIdInteraction(userId).subscribe({
 					prefs.setUserId(userId)
 					emitter.onComplete()
 				}, { emitter.onError(it) })
@@ -98,15 +103,33 @@ class DataManager @Inject constructor(
 		})
 	}
 
-	private fun uploadNewUserId(userid: String): Completable {
+	private fun createUserIdInteraction(userid: String): Completable {
 		return apiService.uploadNewUserId(UserRequest(userid))
 	}
 
 
-	fun uploadUserInteraction(userid: String,
-							  placeId: String,
-							  zoneId: UserRequest.Zone,
-							  action: UserRequest.Action): Completable {
-		return apiService.uploadUserInteraction(UserRequest(userid, placeId, zoneId, action))
+	fun uploadUserInteraction(placeId: String,
+							  circleState: BeaconLocation.CircleState,
+							  action: UserRequest.Action) {
+		d { "(not)uploadUserInteraction($placeId, $circleState, $action)" }
+		//todo upload in background with a queue?
+		createUserInteraction(placeId, circleState, action)
+			.subscribeOn(SchedulersFacade.io())
+			.observeOn(SchedulersFacade.io())
+			.subscribe({
+				i { "user interaction uploaded" }
+			}, {
+				e(it) { "Error uploading user interaction" }
+			})
+	}
+
+	private fun createUserInteraction(placeId: String,
+									  circleState: BeaconLocation.CircleState,
+									  action: UserRequest.Action): Completable {
+		val zoneId = UserRequest.map(circleState) ?: return Completable.error(
+			IllegalArgumentException("Couldn't recognise circle state: $circleState"))
+		val userId = prefs.getUserId() ?: return Completable.error(
+			IllegalArgumentException("No user id found!"))
+		return apiService.uploadUserInteraction(UserRequest(userId, placeId, zoneId, action))
 	}
 }
