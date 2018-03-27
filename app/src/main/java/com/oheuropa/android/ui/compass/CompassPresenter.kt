@@ -12,6 +12,7 @@ import com.oheuropa.android.model.BeaconLocation.CircleState.CENTRE
 import com.oheuropa.android.ui.base.LocationEnabledPresenter
 import com.oheuropa.android.ui.base.SchedulersFacade
 import com.oheuropa.android.util.GenUtils.Companion.limit360
+import com.oheuropa.android.util.GenUtils.Companion.printCallingMethod
 import io.reactivex.Observable
 import io.reactivex.disposables.Disposable
 import kotlin.math.roundToInt
@@ -37,8 +38,8 @@ class CompassPresenter(
 	private var songTitle: String = ""
 	private var performerName: String = ""
 
-
 	private fun getTrackName() {
+		v { "geTrackName - called by: ${printCallingMethod()}" }
 		addDisposable(apiService.getAudioStatus()
 			.subscribeOn(SchedulersFacade.io())
 			.observeOn(SchedulersFacade.io())
@@ -57,6 +58,7 @@ class CompassPresenter(
 	private var namePollDisposable: Disposable? = null
 	private fun startActiveNamePolling() {
 		if (namePollDisposable != null) return
+		v { "startActiveNamePolling()" }
 		val result: Observable<Void> = Observable.create({
 			while (!it.isDisposed) {
 				getTrackName()
@@ -83,7 +85,6 @@ class CompassPresenter(
 
 	private fun checkStatus() {
 		if (beaconLocation?.getCircleState() == CENTRE) {
-			getTrackName()
 			startActiveNamePolling()
 		}
 	}
