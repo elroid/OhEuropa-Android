@@ -29,7 +29,8 @@ class StartPresenter(
 			.subscribeOn(SchedulersFacade.io())
 			.observeOn(SchedulersFacade.ui())
 			.subscribe({
-				continueAfter(SPLASH_WAIT_SECONDS, start)
+				if(view.ensurePlayServicesAvailable())
+					continueAfter(SPLASH_WAIT_SECONDS, start)
 			}, {
 				view.showConnectionError(it.message)
 			}))

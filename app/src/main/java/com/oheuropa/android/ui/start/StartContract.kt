@@ -14,6 +14,7 @@ interface StartContract {
 	interface View : BaseView {
 		fun continueToFirstActivity()
 		fun showConnectionError(msg: String?)
+		fun ensurePlayServicesAvailable():Boolean
 	}
 
 	interface Presenter : BasePres
