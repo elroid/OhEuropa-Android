@@ -31,7 +31,7 @@ class BeaconWatcher constructor(
 	}
 
 	private val beaconLocationObservable: Observable<BeaconLocation> by lazy {
-		createBeaconLocationObservable()
+		createBeaconLocationObservable().share()
 	}
 
 	private fun createBeaconLocationObservable(): Observable<BeaconLocation> {

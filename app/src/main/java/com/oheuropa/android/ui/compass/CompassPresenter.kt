@@ -12,8 +12,10 @@ import com.oheuropa.android.model.BeaconLocation
 import com.oheuropa.android.model.BeaconLocation.CircleState.CENTRE
 import com.oheuropa.android.ui.base.LocationEnabledPresenter
 import com.oheuropa.android.ui.base.SchedulersFacade
+import com.oheuropa.android.util.GenUtils
 import com.oheuropa.android.util.GenUtils.Companion.limit360
 import com.oheuropa.android.util.GenUtils.Companion.printCallingMethod
+import com.oheuropa.android.util.PairFunction
 import io.reactivex.Observable
 import io.reactivex.disposables.Disposable
 import kotlin.math.roundToInt
@@ -35,9 +37,9 @@ class CompassPresenter(
 	private val apiService: OhEuropaApiService
 ) : LocationEnabledPresenter<CompassContract.View>(view, locator), CompassContract.Presenter {
 
-	private var beaconLocation: BeaconLocation? = null
 	private var songTitle: String = ""
 	private var performerName: String = ""
+	private var isInCentre = false
 
 	private fun getTrackName() {
 		v { "geTrackName - called by: ${printCallingMethod()}" }
@@ -48,7 +50,7 @@ class CompassPresenter(
 				performerName = it.current_track.getPerformerName()
 				songTitle = it.current_track.getSongTitle()
 				v { "got new song title($songTitle) and performer($performerName)" }
-				if (beaconLocation?.getCircleState() == BeaconLocation.CircleState.CENTRE) {
+				if (isInCentre) {
 					view.showSongInfo(performerName, songTitle)
 				}
 			}, {
@@ -85,58 +87,52 @@ class CompassPresenter(
 	}
 
 	private fun checkStatus() {
-		if (beaconLocation?.getCircleState() == CENTRE) {
+		if (isInCentre) {
 			startActiveNamePolling()
 		}
 	}
 
 	override fun onConnected() {
 		super.onConnected()
-
+		v { "onConnected thread:${GenUtils.printThread()}" }
 		checkStatus()
 
-		//watch beacons and keep beaconLocation var updated
-		addDisposable(beaconWatcher.followBeaconLocation()
-			.subscribeOn(SchedulersFacade.io())
-			.observeOn(SchedulersFacade.io())
-			.subscribe({
-				v { "got new BeaconLocation: $it" }
-				beaconLocation = it
-				checkStatus()
-			}, {
-				e { "error in beaconWatcher!" }
-				AnalyticsHelper.logException(it, "beaconWatcher.error")
-			})
-		)
+		val beaconObservable = beaconWatcher.followBeaconLocation()
+		val compassFlowable = compass.listenToCompass()
 
-		//listen to compass and update UI
-		addDisposable(compass.listenToCompass()
+		val beaconCompassObservable = Observable
+			.combineLatest<BeaconLocation, Float, Pair<BeaconLocation, Float>>(beaconObservable,
+				compassFlowable.toObservable(), PairFunction())
+
+		addDisposable(beaconCompassObservable
 			.subscribeOn(SchedulersFacade.io())
 			.observeOn(SchedulersFacade.io())
 			.subscribe({
-				//i { "Compass reading: $it" }
-				if (beaconLocation != null) {
-					val (distance, bearing) = beaconLocation!!.getDistanceAndBearing()
-					val circleState = beaconLocation!!.getCircleState()
-					//i { "circleState:$circleState" }
-					when (circleState) {
-						CENTRE -> {
-							//show song info and deactivate compass
-							startActiveNamePolling()
-						}
-						else -> {
-							//show distance and activate compass
-							val northBearing = it
-							val beaconBearing = limit360(it - bearing)
-							val dist = distance.roundToInt()
-							view.showNewReading(0 - northBearing, 0 - beaconBearing, dist)
-							stopActiveNamePolling()
-						}
+				val beaconLocation = it.first
+				val compassReading = it.second
+				v { "combined:$it thread:${GenUtils.printThread()}" }
+				val (distance, bearing) = beaconLocation.getDistanceAndBearing()
+				val circleState = beaconLocation.getCircleState()
+				when (circleState) {
+					CENTRE -> {
+						//show song info and deactivate compass
+						startActiveNamePolling()
+						isInCentre = true
+					}
+					else -> {
+						isInCentre = false
+						//show distance and activate compass
+						val beaconBearing = limit360(compassReading - bearing)
+						val dist = distance.roundToInt()
+						view.showNewReading(0 - compassReading,
+							0 - beaconBearing, dist)
+						stopActiveNamePolling()
 					}
 				}
 			}, {
 				view.showError(msg = it.message)
-				AnalyticsHelper.logException(it, "listenToCompass.error")
-			}))
+				AnalyticsHelper.logException(it, "beaconCompassObservable.error")
+			}
+			))
 	}
 }

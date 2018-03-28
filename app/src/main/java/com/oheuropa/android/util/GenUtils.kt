@@ -1,5 +1,7 @@
 package com.oheuropa.android.util
 
+import android.os.Looper
+
 /**
  * Created Date: 22/03/2018 12:12
  *
@@ -37,7 +39,18 @@ class GenUtils {
 					r.toString()
 				}
 			}
+		}
 
+		fun printThread(): String {
+			val result = StringBuilder()
+			result.append(Thread.currentThread())
+			if (isUIThread())
+				result.append(" (Main thread)")
+			return result.toString()
+		}
+
+		fun isUIThread(): Boolean {
+			return Looper.getMainLooper().thread === Thread.currentThread()
 		}
 	}
 }
