@@ -38,7 +38,7 @@ class AudioPlayer @Inject constructor(ctx: Context) : AudioComponent {
 	override fun setState(newState: AudioComponent.State) {
 		v { "setState:$newState" }
 		if (currentState != newState)
-			Thread().run {
+			Thread({
 				when (newState) {
 					QUIET -> {
 						staticAudio.fadeTo(VOL_MIN)
@@ -58,7 +58,7 @@ class AudioPlayer @Inject constructor(ctx: Context) : AudioComponent {
 					}
 				}
 				currentState = newState
-			}
+			}).start()
 	}
 
 	override fun activate() {

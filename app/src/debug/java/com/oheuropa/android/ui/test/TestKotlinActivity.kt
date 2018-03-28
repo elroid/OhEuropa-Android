@@ -1,5 +1,7 @@
 package com.oheuropa.android.ui.test
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import com.github.ajalt.timberkt.d
@@ -21,6 +23,11 @@ import javax.inject.Inject
  */
 class TestKotlinActivity : BaseActivity() {
 
+	companion object {
+		fun createIntent(ctx: Context): Intent {
+			return Intent(ctx, TestKotlinActivity::class.java)
+		}
+	}
 	@Inject lateinit var audioPlayer: AudioComponent
 
 	override fun onCreate(savedInstanceState: Bundle?) {

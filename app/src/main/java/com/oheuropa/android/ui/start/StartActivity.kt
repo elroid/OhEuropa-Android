@@ -56,6 +56,7 @@ class StartActivity : BaseActivity(), StartContract.View {
 		startActivity(CompassActivity.createIntent(getCtx()))
 //		startActivity(MapActivity.createIntent(getCtx()))
 //		startActivity(InfoActivity.createIntent(getCtx()))
+//		startActivity(TestKotlinActivity.createIntent(getCtx()))
 		finish()
 	}
 

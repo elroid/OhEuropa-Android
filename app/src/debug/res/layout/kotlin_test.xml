@@ -7,30 +7,36 @@
 	android:gravity="center"
 	>
 
+	<ProgressBar
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:indeterminate="true"
+		/>
+
 	<Button
 		android:id="@+id/but1"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:text="One"
+		android:text="Static"
 		/>
 
 	<Button
 		android:id="@+id/but2"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:text="Two"
+		android:text="StaticMix"
 		/>
 
 	<Button
 		android:id="@+id/but3"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:text="Three"
+		android:text="Stream"
 		/>
 	<Button
 		android:id="@+id/but4"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:text="Four"
+		android:text="Stop"
 		/>
 </LinearLayout>
