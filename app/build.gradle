@@ -26,10 +26,10 @@ android {
 
     signingConfigs {
         release {
-            storeFile file(ELROID_STORE_FILE)
-            storePassword ELROID_STORE_PASSWORD
-            keyAlias ELROID_KEY_ALIAS
-            keyPassword ELROID_KEY_PASSWORD
+            storeFile file(AH_STORE_FILE)
+            storePassword AH_STORE_PASSWORD
+            keyAlias AH_KEY_ALIAS
+            keyPassword AH_KEY_PASSWORD
         }
     }
 
