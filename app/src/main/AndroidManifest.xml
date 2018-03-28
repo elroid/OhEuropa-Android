@@ -49,6 +49,12 @@
 			/>
 
 		<service android:name=".data.local.AudioService"/>
+
+		<!--suppress AndroidDomInspection -->
+		<service
+			android:name="com.evernote.android.job.gcm.PlatformGcmService"
+			tools:node="remove"/>
+
 	</application>
 
 </manifest>
