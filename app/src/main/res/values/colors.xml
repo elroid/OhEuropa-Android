@@ -1,13 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 	<color name="colorPrimary">#3F51B5</color>
-	<color name="colorPrimaryDark">#303F9F</color>
-	<color name="colorAccent">#FF4081</color>
+	<color name="colorPrimaryDark">@color/peach</color>
+	<color name="colorAccent">@color/white</color>
 
 	<color name="tab_bg">#ff212121</color>
 	<color name="tab_fg">#ff666666</color>
-	<color name="tab_fg_sel">#ffffffff</color>
+	<color name="tab_fg_sel">@color/blue</color>
+	<color name="text_dark">@color/black</color>
+	<color name="text_light">@color/white</color>
+	<color name="status_bg_trans">#00000000</color>
+	<color name="status_bg_opaque">#66000000</color>
+	<color name="me_fill">@color/blue</color>
+	<color name="me_stroke">#eeffffff</color>
+	<color name="me_acc_stroke">#663333ff</color>
+	<color name="me_acc_fill">#3366cccc</color>
+	<color name="beacon_fill">@color/white</color>
+	<color name="beacon_stroke">#ff367180</color>
 
+	<!--palette-->
+	<color name="peach">#ffffd7a6</color>
+	<color name="blue">#ff4aa2b8</color>
+	<color name="black">#ff212121</color>
+	<color name="white">#ffffffff</color>
+
+	<!--iphone colours-->
+	<!--<color name="grad_color_bottom">#ff1e8cab</color>-->
+	<!--<color name="grad_color_top">#ffffd7a6</color>-->
+	<!--<color name="tab_bg_color">#ff212121</color>-->
+	<!--<color name="tab_bg_color_sel">#ff26a8ca</color>-->
+	<color name="compass_active">#fffad7a6</color>
+	<color name="compass_inactive">#ff26a8ca</color>
+	<color name="line">#ff4c4c4c</color>
+
+	<!--debug-->
 	<color name="debug0">#00000000</color>
 	<color name="debug1">#66ff00ff</color>
 	<color name="debug2">#6600ff00</color>

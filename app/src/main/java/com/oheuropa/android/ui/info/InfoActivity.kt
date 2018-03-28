@@ -3,9 +3,10 @@ package com.oheuropa.android.ui.info
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import androidx.net.toUri
 import com.oheuropa.android.R
-import com.oheuropa.android.ui.base.BaseActivity
 import com.oheuropa.android.ui.base.BottomNavActivity
+import kotlinx.android.synthetic.main.info_waves.*
 
 /**
  *
@@ -24,6 +25,14 @@ class InfoActivity : BottomNavActivity() {
 		fun createIntent(ctx: Context): Intent {
 			return Intent(ctx, InfoActivity::class.java)
 		}
+	}
+
+	override fun onCreate(savedInstanceState: Bundle?) {
+		super.onCreate(savedInstanceState)
+		infoLink.setOnClickListener({
+			val url = getString(R.string.info_web_link)
+			startActivity(Intent(Intent.ACTION_VIEW, url.toUri()))
+		})
 	}
 
 	override fun getLayoutId(): Int {

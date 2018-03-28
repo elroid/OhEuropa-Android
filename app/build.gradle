@@ -2,96 +2,182 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
+apply plugin: 'com.fernandocejas.frodo'
+apply plugin: 'io.objectbox'
+apply plugin: 'com.akaita.android.easylauncher'
+apply plugin: 'io.fabric'
 
 android {
     compileSdkVersion 27
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
     defaultConfig {
         applicationId "com.oheuropa.android"
         minSdkVersion 16
         targetSdkVersion 27
-        versionCode 1
-        versionName "0.1"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        versionCode 2
+        versionName "1.0"
+        testInstrumentationRunner "com.oheuropa.android.framework.CustomTestRunner"
     }
+
+    signingConfigs {
+        release {
+            storeFile file(AH_STORE_FILE)
+            storePassword AH_STORE_PASSWORD
+            keyAlias AH_KEY_ALIAS
+            keyPassword AH_KEY_PASSWORD
+        }
+    }
+
     buildTypes {
         debug {
             minifyEnabled false
             applicationIdSuffix '.debug'
+            signingConfig signingConfigs.release
         }
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+        }
+    }
+
+    testOptions.unitTests.includeAndroidResources true
+
+    project.ext.set("archivesBaseName", "OhEuropa")
+
+    applicationVariants.all { variant ->
+        //add version number to apk name
+        variant.outputs.all {
+            outputFileName = outputFileName.replace('.apk', "-${variant.versionName}.apk")
+        }
+
+        //copy mapping.txt to proguard folder (for retrospective de-obfuscation)
+        if (variant.getBuildType().isMinifyEnabled() && !variant.getBuildType().isDebuggable()) {
+            variant.assemble.doLast {
+                println "Saving mapping.txt for ${variant.getFlavorName()} - ${variant.getBuildType().getName()}"
+                def targetDir = "${rootDir}/app/proguard/"
+                def formattedDate = new Date().format('yyyy.MM.dd')
+                println "Copying ${variant.mappingFile} to ${targetDir} with date ${formattedDate}"
+                if (variant.mappingFile != null) {
+                    getProject().copy {
+                        from variant.mappingFile
+                        into "${targetDir}"
+                        rename { String fileName ->
+                            fileName.replace('.txt', "-${defaultConfig.versionName}-${formattedDate}.txt")
+                        }
+                    }
+                }
+            }
         }
     }
 }
 
 kapt {
     generateStubs = true
+    arguments {
+        arg("objectbox.debug", true)
+    }
 }
 
 project.ext {
     supportLibraryVersion = "27.1.0"
-    daggerVersion = "2.13"
+    daggerVersion = "2.14.1"
     butterKnifeVersion = "8.8.1"
     rxKotlinVersion = "2.2.0"
     rxAndroidVersion = "2.0.1"
     rxRelayVersion = "2.0.0"
-    timberVersion = "4.6.0"
     retrofitVersion = "2.3.0"
     espressoVersion = "3.0.1"
     supportTestVersion = "1.0.1"
     kotshiVersion = "1.0.0"
+    objectboxRxVersion = "0.9.8"
+    gmsVersion = "11.0.4"//"12.0.0"//we don't need the latest
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
+    // UI libs /////////////////////////////////////////////////////////////////////////////////////
     implementation 'com.github.ittianyu:BottomNavigationViewEx:1.2.4'
+    implementation 'org.greenrobot:eventbus:3.0.0'
+    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
 
+    // Back-end libs ///////////////////////////////////////////////////////////////////////////////
+    implementation 'com.daasuu:EasingInterpolator:1.0.0' //for audio fade interpolators
+    implementation "com.google.android.gms:play-services-maps:$gmsVersion"
+    implementation "com.google.android.gms:play-services-location:$gmsVersion"
+    implementation 'com.evernote:android-job:1.2.5'
+    implementation 'com.squareup.okhttp3:logging-interceptor:3.10.0'
+
+    //retrofit
+    implementation "com.squareup.retrofit2:retrofit:$retrofitVersion"
+    implementation "com.squareup.retrofit2:adapter-rxjava2:$retrofitVersion"
+
+    //object box
+    kapt "io.objectbox:objectbox-processor:$objectboxVersion"
+    implementation "io.objectbox:objectbox-android:$objectboxVersion"
+    implementation "io.objectbox:objectbox-kotlin:$objectboxVersion"
+    implementation "io.objectbox:objectbox-rxjava:$objectboxRxVersion"
+
+    //analytics & crash reporting
+    compile('com.crashlytics.sdk.android:crashlytics:2.9.1@aar') {
+        transitive = true
+    }
+    compile('com.crashlytics.sdk.android:answers:1.4.1@aar') {
+        transitive = true
+    }
+
+    //Standard libs ////////////////////////////////////////////////////////////////////////////////
 
     // Android support libs
-    implementation "com.android.support:appcompat-v7:$project.supportLibraryVersion"
-    implementation "com.android.support:design:$project.supportLibraryVersion"
+    implementation "com.android.support:appcompat-v7:$supportLibraryVersion"
+    implementation "com.android.support:design:$supportLibraryVersion"
 
     // Kotlin
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jre8:$project.kotlinVersion"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlinVersion"
     implementation 'androidx.core:core-ktx:0.2'
 
     // Dagger core
-    implementation "com.google.dagger:dagger:$project.daggerVersion"
-    kapt "com.google.dagger:dagger-compiler:$project.daggerVersion"
-    kaptTest "com.google.dagger:dagger-compiler:$project.daggerVersion"
+    implementation "com.google.dagger:dagger:$daggerVersion"
+    kapt "com.google.dagger:dagger-compiler:$daggerVersion"
+    kaptTest "com.google.dagger:dagger-compiler:$daggerVersion"
+    kaptAndroidTest "com.google.dagger:dagger-compiler:$daggerVersion"
 
     // Dagger Android
-    kapt "com.google.dagger:dagger-android-processor:$project.daggerVersion"
-    implementation "com.google.dagger:dagger-android-support:$project.daggerVersion"
+    kapt "com.google.dagger:dagger-android-processor:$daggerVersion"
+    implementation "com.google.dagger:dagger-android-support:$daggerVersion"
 
     //moshi-kotlin/kotshi
     implementation "se.ansman.kotshi:api:$kotshiVersion"
     kapt "se.ansman.kotshi:compiler:$kotshiVersion"
+    implementation "com.squareup.retrofit2:converter-moshi:$retrofitVersion"
 
     // ReactiveX
-    implementation "io.reactivex.rxjava2:rxkotlin:$project.rxKotlinVersion"
-    implementation "io.reactivex.rxjava2:rxandroid:$project.rxAndroidVersion"
+    implementation "io.reactivex.rxjava2:rxkotlin:$rxKotlinVersion"
+    implementation "io.reactivex.rxjava2:rxandroid:$rxAndroidVersion"
     implementation "com.tspoon.traceur:traceur:1.0.1"
 
     // RxRelay
-    implementation "com.jakewharton.rxrelay2:rxrelay:$project.rxRelayVersion"
+    implementation "com.jakewharton.rxrelay2:rxrelay:$rxRelayVersion"
 
     // Timber
-    implementation "com.jakewharton.timber:timber:$project.timberVersion"
+    implementation 'com.github.ajalt:timberkt:1.4.0'
 
-    // Testing
+    // Testing libs ////////////////////////////////////////////////////////////////////////////////
     testImplementation "junit:junit:4.12"
     testImplementation "org.robolectric:robolectric:3.6.1"
-    testImplementation "org.jetbrains.kotlin:kotlin-stdlib-jre8:$project.kotlinVersion"
-    testImplementation "org.jetbrains.kotlin:kotlin-test-junit:$project.kotlinVersion"
+    testImplementation "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlinVersion"
+    testImplementation "org.jetbrains.kotlin:kotlin-test-junit:$kotlinVersion"
     testImplementation "com.nhaarman:mockito-kotlin:1.5.0"
-    kaptTest "com.google.dagger:dagger-compiler:$project.daggerVersion"
 
-    androidTestImplementation "com.android.support.test:runner:$project.supportTestVersion"
-    androidTestImplementation "com.android.support.test:rules:$project.supportTestVersion"
-    androidTestImplementation "com.android.support.test.espresso:espresso-core:$project.espressoVersion"
-    androidTestImplementation "com.android.support.test.espresso:espresso-intents:$project.espressoVersion"
-    androidTestImplementation "com.android.support:support-annotations:$project.supportLibraryVersion"
+    androidTestImplementation "com.android.support.test:runner:$supportTestVersion"
+    androidTestImplementation "com.android.support.test:rules:$supportTestVersion"
+    androidTestImplementation "com.android.support.test.espresso:espresso-core:$espressoVersion"
+    androidTestImplementation "com.android.support.test.espresso:espresso-intents:$espressoVersion"
+    androidTestImplementation "com.android.support:support-annotations:$supportLibraryVersion"
 }

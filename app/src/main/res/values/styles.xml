@@ -1,11 +1,23 @@
 <resources>
 
 	<!-- Base application theme. -->
-	<style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
-		<!-- Customize your theme here. -->
+	<style name="AppTheme.Base" parent="Theme.AppCompat.NoActionBar">
 		<item name="colorPrimary">@color/colorPrimary</item>
 		<item name="colorPrimaryDark">@color/colorPrimaryDark</item>
 		<item name="colorAccent">@color/colorAccent</item>
+		<item name="android:windowBackground">@drawable/gradient_bg</item>
+	</style>
+
+	<style name="AppTheme" parent="AppTheme.Base"/>
+
+	<style name="AppTheme.Map"/>
+
+	<style name="AppTheme.Compass"/>
+
+	<style name="Title">
+		<item name="android:fontFamily">@font/cooper_hewitt_heavy</item>
+		<item name="android:textColor">@color/text_dark</item>
+		<item name="android:textSize">30sp</item>
 	</style>
 
 </resources>

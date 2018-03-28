@@ -1,0 +1,22 @@
+<manifest package="com.oheuropa.android"
+		  xmlns:android="http://schemas.android.com/apk/res/android"
+		  xmlns:tools="http://schemas.android.com/tools"
+	>
+
+	<uses-permission android:name="android.permission.DISABLE_KEYGUARD"/>
+	<uses-permission android:name="android.permission.WAKE_LOCK"/>
+
+	<application
+		android:name=".DebugApp"
+		>
+		<activity
+			android:name=".ui.test.TestKotlinActivity"
+			android:exported="true"
+			/>
+		<activity
+			android:name=".ui.test.TestActivity"
+			android:exported="true"
+			/>
+
+	</application>
+</manifest>
