@@ -43,7 +43,6 @@ class App : BaseApp(), HasActivityInjector, HasServiceInjector {
 			.inject(this)
 
 		Timber.plant(CrashlyticsTree(Log.INFO))
-		Timber.plant(Timber.DebugTree())//todo remove before release
 
 		Fabric.with(Fabric.Builder(this).kits(Crashlytics(), Answers()).build())
 	}
