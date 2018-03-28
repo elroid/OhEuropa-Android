@@ -10,6 +10,7 @@ import android.os.Binder
 import android.os.IBinder
 import com.github.ajalt.timberkt.d
 import com.github.ajalt.timberkt.e
+import com.github.ajalt.timberkt.i
 import com.github.ajalt.timberkt.v
 import com.oheuropa.android.data.DataManager
 import com.oheuropa.android.domain.AudioComponent
@@ -49,28 +50,31 @@ class AudioService : Service() {
 		}
 
 		fun bindService(activity: Activity): AudioConnection {
+			v { "bindService($activity)" }
 			val i = createIntent(activity)
 			val connection = AudioConnection()
 			activity.bindService(i, connection, Context.BIND_AUTO_CREATE)
+			boundActivities++
 			return connection
 		}
 
 		fun unbindService(activity: Activity, connection: ServiceConnection) {
+			v { "unbindService($activity)" }
 			activity.unbindService(connection)
+			boundActivities--
 		}
 
 		class AudioConnection : ServiceConnection {
 			override fun onServiceConnected(name: ComponentName, binder: IBinder) {
 				v { "onServiceConnected($name, $binder)" }
-				boundActivities++
 			}
 
 			override fun onServiceDisconnected(name: ComponentName?) {
 				v { "onServiceDisconnected($name)" }
-				boundActivities--
 			}
 
 			fun unbind(activity: Activity) {
+				v { "onServiceUnbound($activity)" }
 				unbindService(activity, this)
 			}
 		}

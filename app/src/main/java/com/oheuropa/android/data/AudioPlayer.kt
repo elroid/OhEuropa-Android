@@ -103,8 +103,8 @@ class AudioPlayer @Inject constructor(ctx: Context) : AudioComponent {
 			set(vol) {
 				val newVol = 1 - (Math.log(MAX_VOLUME - volume) / Math.log(MAX_VOLUME)).toFloat()
 				try {
-					//if(mediaPlayer.isPlaying)
-					mediaPlayer.setVolume(newVol, newVol)
+					if(isPlaying())
+						mediaPlayer.setVolume(newVol, newVol)
 				} catch (e: Exception) {
 					w { "Unable to set volume, media player is not in correct currentState" }
 				}
@@ -167,7 +167,7 @@ class AudioPlayer @Inject constructor(ctx: Context) : AudioComponent {
 			v { "play(${name()})" }
 			if (!prepared) {
 				try {
-					v { "media player is stopped(playing:${mediaPlayer.isPlaying}), preparing..." }
+					v { "media player is stopped(playing:${isPlaying()}), preparing..." }
 					mediaPlayer.setOnPreparedListener({ mp ->
 						prepared = true
 						onPrepared(mp)
@@ -182,15 +182,28 @@ class AudioPlayer @Inject constructor(ctx: Context) : AudioComponent {
 				onPrepared(mediaPlayer)
 		}
 
+		protected fun isPlaying():Boolean{
+			return try {
+				mediaPlayer.isPlaying
+			} catch (e: Exception) {
+				w { "Error in mediaPlayer.isPlaying($e), retuning false" }
+				false
+			}
+		}
+
 		private fun onPrepared(mediaPlayer: MediaPlayer) {
-			v { "onPrepared(${name()})" }
-			mediaPlayer.start()
-			mediaPlayer.setVolume(0f, 0f)
+			try {
+				v { "onPrepared(${name()})" }
+				mediaPlayer.start()
+				mediaPlayer.setVolume(0f, 0f)
+			} catch (e: Exception) {
+				w { "Error in mediaPlayer.start():$e" }
+			}
 
 		}
 
 		fun pause() {
-			if (mediaPlayer.isPlaying) {
+			if (isPlaying()) {
 				v { "pausing ${name()}" }
 				mediaPlayer.pause()
 			} else {
@@ -201,7 +214,7 @@ class AudioPlayer @Inject constructor(ctx: Context) : AudioComponent {
 
 		fun fadeTo(targetVolume: Int) {
 			v { "${name()}.fadeTo($targetVolume) from $volume" }
-			if (!mediaPlayer.isPlaying && targetVolume > 0)
+			if (!isPlaying() && targetVolume > 0)
 				play(mediaPlayer)
 			if (targetVolume != volume) {
 				ViewUtils.handler().post {
