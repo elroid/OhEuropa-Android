@@ -3,6 +3,7 @@ package com.oheuropa.android.ui.start
 import com.github.ajalt.timberkt.d
 import com.github.ajalt.timberkt.i
 import com.oheuropa.android.data.DataManager
+import com.oheuropa.android.data.local.AnalyticsHelper
 import com.oheuropa.android.domain.SPLASH_WAIT_SECONDS
 import com.oheuropa.android.ui.base.BasePresenter
 import com.oheuropa.android.ui.base.SchedulersFacade
@@ -33,6 +34,7 @@ class StartPresenter(
 					continueAfter(SPLASH_WAIT_SECONDS, start)
 			}, {
 				view.showConnectionError(it.message)
+				AnalyticsHelper.logException(it, "start.error")
 			}))
 	}
 

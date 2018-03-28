@@ -2,6 +2,7 @@ package com.oheuropa.android.ui.map
 
 import com.github.ajalt.timberkt.d
 import com.github.ajalt.timberkt.e
+import com.oheuropa.android.data.local.AnalyticsHelper
 import com.oheuropa.android.domain.BeaconWatcher
 import com.oheuropa.android.domain.LocationComponent
 import com.oheuropa.android.ui.base.LocationEnabledPresenter
@@ -40,8 +41,8 @@ class MapPresenter(
 					mapInitialised = true
 				}
 			}, {
-				e(it)
 				view.showError(msg = it.message)
+				AnalyticsHelper.logException(it, "beaconWatcher-map.error")
 			}))
 	}
 }

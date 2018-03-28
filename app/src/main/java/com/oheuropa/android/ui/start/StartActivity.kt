@@ -12,6 +12,7 @@ import com.google.android.gms.common.GoogleApiAvailability
 import com.google.android.gms.common.GoogleApiAvailability.GOOGLE_PLAY_SERVICES_VERSION_CODE
 import com.oheuropa.android.BuildConfig
 import com.oheuropa.android.R
+import com.oheuropa.android.data.local.AnalyticsHelper
 import com.oheuropa.android.domain.REQUEST_PLAY_SERVICES
 import com.oheuropa.android.ui.base.BaseActivity
 import com.oheuropa.android.ui.compass.CompassActivity
@@ -73,11 +74,13 @@ class StartActivity : BaseActivity(), StartContract.View {
 			}
 			apiAvailability.isUserResolvableError(availability) -> {
 				w { "user-recoverable error" }
+				AnalyticsHelper.logPlayUpdateRequired()
 				apiAvailability.getErrorDialog(this, availability, REQUEST_PLAY_SERVICES).show()
 				false
 			}
 			else -> {
 				wtf { "Unrecoverable error for google play services....ignore?" }
+				AnalyticsHelper.logException(message = "Unrecoverable error for google play services")
 				true
 			}
 		}

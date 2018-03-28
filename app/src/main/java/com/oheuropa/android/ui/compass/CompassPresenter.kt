@@ -2,6 +2,7 @@ package com.oheuropa.android.ui.compass
 
 import com.github.ajalt.timberkt.e
 import com.github.ajalt.timberkt.v
+import com.oheuropa.android.data.local.AnalyticsHelper
 import com.oheuropa.android.data.remote.OhEuropaApiService
 import com.oheuropa.android.domain.BeaconWatcher
 import com.oheuropa.android.domain.CompassComponent
@@ -104,6 +105,7 @@ class CompassPresenter(
 				checkStatus()
 			}, {
 				e { "error in beaconWatcher!" }
+				AnalyticsHelper.logException(it, "beaconWatcher.error")
 			})
 		)
 
@@ -134,6 +136,7 @@ class CompassPresenter(
 				}
 			}, {
 				view.showError(msg = it.message)
+				AnalyticsHelper.logException(it, "listenToCompass.error")
 			}))
 	}
 }

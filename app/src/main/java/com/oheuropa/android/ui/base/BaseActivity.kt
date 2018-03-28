@@ -10,6 +10,7 @@ import com.github.ajalt.timberkt.e
 import com.github.ajalt.timberkt.v
 import com.oheuropa.android.R
 import com.oheuropa.android.data.event.AppQuitEvent
+import com.oheuropa.android.data.local.AnalyticsHelper
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -73,7 +74,7 @@ abstract class BaseActivity : AppCompatActivity(), BaseView {
 				builder.setPositiveButton(R.string.err_ok) { dialog, _ -> dialog.dismiss() }
 			builder.create().show()
 		} catch (ex: Throwable) {
-			e(ex) { "Error showing an error!" }
+			AnalyticsHelper.logException(ex, "Error showing an error!")
 		}
 	}
 

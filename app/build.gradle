@@ -5,6 +5,7 @@ apply plugin: 'kotlin-kapt'
 apply plugin: 'com.fernandocejas.frodo'
 apply plugin: 'io.objectbox'
 apply plugin: 'com.akaita.android.easylauncher'
+apply plugin: 'io.fabric'
 
 android {
     compileSdkVersion 27
@@ -39,7 +40,7 @@ android {
             signingConfig signingConfigs.release
         }
         release {
-            minifyEnabled true
+            minifyEnabled false//true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.release
         }
@@ -95,10 +96,13 @@ dependencies {
     implementation "io.objectbox:objectbox-kotlin:$objectboxVersion"
     implementation "io.objectbox:objectbox-rxjava:$objectboxRxVersion"
 
-//    kaptAndroidTest "io.objectbox:objectbox-processor:$objectboxVersion"
-//    androidTestImplementation "io.objectbox:objectbox-android:$objectboxVersion"
-//    androidTestImplementation "io.objectbox:objectbox-kotlin:$objectboxVersion"
-//    androidTestImplementation "io.objectbox:objectbox-rxjava:$objectboxRxVersion"
+    //analytics & crash reporting
+    compile('com.crashlytics.sdk.android:crashlytics:2.9.1@aar') {
+        transitive = true
+    }
+    compile('com.crashlytics.sdk.android:answers:1.4.1@aar') {
+        transitive = true
+    }
 
     //Standard libs ////////////////////////////////////////////////////////////////////////////////
 

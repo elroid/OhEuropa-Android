@@ -43,17 +43,22 @@
 			android:screenOrientation="sensorPortrait"
 			/>
 
-		<meta-data
-			android:name="com.google.android.geo.API_KEY"
-			android:value="@string/google_maps_key"
-			/>
-
 		<service android:name=".data.local.AudioService"/>
 
 		<!--suppress AndroidDomInspection -->
 		<service
 			android:name="com.evernote.android.job.gcm.PlatformGcmService"
 			tools:node="remove"/>
+
+		<meta-data
+			android:name="com.google.android.geo.API_KEY"
+			android:value="@string/google_maps_key"
+			/>
+
+		<meta-data
+			android:name="io.fabric.ApiKey"
+			android:value="ffd1f3f77b77fb12177f123a99ac7ef674db0119"
+			/>
 
 	</application>
 
