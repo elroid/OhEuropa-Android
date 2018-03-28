@@ -37,7 +37,7 @@ class MapPresenter(
 				view.showMyLocation(it.myLocation)
 				if (!mapInitialised) {
 					view.showBeacons(it.beacons)
-					view.zoomTo(it.beacons, it.myLocation)
+					view.zoomTo(listOf(it.beacons[0]), it.myLocation)
 					mapInitialised = true
 				}
 			}, {
