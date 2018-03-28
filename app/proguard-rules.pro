@@ -60,3 +60,17 @@
   <init>(...);
   <fields>;
 }
+
+#okhttp
+-dontwarn okhttp3.**
+-dontwarn okio.**
+-dontwarn javax.annotation.**
+-dontwarn org.conscrypt.**
+# A resource is loaded with a relative path so the package of this class must be preserved.
+-keepnames class okhttp3.internal.publicsuffix.PublicSuffixDatabase
+
+#crashlytics: https://docs.fabric.io/android/crashlytics/dex-and-proguard.html
+#-keepattributes *Annotation*
+-keepattributes SourceFile,LineNumberTable
+#-keep class com.crashlytics.** { *; }
+#-dontwarn com.crashlytics.**
