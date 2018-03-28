@@ -47,6 +47,34 @@ android {
     }
 
     testOptions.unitTests.includeAndroidResources true
+
+    project.ext.set("archivesBaseName", "OhEuropa")
+
+    applicationVariants.all { variant ->
+        //add version number to apk name
+        variant.outputs.all {
+            outputFileName = outputFileName.replace('.apk', "-${variant.versionName}.apk")
+        }
+
+        //copy mapping.txt to proguard folder (for retrospective de-obfuscation)
+        if (variant.getBuildType().isMinifyEnabled() && !variant.getBuildType().isDebuggable()) {
+            variant.assemble.doLast {
+                println "Saving mapping.txt for ${variant.getFlavorName()} - ${variant.getBuildType().getName()}"
+                def targetDir = "${rootDir}/app/proguard/"
+                def formattedDate = new Date().format('yyyy.MM.dd')
+                println "Copying ${variant.mappingFile} to ${targetDir} with date ${formattedDate}"
+                if (variant.mappingFile != null) {
+                    getProject().copy {
+                        from variant.mappingFile
+                        into "${targetDir}"
+                        rename { String fileName ->
+                            fileName.replace('.txt', "-${defaultConfig.versionName}-${formattedDate}.txt")
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
 
 kapt {
