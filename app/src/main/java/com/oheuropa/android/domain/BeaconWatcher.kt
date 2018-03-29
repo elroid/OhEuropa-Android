@@ -1,6 +1,7 @@
 package com.oheuropa.android.domain
 
 import com.fernandocejas.frodo.annotation.RxLogObservable
+import com.github.ajalt.timberkt.d
 import com.github.ajalt.timberkt.i
 import com.github.ajalt.timberkt.v
 import com.oheuropa.android.data.DataManager
@@ -35,7 +36,7 @@ class BeaconWatcher constructor(
 	}
 
 	private fun createBeaconLocationObservable(): Observable<BeaconLocation> {
-		i { "CREATING beaconObservable" }
+		d { "CREATING beaconObservable" }
 		val allBeacons = dataManager.followBeaconList()
 		val currentLocation = locator.locationListener()
 		return Observable.combineLatest<List<Beacon>, Coordinate, BeaconLocation>(allBeacons,

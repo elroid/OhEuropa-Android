@@ -84,11 +84,11 @@ class LocationProvider constructor(private val ctx: Context) : LocationComponent
 		var e: ObservableEmitter<Coordinate>? = null
 
 		init {
-			v { "creating LocationObservable..." }
+			d { "creating LocationObservable..." }
 			locationCallback = object : LocationCallback() {
 				override fun onLocationResult(locationResult: LocationResult?) {
 					locationResult ?: return
-					v { "got location result: $locationResult" }
+					d { "got location result: $locationResult" }
 					for (location in locationResult.locations) {
 						onNext(Coordinate(location))
 					}
@@ -103,10 +103,11 @@ class LocationProvider constructor(private val ctx: Context) : LocationComponent
 				emitter.setDisposable(this)
 				try {
 					fusedLocationClient.lastLocation.addOnSuccessListener {
-						v { "got last location: $it" }
-						onNext(Coordinate(it))
+						d { "got last location: $it" }
+						if(it != null)
+							onNext(Coordinate(it))
 					}
-					v { "requesting location updates..." }
+					d { "requesting location updates..." }
 					ViewUtils.handler().post {
 						fusedLocationClient.requestLocationUpdates(locationRequest,
 							locationCallback, null)

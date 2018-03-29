@@ -42,7 +42,8 @@ class App : BaseApp(), HasActivityInjector, HasServiceInjector {
 			.build()
 			.inject(this)
 
-		Timber.plant(CrashlyticsTree(Log.INFO))
+		Timber.plant(CrashlyticsTree(Log.DEBUG))
+		//Timber.plant(Timber.DebugTree())//remove before release
 
 		Fabric.with(Fabric.Builder(this).kits(Crashlytics(), Answers()).build())
 	}
