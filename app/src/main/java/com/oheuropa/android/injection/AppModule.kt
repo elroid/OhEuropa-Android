@@ -10,6 +10,7 @@ import com.oheuropa.android.data.DataManager
 import com.oheuropa.android.data.job.BackgroundJobCreator
 import com.oheuropa.android.data.local.CompassProvider
 import com.oheuropa.android.data.local.LocationProvider
+import com.oheuropa.android.data.local.PrefsHelper
 import com.oheuropa.android.data.remote.OhEuropaApiService
 import com.oheuropa.android.domain.*
 import com.oheuropa.android.model.MyObjectBox
@@ -115,5 +116,11 @@ class AppModule {
 	fun provideJobManager(ctx: Context, jobCreator: BackgroundJobCreator): JobManager {
 		JobManager.create(ctx).addJobCreator(jobCreator)
 		return JobManager.instance()
+	}
+
+	@Singleton
+	@Provides
+	internal fun providePrefsHelper(ctx: Context): PrefsHelper {
+		return PrefsHelper(ctx)
 	}
 }

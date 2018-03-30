@@ -10,20 +10,14 @@ import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.support.v4.content.ContextCompat.getColor
 import android.support.v4.content.ContextCompat.getDrawable
-import android.view.View
 import android.view.WindowManager
-import com.github.ajalt.timberkt.d
 import com.github.ajalt.timberkt.e
 import com.github.ajalt.timberkt.v
 import com.github.ajalt.timberkt.w
-import com.google.android.gms.maps.CameraUpdateFactory
-import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.OnMapReadyCallback
-import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.*
+import com.google.android.gms.maps.GoogleMap.OnCameraMoveStartedListener.REASON_GESTURE
 import com.google.android.gms.maps.model.*
 import com.oheuropa.android.R
-import com.oheuropa.android.data.local.PrefsHelper
-import com.oheuropa.android.domain.DEFAULT_MAP_ZOOM
 import com.oheuropa.android.model.Beacon
 import com.oheuropa.android.model.Coordinate
 import com.oheuropa.android.ui.base.LocationEnabledActivity
@@ -51,14 +45,9 @@ class MapActivity : LocationEnabledActivity<MapContract.Presenter>()
 	}
 
 	@Inject override lateinit var presenter: MapContract.Presenter
-	@Inject lateinit var prefs: PrefsHelper
 	private lateinit var map: GoogleMap
 
-	private var currentZoom: Float = DEFAULT_MAP_ZOOM
-	private var currentCentre: LatLng? = null
-
 	override fun onCreate(savedInstanceState: Bundle?) {
-		d { "MapActivity.create: $savedInstanceState" }
 		AndroidInjection.inject(this)
 		super.onCreate(savedInstanceState)
 
@@ -72,7 +61,7 @@ class MapActivity : LocationEnabledActivity<MapContract.Presenter>()
 
 	override fun onPause() {
 		super.onPause()
-		prefs.saveMapCentre(currentCentre, currentZoom)
+		presenter.saveMapState()
 	}
 
 	override fun onStop() {
@@ -85,20 +74,15 @@ class MapActivity : LocationEnabledActivity<MapContract.Presenter>()
 		applyMapStyle(map)
 
 		map.setOnCameraIdleListener {
-			currentZoom = map.cameraPosition.zoom
-			currentCentre = map.cameraPosition.target
-			d { "recording idle zoom($currentZoom) and pos($currentCentre)" }
+			presenter.onCameraIdle(Coordinate(map.cameraPosition.target), map.cameraPosition.zoom)
 		}
 
 		//remove popup directions
 		map.uiSettings.isMapToolbarEnabled = false
 
-		//apply state if we have it
-		val (centre, zoom) = prefs.restoreMapCentre()
-		if (centre.isValid()) {
-			d { "restoring saved centre($centre) and zoom($zoom)" }
-			val cu = CameraUpdateFactory.newLatLngZoom(centre.toLatLng(), zoom)
-			map.moveCamera(cu)
+		map.setOnCameraMoveStartedListener {
+			if (it == REASON_GESTURE)
+				presenter.onMapWander()
 		}
 	}
 
@@ -181,15 +165,30 @@ class MapActivity : LocationEnabledActivity<MapContract.Presenter>()
 		return bitmap
 	}
 
-	override fun zoomTo(beacons: List<Beacon>, myLocation: Coordinate) {
+	override fun zoomTo(beacons: List<Beacon>, myLocation: Coordinate, durationSeconds: Int) {
+		v { "zoomTo($beacons, $myLocation, $durationSeconds)" }
 		val b = LatLngBounds.builder()
 		beacons.iterator().forEach {
 			b.include(it.getCoordinate().toLatLng())
 		}
 		b.include(myLocation.toLatLng())
 		val bounds = b.build()
-		val margin = getScreenWidth() / 4
-		map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, margin))
+		val margin = getScreenWidth() / 8
+		zoomTo(CameraUpdateFactory.newLatLngBounds(bounds, margin), durationSeconds)
+	}
+
+	override fun zoomTo(centre: Coordinate, zoom: Float, durationSeconds: Int) {
+		v { "zoomTo($centre, $zoom, $durationSeconds)" }
+		val cu = CameraUpdateFactory.newLatLngZoom(centre.toLatLng(), zoom)
+		zoomTo(cu, durationSeconds)
+	}
+
+	private fun zoomTo(cu: CameraUpdate, durationSeconds: Int) {
+		if (durationSeconds == 0) {
+			map.moveCamera(cu)
+		} else {
+			map.animateCamera(cu, durationSeconds * 1000, null)
+		}
 	}
 
 	override fun getLayoutId(): Int {
@@ -198,5 +197,9 @@ class MapActivity : LocationEnabledActivity<MapContract.Presenter>()
 
 	override fun getNavigationMenuItemId(): Int {
 		return R.id.navigation_map
+	}
+
+	override fun onThisTabPressed() {
+		presenter.onMapTabPressed()
 	}
 }

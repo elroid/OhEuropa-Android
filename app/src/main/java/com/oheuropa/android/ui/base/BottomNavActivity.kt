@@ -5,6 +5,9 @@ import android.support.annotation.LayoutRes
 import android.support.design.widget.BottomNavigationView
 import android.view.MenuItem
 import androidx.view.doOnPreDraw
+import com.github.ajalt.timberkt.d
+import com.github.ajalt.timberkt.i
+import com.github.ajalt.timberkt.v
 import com.oheuropa.android.R
 import com.oheuropa.android.ui.compass.CompassActivity
 import com.oheuropa.android.ui.info.InfoActivity
@@ -24,6 +27,7 @@ import kotlinx.android.synthetic.main.bottom_navigation.*
 abstract class BottomNavActivity : BaseActivity(), BottomNavigationView.OnNavigationItemSelectedListener {
 
 	override fun onCreate(savedInstanceState: Bundle?) {
+		i { "onCreate $this" }
 		super.onCreate(savedInstanceState)
 		setContentView(getLayoutId())
 
@@ -46,15 +50,24 @@ abstract class BottomNavActivity : BaseActivity(), BottomNavigationView.OnNaviga
 
 	internal abstract fun getNavigationMenuItemId(): Int
 
+	open fun onThisTabPressed() {
+		v { "this tab pressed(%s) - doing nothing by default" }
+	}
+
 	override fun onNavigationItemSelected(item: MenuItem): Boolean {
-		bottomNavigationView.postDelayed({
-			when (item.itemId) {
-				R.id.navigation_compass -> startActivity(CompassActivity.createIntent(getCtx()))
-				R.id.navigation_map -> startActivity(MapActivity.createIntent(getCtx()))
-				R.id.navigation_info -> startActivity(InfoActivity.createIntent(getCtx()))
-			}
-			finish()
-		}, 300)
+		i { "onNavigationItemSelected(${item.title})" }
+		if (item.itemId == getNavigationMenuItemId())
+			onThisTabPressed()
+		else
+			bottomNavigationView.postDelayed({
+				i { "creating intent..." }
+				when (item.itemId) {
+					R.id.navigation_compass -> startActivity(CompassActivity.createIntent(getCtx()))
+					R.id.navigation_map -> startActivity(MapActivity.createIntent(getCtx()))
+					R.id.navigation_info -> startActivity(InfoActivity.createIntent(getCtx()))
+				}
+				finish()
+			}, 300)
 		return true
 	}
 

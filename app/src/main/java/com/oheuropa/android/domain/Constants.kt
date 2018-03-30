@@ -31,9 +31,11 @@ const val VOL_MAX_RADIO = 75
 const val VOL_MIN_RADIO = 15
 const val VOL_MIN = 0
 
+const val MAP_ZOOM_DURATION_SECONDS = 3
+
 //Debug constants - to only have an effect on debug builds - by using Constants.isDebug(*)
-const val USE_MOCK_BEACON_LOCATIONS = true
-const val USE_MOCK_USER_LOCATION = true
+const val USE_MOCK_BEACON_LOCATIONS = false
+const val USE_MOCK_USER_LOCATION = false
 const val USE_MOCK_COMPASS_READINGS = false
 const val USE_MOCK_INTERACTION_EVENTS = true
 const val LOG_HTTP = true

@@ -20,6 +20,7 @@ data class Coordinate(
 ) {
 	constructor(lat: Float, lon: Float) : this(lat.toDouble(), lon.toDouble())
 	constructor(loc: Location) : this(loc.latitude, loc.longitude, loc.accuracy)
+	constructor(loc: LatLng) : this(loc.latitude, loc.longitude, 0f)
 
 	private val loc: Location by lazy {
 		val location = Location("generated")
