@@ -8,6 +8,7 @@ import android.view.WindowManager
 import android.widget.Toast
 import com.github.ajalt.timberkt.e
 import com.github.ajalt.timberkt.v
+import com.github.ajalt.timberkt.w
 import com.oheuropa.android.R
 import com.oheuropa.android.data.event.AppQuitEvent
 import com.oheuropa.android.data.local.AnalyticsHelper
@@ -51,7 +52,7 @@ abstract class BaseActivity : AppCompatActivity(), BaseView {
 	}
 
 	override fun showError(msgId: Int, msg: String?, fatal: Boolean) {
-		v { "showError($msgId, $msg, $fatal)" }
+		w { "showError($msgId, $msg, $fatal)" }
 		try {
 			val builder = AlertDialog.Builder(this)
 			builder.setTitle(R.string.err_title)

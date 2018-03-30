@@ -1,10 +1,7 @@
 package com.oheuropa.android.data
 
 import com.fernandocejas.frodo.annotation.RxLogObservable
-import com.github.ajalt.timberkt.d
-import com.github.ajalt.timberkt.e
-import com.github.ajalt.timberkt.i
-import com.github.ajalt.timberkt.v
+import com.github.ajalt.timberkt.*
 import com.oheuropa.android.data.job.RefreshBeaconsJob
 import com.oheuropa.android.data.local.PrefsHelper
 import com.oheuropa.android.data.remote.OhEuropaApiService
@@ -64,9 +61,9 @@ class DataManager @Inject constructor(
 				.map { it.data }//get beacons from parent object
 				.subscribe({
 					val beaconBox = boxStore.boxFor(Beacon::class.java)
-					v { "RefreshBeaconsJob-Adding ${it.size} beacons to object box of size(${beaconBox.count()}): $it" }
+					d { "RefreshBeaconsJob-Adding ${it.size} beacons to object box of size(${beaconBox.count()}): $it" }
 					beaconBox.put(it)
-					v { "RefreshBeaconsJob-...done adding beacons, new size:${beaconBox.count()}" }
+					d { "RefreshBeaconsJob-...done adding beacons, new size:${beaconBox.count()}" }
 					emitter.onComplete()
 				}, {
 					emitter.onError(it)
@@ -84,7 +81,12 @@ class DataManager @Inject constructor(
 				RefreshBeaconsJob.schedule()
 			} else {
 				updateBeaconList()
-					.subscribe({ emitter.onComplete() }, { emitter.onError(it) })
+					.subscribe({
+						emitter.onComplete()
+					}, {
+						w(it) { "error updating beacon list..." }
+						emitter.onError(it)
+					})
 			}
 		}
 	}

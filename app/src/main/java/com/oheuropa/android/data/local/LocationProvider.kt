@@ -1,6 +1,7 @@
 package com.oheuropa.android.data.local
 
 import android.content.Context
+import android.location.Location
 import com.github.ajalt.timberkt.d
 import com.github.ajalt.timberkt.v
 import com.github.ajalt.timberkt.w
@@ -102,7 +103,7 @@ class LocationProvider constructor(private val ctx: Context) : LocationComponent
 				e = emitter
 				emitter.setDisposable(this)
 				try {
-					fusedLocationClient.lastLocation.addOnSuccessListener {
+					fusedLocationClient.lastLocation.addOnSuccessListener { it: Location? ->
 						d { "got last location: $it" }
 						if(it != null)
 							onNext(Coordinate(it))
