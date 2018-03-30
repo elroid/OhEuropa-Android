@@ -2,9 +2,11 @@ package com.oheuropa.android.data.job
 
 import com.evernote.android.job.Job
 import com.evernote.android.job.JobRequest
+import com.github.ajalt.timberkt.d
 import com.github.ajalt.timberkt.e
 import com.github.ajalt.timberkt.w
 import com.oheuropa.android.data.DataManager
+import com.oheuropa.android.data.local.AnalyticsHelper
 import javax.inject.Inject
 
 /**
@@ -19,9 +21,10 @@ class RefreshBeaconsJob
 		@JvmStatic
 		fun schedule() {
 
+			d { "scheduling job..." }
 			//every 24 hours, give or take 2 hours
-			val updateIntervalMS = 2_073_600_000L//24 hours
-			val updateFlexMS = 518_400_000L//6 hours
+			val updateIntervalMS = 86_400_000L//24 hours
+			val updateFlexMS = 21_600_000L//6 hours
 
 			JobRequest.Builder(RefreshBeaconsJob.TAG)
 				.setPeriodic(updateIntervalMS, updateFlexMS)
@@ -46,11 +49,12 @@ class RefreshBeaconsJob
 			dataManager.updateBeaconList()
 				.subscribe({
 					w { "Finished beacon update job" }
+					AnalyticsHelper.logBeaconUpdateComplete()
 				})
 
 			Job.Result.SUCCESS
 		} catch (ex: Exception) {
-			e(ex) { "Error running background RefreshBeaconsJob" }
+			AnalyticsHelper.logException(ex, "Error running background RefreshBeaconsJob")
 			Job.Result.FAILURE
 		}
 	}

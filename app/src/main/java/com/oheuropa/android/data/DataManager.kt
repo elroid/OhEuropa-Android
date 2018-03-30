@@ -62,6 +62,7 @@ class DataManager @Inject constructor(
 				.subscribe({
 					val beaconBox = boxStore.boxFor(Beacon::class.java)
 					d { "RefreshBeaconsJob-Adding ${it.size} beacons to object box of size(${beaconBox.count()}): $it" }
+					beaconBox.removeAll()
 					beaconBox.put(it)
 					d { "RefreshBeaconsJob-...done adding beacons, new size:${beaconBox.count()}" }
 					emitter.onComplete()

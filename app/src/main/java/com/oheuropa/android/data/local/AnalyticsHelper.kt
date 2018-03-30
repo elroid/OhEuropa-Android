@@ -39,5 +39,15 @@ class AnalyticsHelper {
 		fun logPlayUpdateRequired(){
 			Answers.getInstance().logCustom(CustomEvent("Play update required"));
 		}
+
+		fun logBeaconUpdateComplete(){
+			//todo remove once we are sure this is working
+			i { "logBeaconUpdateComplete" }
+			try {
+				throw Exception("beacon update Complete")
+			} catch (e: Exception) {
+				Crashlytics.logException(e)
+			}
+		}
 	}
 }
