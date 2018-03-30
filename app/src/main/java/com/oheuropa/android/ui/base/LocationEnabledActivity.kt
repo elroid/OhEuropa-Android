@@ -65,8 +65,8 @@ abstract class LocationEnabledActivity<Pres : LocationEnabledPres>
 	override fun showLocationPermissionExplanation() {
 		android.app.AlertDialog.Builder(getCtx())
 			.setMessage(R.string.loc_justification)
-			.setPositiveButton(R.string.loc_ok) { _, _ -> requestLocationPermission() }
-			.setNegativeButton(R.string.loc_quit) { _, _ -> quit() }
+			.setPositiveButton(R.string.ok) { _, _ -> requestLocationPermission() }
+			.setNegativeButton(R.string.quit) { _, _ -> quit() }
 			.create().show()
 	}
 
