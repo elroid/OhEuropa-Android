@@ -70,9 +70,9 @@ abstract class BaseActivity : AppCompatActivity(), BaseView {
 			}
 
 			if (fatal)
-				builder.setPositiveButton(R.string.err_quit) { _, _ -> quit() }
+				builder.setPositiveButton(R.string.quit) { _, _ -> quit() }
 			else
-				builder.setPositiveButton(R.string.err_ok) { dialog, _ -> dialog.dismiss() }
+				builder.setPositiveButton(R.string.ok) { dialog, _ -> dialog.dismiss() }
 			builder.create().show()
 		} catch (ex: Throwable) {
 			AnalyticsHelper.logException(ex, "Error showing an error!")
