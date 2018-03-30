@@ -3,6 +3,7 @@ package com.oheuropa.android.data
 import com.fernandocejas.frodo.annotation.RxLogObservable
 import com.github.ajalt.timberkt.*
 import com.oheuropa.android.data.job.RefreshBeaconsJob
+import com.oheuropa.android.data.local.AnalyticsHelper
 import com.oheuropa.android.data.local.PrefsHelper
 import com.oheuropa.android.data.remote.OhEuropaApiService
 import com.oheuropa.android.domain.Constants
@@ -136,6 +137,7 @@ class DataManager @Inject constructor(
 					e(it) { "Error uploading user interaction" }
 				})
 		}
+		AnalyticsHelper.logBeaconEntered(placeId, circleState, action)
 	}
 
 	private fun createUserInteraction(placeId: String,

@@ -4,6 +4,8 @@ import com.crashlytics.android.Crashlytics
 import com.crashlytics.android.answers.Answers
 import com.crashlytics.android.answers.CustomEvent
 import com.github.ajalt.timberkt.*
+import com.oheuropa.android.model.BeaconLocation
+import com.oheuropa.android.model.UserRequest
 import io.fabric.sdk.android.Fabric
 import timber.log.Timber
 
@@ -47,6 +49,15 @@ class AnalyticsHelper {
 				throw Exception("beacon update Complete")
 			} catch (e: Exception) {
 				Crashlytics.logException(e)
+			}
+		}
+
+		fun logBeaconEntered(placeId: String, circleState: BeaconLocation.CircleState, action: UserRequest.Action) {
+			if(action == UserRequest.Action.Entered) {
+				val event = CustomEvent("Beacon-Entered")
+				event.putCustomAttribute("zone", circleState.toString())
+				event.putCustomAttribute("placeId", placeId)
+				Answers.getInstance().logCustom(event)
 			}
 		}
 	}
