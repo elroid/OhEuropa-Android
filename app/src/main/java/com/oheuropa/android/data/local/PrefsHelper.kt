@@ -7,6 +7,7 @@ import androidx.content.edit
 import com.github.ajalt.timberkt.d
 import com.google.android.gms.maps.model.LatLng
 import com.oheuropa.android.domain.DEFAULT_MAP_ZOOM
+import com.oheuropa.android.domain.MAX_UPDATE_INTERVAL_HOURS
 import com.oheuropa.android.model.Coordinate
 import com.oheuropa.android.ui.map.MapPresenter
 import javax.inject.Inject
@@ -24,6 +25,7 @@ class PrefsHelper constructor(ctx: Context) {
 	private val prefs: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(ctx)
 
 	private val USER_ID = "UserId"
+	private val LAST_UPDATE = "LastUpdate"
 
 	//map centre is stored in memory only
 	private var centre:Coordinate? = null
@@ -51,6 +53,16 @@ class PrefsHelper constructor(ctx: Context) {
 	fun setUserId(userId: String) {
 		d { "setUserId:$userId" }
 		prefs.edit { putString(USER_ID, userId) }
+	}
+
+	fun logUpdateSuccessful(){
+		prefs.edit{putLong(LAST_UPDATE, System.currentTimeMillis())}
+	}
+
+	fun isUpdateNeeded():Boolean{
+		val lastUpdate = prefs.getLong(LAST_UPDATE, 0)
+		val maxIntervalMs = MAX_UPDATE_INTERVAL_HOURS * 3_600_000
+		return (lastUpdate + maxIntervalMs) < System.currentTimeMillis()
 	}
 }
 

@@ -44,3 +44,4 @@ captures/
 .externalNativeBuild
 .DS_Store
 projectFilesBackup*
+build_file_checksums.ser

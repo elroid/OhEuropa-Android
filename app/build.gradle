@@ -105,7 +105,7 @@ dependencies {
     // UI libs /////////////////////////////////////////////////////////////////////////////////////
     implementation 'com.github.ittianyu:BottomNavigationViewEx:1.2.4'
     implementation 'org.greenrobot:eventbus:3.0.0'
-    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
+    implementation 'com.android.support.constraint:constraint-layout:1.1.0'
 
     // Back-end libs ///////////////////////////////////////////////////////////////////////////////
     implementation 'com.daasuu:EasingInterpolator:1.0.0' //for audio fade interpolators
@@ -125,10 +125,10 @@ dependencies {
     implementation "io.objectbox:objectbox-rxjava:$objectboxRxVersion"
 
     //analytics & crash reporting
-    compile('com.crashlytics.sdk.android:crashlytics:2.9.1@aar') {
+    implementation('com.crashlytics.sdk.android:crashlytics:2.9.1@aar') {
         transitive = true
     }
-    compile('com.crashlytics.sdk.android:answers:1.4.1@aar') {
+    implementation('com.crashlytics.sdk.android:answers:1.4.1@aar') {
         transitive = true
     }
 

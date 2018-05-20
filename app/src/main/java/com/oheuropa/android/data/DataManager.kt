@@ -57,6 +57,7 @@ class DataManager @Inject constructor(
 
 	@RxLogObservable
 	fun updateBeaconList(): Completable {
+		i { "Updating beacons list" }
 		return Completable.create { emitter ->
 			apiService.getBeacons()
 				.map { it.data }//get beacons from parent object
@@ -66,6 +67,7 @@ class DataManager @Inject constructor(
 					beaconBox.removeAll()
 					beaconBox.put(it)
 					d { "RefreshBeaconsJob-...done adding beacons, new size:${beaconBox.count()}" }
+					prefs.logUpdateSuccessful()
 					emitter.onComplete()
 				}, {
 					emitter.onError(it)
@@ -74,10 +76,11 @@ class DataManager @Inject constructor(
 	}
 
 	fun ensureBeaconListPresent(): Completable {
+		i { "Ensuring beacon list is present..." };
 		return Completable.create { emitter ->
 			val beaconBox = boxStore.boxFor(Beacon::class.java)
 			val count = beaconBox.count()
-			if (count > 0) {
+			if (count > 0 && !prefs.isUpdateNeeded()) {
 				v { "no update needed, we already have $count beacons" }
 				emitter.onComplete()
 				RefreshBeaconsJob.schedule()

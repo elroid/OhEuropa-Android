@@ -53,11 +53,15 @@ class AnalyticsHelper {
 		}
 
 		fun logBeaconEntered(placeId: String, circleState: BeaconLocation.CircleState, action: UserRequest.Action) {
-			if(action == UserRequest.Action.Entered) {
-				val event = CustomEvent("Beacon-Entered")
-				event.putCustomAttribute("zone", circleState.toString())
-				event.putCustomAttribute("placeId", placeId)
-				Answers.getInstance().logCustom(event)
+			try {
+				if(action == UserRequest.Action.Entered) {
+					val event = CustomEvent("Beacon-Entered")
+					event.putCustomAttribute("zone", circleState.toString())
+					event.putCustomAttribute("placeId", placeId)
+					Answers.getInstance().logCustom(event)
+				}
+			} catch (ex: Exception) {
+				w(ex) { "Error logging beacon entry..." }
 			}
 		}
 	}

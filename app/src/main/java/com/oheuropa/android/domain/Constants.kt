@@ -33,6 +33,8 @@ const val VOL_MIN = 0
 
 const val MAP_ZOOM_DURATION_SECONDS = 3
 
+const val MAX_UPDATE_INTERVAL_HOURS = 24
+
 //Debug constants - to only have an effect on debug builds - by using Constants.isDebug(*)
 const val USE_MOCK_BEACON_LOCATIONS = true
 const val USE_MOCK_USER_LOCATION = true
