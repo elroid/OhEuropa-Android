@@ -12,6 +12,12 @@ When participants who have downloaded the application enter the beacon zone they
 More information can be found at http://oheuropa.com/ 
 
 
-### Version History
+## Version History
 
-No version history
+###Version 1.2
+* Ensures beacon database is marked for an update when data age > 24h
+
+---
+###Version 1.1
+* Inital release
+

@@ -45,3 +45,4 @@ captures/
 .DS_Store
 projectFilesBackup*
 build_file_checksums.ser
+/.idea/misc.xml
