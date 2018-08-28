@@ -14,6 +14,11 @@ More information can be found at http://oheuropa.com/
 
 ## Version History
 
+###Version 1.3
+* Ensures errors in background jonb do not crash app
+* Ensures audio player doesn't crash app in background
+
+---
 ###Version 1.2
 * Ensures beacon database is marked for an update when data age > 24h
 
