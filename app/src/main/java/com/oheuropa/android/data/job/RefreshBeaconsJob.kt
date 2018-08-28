@@ -4,6 +4,7 @@ import com.evernote.android.job.Job
 import com.evernote.android.job.JobRequest
 import com.github.ajalt.timberkt.d
 import com.github.ajalt.timberkt.e
+import com.github.ajalt.timberkt.i
 import com.github.ajalt.timberkt.w
 import com.oheuropa.android.data.DataManager
 import com.oheuropa.android.data.local.AnalyticsHelper
@@ -45,11 +46,13 @@ class RefreshBeaconsJob
 
 	override fun onRunJob(params: Params): Result {
 		return try {
-			w { "RUNNING RefreshBeaconsJob: $params *********************************************" }
+			i { "RUNNING RefreshBeaconsJob: $params *********************************************" }
 			dataManager.updateBeaconList()
 				.subscribe({
-					w { "Finished beacon update job" }
+					i { "Finished beacon update job" }
 					AnalyticsHelper.logBeaconUpdateComplete()
+				},{
+					AnalyticsHelper.logException(it, "Error running RefreshBeaconsJob")
 				})
 
 			Job.Result.SUCCESS
