@@ -3,14 +3,12 @@ package com.oheuropa.android.data.local
 import android.content.Context
 import android.content.SharedPreferences
 import android.preference.PreferenceManager
-import androidx.content.edit
+import androidx.core.content.edit
 import com.github.ajalt.timberkt.d
-import com.google.android.gms.maps.model.LatLng
 import com.oheuropa.android.domain.DEFAULT_MAP_ZOOM
 import com.oheuropa.android.domain.MAX_UPDATE_INTERVAL_HOURS
 import com.oheuropa.android.model.Coordinate
 import com.oheuropa.android.ui.map.MapPresenter
-import javax.inject.Inject
 
 /**
  *
@@ -21,11 +19,11 @@ import javax.inject.Inject
  * @author <a href="mailto:e@elroid.com">Elliot Long</a>
  *         Copyright (c) 2018 Elroid Ltd. All rights reserved.
  */
+const val USER_ID = "UserId"
+const val LAST_UPDATE = "LastUpdate"
 class PrefsHelper constructor(ctx: Context) {
 	private val prefs: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(ctx)
 
-	private val USER_ID = "UserId"
-	private val LAST_UPDATE = "LastUpdate"
 
 	//map centre is stored in memory only
 	private var centre:Coordinate? = null

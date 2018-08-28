@@ -7,7 +7,7 @@ import android.media.AudioAttributes
 import android.media.AudioManager
 import android.media.MediaPlayer
 import android.os.Build
-import androidx.net.toUri
+import androidx.core.net.toUri
 import com.daasuu.ei.Ease
 import com.daasuu.ei.EasingInterpolator
 import com.github.ajalt.timberkt.d
@@ -38,7 +38,7 @@ class AudioPlayer @Inject constructor(ctx: Context) : AudioComponent {
 	override fun setState(newState: AudioComponent.State) {
 		v { "setState:$newState" }
 		if (currentState != newState)
-			Thread({
+			Thread {
 				when (newState) {
 					QUIET -> {
 						staticAudio.fadeTo(VOL_MIN)
@@ -58,7 +58,7 @@ class AudioPlayer @Inject constructor(ctx: Context) : AudioComponent {
 					}
 				}
 				currentState = newState
-			}).start()
+			}.start()
 	}
 
 	override fun activate() {
@@ -68,10 +68,10 @@ class AudioPlayer @Inject constructor(ctx: Context) : AudioComponent {
 
 	override fun deactivate() {
 		v { "deactivate()" }
-		Thread({
+		Thread {
 			staticAudio.stopAfterFade()
 			radioAudio.stopAfterFade()
-		}).start()
+		}.start()
 	}
 
 	class RadioAudio(ctx: Context) : Audio(ctx) {
@@ -178,10 +178,10 @@ class AudioPlayer @Inject constructor(ctx: Context) : AudioComponent {
 			if (!prepared) {
 				try {
 					v { "media player is stopped(playing:${isPlaying()}), preparing..." }
-					mediaPlayer.setOnPreparedListener({ mp ->
+					mediaPlayer.setOnPreparedListener { mp ->
 						prepared = true
 						onPrepared(mp)
-					})
+					}
 					setType(mediaPlayer)
 					mediaPlayer.prepareAsync()
 				} catch (e: Exception) {

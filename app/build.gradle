@@ -139,8 +139,8 @@ dependencies {
     implementation "com.android.support:design:$supportLibraryVersion"
 
     // Kotlin
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlinVersion"
-    implementation 'androidx.core:core-ktx:0.2'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlinVersion"
+    implementation 'androidx.core:core-ktx:0.3'
 
     // Dagger core
     implementation "com.google.dagger:dagger:$daggerVersion"

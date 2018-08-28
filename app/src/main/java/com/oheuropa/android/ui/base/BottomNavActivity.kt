@@ -4,8 +4,7 @@ import android.os.Bundle
 import android.support.annotation.LayoutRes
 import android.support.design.widget.BottomNavigationView
 import android.view.MenuItem
-import androidx.view.doOnPreDraw
-import com.github.ajalt.timberkt.d
+import androidx.core.view.doOnPreDraw
 import com.github.ajalt.timberkt.i
 import com.github.ajalt.timberkt.v
 import com.oheuropa.android.R
