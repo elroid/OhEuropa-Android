@@ -138,7 +138,11 @@ class AudioPlayer @Inject constructor(ctx: Context) : AudioComponent {
 		private fun stop() {
 			d { "stopping audio..." }
 			prepared = false
-			volumeAnimator?.cancel()
+			try {
+				volumeAnimator?.cancel()
+			} catch (ex: IllegalStateException) {
+				w(ex) {"Error cancelling value animator..."}
+			}
 			volume = 0
 			try {
 				mediaPlayer?.apply{
