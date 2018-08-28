@@ -9,6 +9,7 @@ import com.evernote.android.job.JobManager
 import com.github.ajalt.timberkt.Timber
 import com.oheuropa.android.injection.DaggerAppComponent
 import com.oheuropa.android.util.CrashlyticsTree
+import com.tspoon.traceur.Traceur
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasActivityInjector
@@ -42,7 +43,8 @@ class App : BaseApp(), HasActivityInjector, HasServiceInjector {
 			.build()
 			.inject(this)
 
-		Timber.plant(CrashlyticsTree(Log.DEBUG))
+		Traceur.enableLogging()
+		Timber.plant(CrashlyticsTree(Log.INFO))
 		//Timber.plant(Timber.DebugTree())//remove before release
 
 		Fabric.with(Fabric.Builder(this).kits(Crashlytics(), Answers()).build())

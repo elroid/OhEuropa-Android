@@ -7,6 +7,7 @@ import com.evernote.android.job.JobManager
 import com.github.ajalt.timberkt.Timber
 import com.oheuropa.android.injection.DaggerDebugAppComponent
 import com.oheuropa.android.util.ThreadTree
+import com.tspoon.traceur.Traceur
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasActivityInjector
@@ -39,6 +40,7 @@ class DebugApp : BaseApp(), HasActivityInjector, HasServiceInjector {
 			.build()
 			.inject(this)
 
+		Traceur.enableLogging()
 		//Timber.plant(Timber.DebugTree())
 		Timber.plant(ThreadTree(VERBOSE))
 	}

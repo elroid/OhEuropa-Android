@@ -85,7 +85,7 @@ kapt {
 }
 
 project.ext {
-    supportLibraryVersion = "27.1.0"
+    supportLibraryVersion = "27.1.1"
     daggerVersion = "2.14.1"
     butterKnifeVersion = "8.8.1"
     rxKotlinVersion = "2.2.0"
@@ -105,7 +105,7 @@ dependencies {
     // UI libs /////////////////////////////////////////////////////////////////////////////////////
     implementation 'com.github.ittianyu:BottomNavigationViewEx:1.2.4'
     implementation 'org.greenrobot:eventbus:3.0.0'
-    implementation 'com.android.support.constraint:constraint-layout:1.1.0'
+    implementation 'com.android.support.constraint:constraint-layout:1.1.2'
 
     // Back-end libs ///////////////////////////////////////////////////////////////////////////////
     implementation 'com.daasuu:EasingInterpolator:1.0.0' //for audio fade interpolators
@@ -170,7 +170,7 @@ dependencies {
 
     // Testing libs ////////////////////////////////////////////////////////////////////////////////
     testImplementation "junit:junit:4.12"
-    testImplementation "org.robolectric:robolectric:3.6.1"
+    testImplementation "org.robolectric:robolectric:3.8"
     testImplementation "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlinVersion"
     testImplementation "org.jetbrains.kotlin:kotlin-test-junit:$kotlinVersion"
     testImplementation "com.nhaarman:mockito-kotlin:1.5.0"
