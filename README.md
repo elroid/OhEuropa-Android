@@ -14,6 +14,9 @@ More information can be found at http://oheuropa.com/
 
 ## Version History
 
+###Version 1.3.1
+* Removed beacon update log event (not needed)
+
 ###Version 1.3
 * Ensures errors in background jonb do not crash app
 * Ensures audio player doesn't crash app in background

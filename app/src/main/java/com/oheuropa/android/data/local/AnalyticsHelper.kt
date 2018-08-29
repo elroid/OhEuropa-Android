@@ -43,13 +43,7 @@ class AnalyticsHelper {
 		}
 
 		fun logBeaconUpdateComplete(){
-			//todo remove once we are sure this is working
 			i { "logBeaconUpdateComplete" }
-			try {
-				throw Exception("beacon update Complete")
-			} catch (e: Exception) {
-				Crashlytics.logException(e)
-			}
 		}
 
 		fun logBeaconEntered(placeId: String, circleState: BeaconLocation.CircleState, action: UserRequest.Action) {
