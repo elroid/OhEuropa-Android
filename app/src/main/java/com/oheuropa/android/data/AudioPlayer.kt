@@ -140,7 +140,7 @@ class AudioPlayer @Inject constructor(ctx: Context) : AudioComponent {
 			prepared = false
 			try {
 				volumeAnimator?.cancel()
-			} catch (ex: IllegalStateException) {
+			} catch (ex: Exception) {
 				w(ex) {"Error cancelling value animator..."}
 			}
 			volume = 0
@@ -156,13 +156,16 @@ class AudioPlayer @Inject constructor(ctx: Context) : AudioComponent {
 		}
 
 		fun stopAfterFade() {
-			if (volume > 0f) {
-				fadeTo(0)
-				ViewUtils.handler().postDelayed({
-					stop()
-				}, (FADE_DURATION_MS * 1.1).toLong())
-			} else
+			val delay =
+				if(volume > 0f) {
+					fadeTo(0)
+					(FADE_DURATION_MS * 1.1).toLong()//wait for fade before stopping
+				} else {
+					50//stop immediately(ish)
+				}
+			ViewUtils.handler().postDelayed({
 				stop()
+			}, delay)
 		}
 
 		private fun setType(mediaPlayer: MediaPlayer) {
