@@ -8,10 +8,7 @@ import android.content.Intent
 import android.content.ServiceConnection
 import android.os.Binder
 import android.os.IBinder
-import com.github.ajalt.timberkt.d
-import com.github.ajalt.timberkt.e
-import com.github.ajalt.timberkt.i
-import com.github.ajalt.timberkt.v
+import com.github.ajalt.timberkt.*
 import com.oheuropa.android.data.DataManager
 import com.oheuropa.android.domain.AudioComponent
 import com.oheuropa.android.domain.AudioComponent.State.*
@@ -50,7 +47,7 @@ class AudioService : Service() {
 		}
 
 		fun bindService(activity: Activity): AudioConnection {
-			v { "bindService($activity)" }
+			i { "bindService($activity), boundActivities:$boundActivities" }
 			val i = createIntent(activity)
 			val connection = AudioConnection()
 			activity.bindService(i, connection, Context.BIND_AUTO_CREATE)
@@ -59,9 +56,15 @@ class AudioService : Service() {
 		}
 
 		fun unbindService(activity: Activity, connection: ServiceConnection) {
-			v { "unbindService($activity)" }
-			activity.unbindService(connection)
-			boundActivities--
+			i { "unbindService($activity)" }
+			try {
+				if(boundActivities > 0) {
+					activity.unbindService(connection)
+					boundActivities--
+				}
+			} catch(e: Exception) {
+				w(e){"Unable to unbind service, boundActivities:$boundActivities"}
+			}
 		}
 
 		class AudioConnection : ServiceConnection {
