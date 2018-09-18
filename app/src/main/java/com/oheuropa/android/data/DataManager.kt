@@ -1,6 +1,5 @@
 package com.oheuropa.android.data
 
-import com.fernandocejas.frodo.annotation.RxLogObservable
 import com.github.ajalt.timberkt.*
 import com.oheuropa.android.data.job.RefreshBeaconsJob
 import com.oheuropa.android.data.local.AnalyticsHelper
@@ -45,17 +44,16 @@ class DataManager @Inject constructor(
 				RxQuery.observable(query)
 			}
 			true -> {
-				Observable.create({ it: ObservableEmitter<List<Beacon>> ->
+				Observable.create { it: ObservableEmitter<List<Beacon>> ->
 					val beacons2 = ArrayList<Beacon>(2)
 					beacons2.add(Beacon(name = "ChocFactory", placeid = "ChocFact", id = 10, lat = 51.468260f, lng = -2.554214f))
 					beacons2.add(Beacon(name = "StreetEnd", placeid = "StreetEnd", id = 11, lat = 51.469125f, lng = -2.550244f))
 					it.onNext(beacons2)
-				})
+				}
 			}
 		}
 	}
 
-	@RxLogObservable
 	fun updateBeaconList(): Completable {
 		i { "Updating beacons list" }
 		return Completable.create { emitter ->

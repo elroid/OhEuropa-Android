@@ -1,8 +1,6 @@
 package com.oheuropa.android.domain
 
-import com.fernandocejas.frodo.annotation.RxLogObservable
 import com.github.ajalt.timberkt.d
-import com.github.ajalt.timberkt.i
 import com.github.ajalt.timberkt.v
 import com.oheuropa.android.data.DataManager
 import com.oheuropa.android.model.Beacon
@@ -26,7 +24,7 @@ class BeaconWatcher constructor(
 	private val dataManager: DataManager,
 	private val locator: LocationComponent
 ) {
-	@RxLogObservable
+
 	fun followBeaconLocation(): Observable<BeaconLocation> {
 		return beaconLocationObservable
 	}
