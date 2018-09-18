@@ -1,5 +1,6 @@
 package com.oheuropa.android.data
 
+import android.annotation.SuppressLint
 import com.github.ajalt.timberkt.*
 import com.oheuropa.android.data.job.RefreshBeaconsJob
 import com.oheuropa.android.data.local.AnalyticsHelper
@@ -120,6 +121,7 @@ class DataManager @Inject constructor(
 	}
 
 
+	@SuppressLint("CheckResult")
 	fun uploadUserInteraction(placeId: String,
 							  circleState: BeaconLocation.CircleState,
 							  action: UserRequest.Action) {

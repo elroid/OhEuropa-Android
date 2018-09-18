@@ -59,7 +59,7 @@ class CompassWaveView constructor(context: Context, attrs: AttributeSet? = null)
 
 	override fun drawCompass(canvas: Canvas) {
 		if (wavesBitmap != null)//draw waves
-			canvas.drawBitmap(wavesBitmap, xCentre - innerRadius, innerRadius / 2,
+			canvas.drawBitmap(wavesBitmap!!, xCentre - innerRadius, innerRadius / 2,
 				bitmapPaint)
 	}
 }

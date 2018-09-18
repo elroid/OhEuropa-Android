@@ -7,7 +7,7 @@ apply plugin: 'com.akaita.android.easylauncher'
 apply plugin: 'io.fabric'
 
 android {
-    compileSdkVersion 27
+    compileSdkVersion 28
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -17,7 +17,7 @@ android {
     defaultConfig {
         applicationId "com.oheuropa.android"
         minSdkVersion 16
-        targetSdkVersion 27
+        targetSdkVersion 28
         versionCode 9
         versionName "1.4.0"
         testInstrumentationRunner "com.oheuropa.android.framework.CustomTestRunner"
@@ -79,6 +79,8 @@ android {
     configurations.all {
         resolutionStrategy {
             force "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlinVersion"
+            force "com.android.support:appcompat-v7:$supportLibraryVersion"
+            force "com.android.support:design:$supportLibraryVersion"
         }
     }
 }
@@ -170,7 +172,7 @@ dependencies {
     implementation "com.jakewharton.rxrelay2:rxrelay:$rxRelayVersion"
 
     // Timber
-    implementation 'com.github.ajalt:timberkt:1.4.0'
+    implementation 'com.github.ajalt:timberkt:1.5.1'
 
     // Testing libs ////////////////////////////////////////////////////////////////////////////////
     testImplementation "junit:junit:4.12"

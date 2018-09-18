@@ -1,5 +1,6 @@
 package com.oheuropa.android.data.job
 
+import android.annotation.SuppressLint
 import com.evernote.android.job.Job
 import com.evernote.android.job.JobRequest
 import com.github.ajalt.timberkt.d
@@ -44,6 +45,7 @@ class RefreshBeaconsJob
 		}
 	}
 
+	@SuppressLint("CheckResult")
 	override fun onRunJob(params: Params): Result {
 		return try {
 			i { "RUNNING RefreshBeaconsJob: $params *********************************************" }

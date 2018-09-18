@@ -2,6 +2,8 @@ package com.oheuropa.android.ui.start
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.content.pm.PackageInfo
+import android.os.Build
 import android.os.Bundle
 import com.github.ajalt.timberkt.d
 import com.github.ajalt.timberkt.v
@@ -61,7 +63,7 @@ class StartActivity : BaseActivity(), StartContract.View {
 	}
 
 	override fun showConnectionError(msg: String?) {
-		val explanation = if (msg == null) " ($msg)" else ""
+		val explanation = if(msg == null) " ($msg)" else ""
 		showError(msg = getString(R.string.err_beacon_conn, explanation), fatal = true)
 	}
 
@@ -89,7 +91,7 @@ class StartActivity : BaseActivity(), StartContract.View {
 
 	override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
 		d { "onActivityResult($requestCode, $resultCode, $data)" }
-		if (requestCode == REQUEST_PLAY_SERVICES) {
+		if(requestCode == REQUEST_PLAY_SERVICES) {
 			d { "result is $resultCode - doing nothing (presenter starts onResume anyway)..." }
 		} else
 			super.onActivityResult(requestCode, resultCode, data)
@@ -99,11 +101,20 @@ class StartActivity : BaseActivity(), StartContract.View {
 		return try {
 			val packageInfo = packageManager.getPackageInfo(packageName, 0)
 			var result = packageInfo.versionName
-			if (full) result += " (" + packageInfo.versionCode + ")"
+			if(full) result += " (" + packageInfo.code + ")"
 			result
-		} catch (ex: Exception) {
+		} catch(ex: Exception) {
 			w(ex) { "Unable to get version" }
 			"--"
 		}
 	}
 }
+
+val PackageInfo.code: Long
+	get() {
+		@Suppress("DEPRECATION")
+		return if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.P)
+			longVersionCode
+		else
+			versionCode.toLong()
+	}
