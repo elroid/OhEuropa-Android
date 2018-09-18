@@ -33,6 +33,10 @@ class InfoActivity : BottomNavActivity() {
 			val url = getString(R.string.info_web_link)
 			startActivity(Intent(Intent.ACTION_VIEW, url.toUri()))
 		}
+		privacyLink.setOnClickListener {
+			val url = getString(R.string.info_privacy_link)
+			startActivity(Intent(Intent.ACTION_VIEW, url.toUri()))
+		}
 	}
 
 	override fun getLayoutId(): Int {
