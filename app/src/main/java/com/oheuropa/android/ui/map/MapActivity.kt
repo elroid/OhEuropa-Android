@@ -14,9 +14,20 @@ import android.view.WindowManager
 import com.github.ajalt.timberkt.e
 import com.github.ajalt.timberkt.v
 import com.github.ajalt.timberkt.w
-import com.google.android.gms.maps.*
+import com.google.android.gms.maps.CameraUpdate
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.GoogleMap.OnCameraMoveStartedListener.REASON_GESTURE
-import com.google.android.gms.maps.model.*
+import com.google.android.gms.maps.OnMapReadyCallback
+import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.BitmapDescriptor
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
+import com.google.android.gms.maps.model.Circle
+import com.google.android.gms.maps.model.CircleOptions
+import com.google.android.gms.maps.model.LatLngBounds
+import com.google.android.gms.maps.model.MapStyleOptions
+import com.google.android.gms.maps.model.Marker
+import com.google.android.gms.maps.model.MarkerOptions
 import com.oheuropa.android.R
 import com.oheuropa.android.model.Beacon
 import com.oheuropa.android.model.Coordinate
@@ -149,7 +160,7 @@ class MapActivity : LocationEnabledActivity<MapContract.Presenter>()
 		drawable.draw(canvas)
 		val icon = createBitmap(drawable)
 		val descriptor = BitmapDescriptorFactory.fromBitmap(icon)
-		bitMap.put(drawableResId, descriptor)
+		bitMap[drawableResId] = descriptor
 		return descriptor
 	}
 

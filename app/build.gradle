@@ -78,9 +78,14 @@ android {
     //force the correct support library version
     configurations.all {
         resolutionStrategy {
+            //direct
             force "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlinVersion"
             force "com.android.support:appcompat-v7:$supportLibraryVersion"
             force "com.android.support:design:$supportLibraryVersion"
+            //dependencies
+            force "com.android.support:animated-vector-drawable:$supportLibraryVersion"
+            force "com.android.support:support-v4:$supportLibraryVersion"
+            force "com.android.support:support-media-compat:$supportLibraryVersion"
         }
     }
 }
