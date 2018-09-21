@@ -109,7 +109,6 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
     // UI libs /////////////////////////////////////////////////////////////////////////////////////
-    implementation 'com.github.ittianyu:BottomNavigationViewEx:1.2.4'
     implementation 'org.greenrobot:eventbus:3.0.0'
     implementation 'com.android.support.constraint:constraint-layout:1.1.3'
 
