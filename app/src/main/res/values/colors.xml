@@ -7,6 +7,7 @@
 	<color name="tab_bg">#ff212121</color>
 	<color name="tab_fg">#ff666666</color>
 	<color name="tab_fg_sel">@color/blue</color>
+	<color name="text_sel">@color/blue</color>
 	<color name="text_dark">@color/black</color>
 	<color name="text_light">@color/white</color>
 	<color name="status_bg_trans">#00000000</color>
