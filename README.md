@@ -14,6 +14,10 @@ More information can be found at http://oheuropa.com/
 
 ## Version History
 
+###Version 1.4.0
+* Added privacy link to info screen
+
+----
 ###Version 1.3.1
 * Removed beacon update log event (not needed)
 
