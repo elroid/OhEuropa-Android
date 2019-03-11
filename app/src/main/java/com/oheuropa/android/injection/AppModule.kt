@@ -5,6 +5,7 @@ import com.evernote.android.job.JobManager
 import com.github.ajalt.timberkt.d
 import com.github.ajalt.timberkt.i
 import com.github.ajalt.timberkt.v
+import com.oheuropa.android.R
 import com.oheuropa.android.data.AudioPlayer
 import com.oheuropa.android.data.DataManager
 import com.oheuropa.android.data.job.BackgroundJobCreator
@@ -73,7 +74,7 @@ class AppModule {
 		}
 
 		val retrofit = Retrofit.Builder()
-			.baseUrl("http://oheuropa.com/api/")
+			.baseUrl(ctx.getString(R.string.api_link))
 			.client(okBuilder.build())
 			.addConverterFactory(MoshiConverterFactory.create())
 			.addCallAdapterFactory(RxJava2CallAdapterFactory.create())

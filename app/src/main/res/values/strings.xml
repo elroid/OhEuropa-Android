@@ -2,6 +2,7 @@
 	<string name="app_name" translatable="false">Oh Europa</string>
 	<string name="info_title" translatable="false">OH EUROPA</string>
 	<string name="info_web_text" translatable="false">oheuropa.com</string>
+	<string name="api_link" translatable="false">http://oheuropa.com/api/</string>
 	<string name="info_web_link" translatable="false">http://oheuropa.com</string>
 	<string name="info_privacy_link" translatable="false">http://oheuropa.com/privacy/</string>
 	<string name="info_privacy_text">privacy policy</string>
