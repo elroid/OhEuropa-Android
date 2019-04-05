@@ -22,4 +22,5 @@
 	<string name="ok">OK</string>
 	<string name="quit">Quit</string>
 	<string name="skip">Skip</string>
+	<string name="beacon">Beacon</string>
 </resources>
