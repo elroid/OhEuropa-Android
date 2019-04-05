@@ -32,7 +32,6 @@ import com.oheuropa.android.R
 import com.oheuropa.android.model.Beacon
 import com.oheuropa.android.model.Coordinate
 import com.oheuropa.android.ui.base.LocationEnabledActivity
-import com.oheuropa.android.util.LocationUtils
 import com.oheuropa.android.util.ViewUtils.Companion.dpToPxF
 import com.oheuropa.android.util.ViewUtils.Companion.getScreenWidth
 import dagger.android.AndroidInjection
@@ -129,8 +128,7 @@ class MapActivity : LocationEnabledActivity<MapContract.Presenter>()
 	}
 
 	private fun getSnippet(beacon: Beacon): String {
-		val snippet = LocationUtils.convert(beacon.getCoordinate().latitude,beacon.getCoordinate().longitude)
-		return snippet
+		return beacon.getCoordinate().toMinutesString()
 	}
 
 	private var meMarker: Marker? = null

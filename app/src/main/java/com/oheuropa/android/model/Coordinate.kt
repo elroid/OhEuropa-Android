@@ -50,4 +50,46 @@ data class Coordinate(
 		Location.distanceBetween(latitude, longitude, other.latitude, other.longitude, results)
 		return Pair(results[0], results[1])
 	}
+
+	fun toMinutesString(): String {
+		val builder = StringBuilder()
+
+		val latitudeDegrees = Location.convert(Math.abs(latitude), Location.FORMAT_SECONDS)
+		val latitudeSplit =
+			latitudeDegrees.split(":".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
+		builder.append(latitudeSplit[0])
+		builder.append("° ")
+		builder.append(latitudeSplit[1])
+		builder.append("' ")
+
+		var seconds = java.lang.Float.parseFloat(latitudeSplit[2])
+		builder.append(Math.floor(seconds.toDouble()).toInt())
+		builder.append("\" ")
+
+		if (latitude < 0) {
+			builder.append("S ")
+		} else {
+			builder.append("N ")
+		}
+
+		val longitudeDegrees = Location.convert(Math.abs(longitude), Location.FORMAT_SECONDS)
+		val longitudeSplit =
+			longitudeDegrees.split(":".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
+		builder.append(longitudeSplit[0])
+		builder.append("° ")
+		builder.append(longitudeSplit[1])
+		builder.append("' ")
+
+		seconds = java.lang.Float.parseFloat(longitudeSplit[2])
+		builder.append(Math.floor(seconds.toDouble()).toInt())
+		builder.append("\" ")
+
+		if (longitude < 0) {
+			builder.append("W")
+		} else {
+			builder.append("E")
+		}
+
+		return builder.toString()
+	}
 }
