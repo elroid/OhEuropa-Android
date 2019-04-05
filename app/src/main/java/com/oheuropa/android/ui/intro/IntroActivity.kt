@@ -39,9 +39,8 @@ class IntroActivity: BaseActivity()
 
     private fun setupVideoView(){
         val path = "android.resource://" + packageName + "/" + R.raw.intro
-        val videoView = findViewById<TextureVideoView>(R.id.videoView)
 
-        videoView.setScaleType(TextureVideoView.ScaleType.CENTER_CROP)
+        videoView.scaleType = TextureVideoView.ScaleType.CENTER_CROP
         videoView.setDataSource(getCtx(), Uri.parse(path))
 
         val listener = object : TextureVideoView.MediaPlayerListener {
