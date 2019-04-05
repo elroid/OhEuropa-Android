@@ -16,8 +16,8 @@ import com.oheuropa.android.BuildConfig
 import com.oheuropa.android.R
 import com.oheuropa.android.data.local.AnalyticsHelper
 import com.oheuropa.android.domain.REQUEST_PLAY_SERVICES
+import com.oheuropa.android.ui.intro.IntroActivity
 import com.oheuropa.android.ui.base.BaseActivity
-import com.oheuropa.android.ui.compass.CompassActivity
 import dagger.android.AndroidInjection
 import kotlinx.android.synthetic.main.activity_start.*
 import javax.inject.Inject
@@ -55,7 +55,8 @@ class StartActivity : BaseActivity(), StartContract.View {
 
 	override fun continueToFirstActivity() {
 		d { "continueToFirstActivity" }
-		startActivity(CompassActivity.createIntent(getCtx()))
+		startActivity(IntroActivity.createIntent(getCtx()))
+//		startActivity(CompassActivity.createIntent(getCtx()))
 //		startActivity(MapActivity.createIntent(getCtx()))
 //		startActivity(InfoActivity.createIntent(getCtx()))
 //		startActivity(TestKotlinActivity.createIntent(getCtx()))
