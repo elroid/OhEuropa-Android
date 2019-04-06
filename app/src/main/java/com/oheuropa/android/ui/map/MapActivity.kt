@@ -111,17 +111,24 @@ class MapActivity : LocationEnabledActivity<MapContract.Presenter>()
 
 	override fun showBeacons(beacons: List<Beacon>) {
 		beacons.iterator().forEach {
-			showBeaconLocation(it.getCoordinate())
+			showBeaconLocation(it)
 		}
 	}
 
-	private fun showBeaconLocation(loc: Coordinate) {
+	private fun showBeaconLocation(beacon: Beacon) {
 		val opts = MarkerOptions()
-		opts.position(loc.toLatLng())
+		opts.position(beacon.getCoordinate().toLatLng())
 		opts.icon(createIcon(R.drawable.beacon_marker))
 		opts.anchor(0.5f, 0.5f)
 		opts.flat(true)
+		opts.title(beacon.name + " " + getString(R.string.beacon))
+		opts.snippet(getSnippet(beacon))
+
 		map.addMarker(opts)
+	}
+
+	private fun getSnippet(beacon: Beacon): String {
+		return beacon.getCoordinate().toMinutesString()
 	}
 
 	private var meMarker: Marker? = null

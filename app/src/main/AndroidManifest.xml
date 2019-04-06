@@ -43,6 +43,11 @@
 			android:screenOrientation="sensorPortrait"
 			/>
 
+		<activity
+			android:name=".ui.intro.IntroActivity"
+			android:screenOrientation="sensorPortrait"
+			/>
+
 		<service android:name=".data.local.AudioService"/>
 
 		<!--suppress AndroidDomInspection -->
