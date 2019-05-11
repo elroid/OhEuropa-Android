@@ -68,6 +68,7 @@
 			android:value="ffd1f3f77b77fb12177f123a99ac7ef674db0119"
 			/>
 
+		<uses-library android:name="org.apache.http.legacy" android:required="false" />
 	</application>
 
 </manifest>
