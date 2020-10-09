@@ -10,47 +10,66 @@
       "properties": [
         {
           "id": "2:6737266528736147664",
-          "name": "id"
+          "name": "id",
+          "type": 6,
+          "flags": 129
         },
         {
           "id": "3:7187427317205624245",
-          "name": "name"
+          "name": "name",
+          "type": 9
         },
         {
           "id": "4:5357649702984772109",
-          "name": "placeid"
+          "name": "placeid",
+          "type": 9
         },
         {
           "id": "5:311188905842439062",
-          "name": "lat"
+          "name": "lat",
+          "type": 7,
+          "flags": 4
         },
         {
           "id": "6:3049624430601553990",
-          "name": "lng"
+          "name": "lng",
+          "type": 7,
+          "flags": 4
         },
         {
           "id": "7:8999722256099085507",
-          "name": "datecreated"
+          "name": "datecreated",
+          "type": 9
         },
         {
           "id": "8:5399420809065274508",
-          "name": "centerradius"
+          "name": "centerradius",
+          "type": 5,
+          "flags": 4
         },
         {
           "id": "9:886341914481845624",
-          "name": "innerradius"
+          "name": "innerradius",
+          "type": 5,
+          "flags": 4
         },
         {
           "id": "10:1453994938421557692",
-          "name": "outerradius"
+          "name": "outerradius",
+          "type": 5,
+          "flags": 4
         },
         {
           "id": "11:1268265985010828013",
-          "name": "radioplays"
+          "name": "radioplays",
+          "type": 5,
+          "flags": 4
         },
         {
           "id": "12:919911655262616331",
-          "name": "nearbys"
+          "name": "nearbys",
+          "type": 5,
+          "flags": 4
         }
       ],
       "relations": []
@@ -60,8 +79,8 @@
   "lastIndexId": "0:0",
   "lastRelationId": "0:0",
   "lastSequenceId": "0:0",
-  "modelVersion": 4,
-  "modelVersionParserMinimum": 4,
+  "modelVersion": 5,
+  "modelVersionParserMinimum": 5,
   "retiredEntityUids": [],
   "retiredIndexUids": [],
   "retiredPropertyUids": [

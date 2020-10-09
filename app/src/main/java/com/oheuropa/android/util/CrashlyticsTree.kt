@@ -1,9 +1,10 @@
 package com.oheuropa.android.util
 
 import android.util.Log
-import com.crashlytics.android.Crashlytics
+import com.github.ajalt.timberkt.w
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import timber.log.Timber
-import java.util.*
+import java.util.Date
 
 
 /**
@@ -13,36 +14,43 @@ import java.util.*
  *         Copyright (c) 2018 Elroid Ltd. All rights reserved.
  */
 class CrashlyticsTree(val logLevel: Int) : Timber.Tree() {
+
+	companion object {
+		fun withCrashlytics(action: FirebaseCrashlytics.() -> Unit) {
+			try {
+				FirebaseCrashlytics.getInstance().apply(action)
+			} catch (e: Throwable) {
+				w(e) { "Crashlytics function failed: ${e.message}" }
+			}
+		}
+	}
+
 	override fun isLoggable(tag: String?, priority: Int): Boolean {
 		return priority >= logLevel
 	}
 
-	override fun log(priority: Int, tag: String?, message: String, t: Throwable?) {
-		//15:47:28.123 - ClassName: DEBUG/My Message here
-		var msg = Date().toString()
-		msg += " - "
-		if (tag != null) msg += "$tag: "
-		msg += print(priority) + "/"
-		msg += message
+	override fun log(priority: Int, tag: String?, message: String, throwable: Throwable?) {
+		withCrashlytics {
+			log("${levelAbbreviation(priority)}/${tag ?: ""}:$message")
 
-		if (t != null) {
-			//add \nStack:...
-			val elements = t.stackTrace
-			msg += "\nStack:"
-			for (element in elements) {
-				msg += "\n\t" + element
+			if (priority > Log.ERROR) {
+				when (throwable) {
+					null -> recordException(Exception(message))
+					else -> {
+						recordException(Exception(message, throwable))
+					}
+				}
 			}
 		}
-		Crashlytics.log(tag + ": " + print(priority) + "/" + msg)
 	}
 
-	private fun print(priority: Int): String {
-		return when (priority) {
-			Log.VERBOSE -> "TRACE"
-			Log.DEBUG -> "DEBUG"
-			Log.WARN -> "WARN "
-			Log.ERROR -> "ERROR"
-			else -> "? ($priority)"
-		}
+	private fun levelAbbreviation(priority: Int): String = when (priority) {
+		Log.VERBOSE -> "V"
+		Log.DEBUG -> "D"
+		Log.INFO -> "I"
+		Log.WARN -> "W"
+		Log.ERROR -> "E"
+		Log.ASSERT -> "WTF"
+		else -> "X"
 	}
 }

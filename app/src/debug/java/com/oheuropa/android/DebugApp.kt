@@ -1,17 +1,16 @@
 package com.oheuropa.android
 
-import android.app.Activity
-import android.app.Service
+import android.content.Context
 import android.util.Log.VERBOSE
+import androidx.multidex.MultiDex
 import com.evernote.android.job.JobManager
 import com.github.ajalt.timberkt.Timber
+import com.halfhp.rxtracer.RxTracer
 import com.oheuropa.android.injection.DaggerDebugAppComponent
 import com.oheuropa.android.util.ThreadTree
-import com.tspoon.traceur.Traceur
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
-import dagger.android.HasActivityInjector
-import dagger.android.HasServiceInjector
+import dagger.android.HasAndroidInjector
 import javax.inject.Inject
 
 /**
@@ -23,10 +22,9 @@ import javax.inject.Inject
  * @author <a href="mailto:e@elroid.com">Elliot Long</a>
  *         Copyright (c) 2018 Elroid Ltd. All rights reserved.
  */
-class DebugApp : BaseApp(), HasActivityInjector, HasServiceInjector {
+class DebugApp : BaseApp(), HasAndroidInjector {
 
-	@Inject lateinit var dispatchingActivityInjector: DispatchingAndroidInjector<Activity>
-	@Inject lateinit var dispatchingServiceInjector: DispatchingAndroidInjector<Service>
+	@Inject lateinit var androidInjector: DispatchingAndroidInjector<Any>
 
 	@Suppress("unused")//inject here so will re-schedule after reboot
 	@Inject lateinit var jobManager: JobManager
@@ -40,16 +38,16 @@ class DebugApp : BaseApp(), HasActivityInjector, HasServiceInjector {
 			.build()
 			.inject(this)
 
-		Traceur.enableLogging()
+		RxTracer.enable()
 		//Timber.plant(Timber.DebugTree())
 		Timber.plant(ThreadTree(VERBOSE))
+		initCrashlytics(false)
 	}
 
-	override fun activityInjector(): AndroidInjector<Activity> {
-		return dispatchingActivityInjector
-	}
+	override fun androidInjector(): AndroidInjector<Any> = androidInjector
 
-	override fun serviceInjector(): AndroidInjector<Service> {
-		return dispatchingServiceInjector
+	override fun attachBaseContext(base: Context) {
+		super.attachBaseContext(base)
+		MultiDex.install(this)
 	}
 }

@@ -2,7 +2,7 @@ package com.oheuropa.android.ui.map
 
 import com.github.ajalt.timberkt.d
 import com.github.ajalt.timberkt.w
-import com.oheuropa.android.data.local.AnalyticsHelper
+import com.github.ajalt.timberkt.wtf
 import com.oheuropa.android.data.local.PrefsHelper
 import com.oheuropa.android.domain.BeaconWatcher
 import com.oheuropa.android.domain.DEFAULT_MAP_ZOOM
@@ -27,7 +27,7 @@ class MapPresenter(
 	locator: LocationComponent,
 	private val beaconWatcher: BeaconWatcher,
 	private val prefs: PrefsHelper
-) : LocationEnabledPresenter<MapContract.View>(mapView, locator), MapContract.Presenter {
+):LocationEnabledPresenter<MapContract.View>(mapView, locator), MapContract.Presenter {
 
 	//default europe centre
 	private val europeCentre = Coordinate(56.05500303882426, 11.342917084693907)
@@ -36,12 +36,13 @@ class MapPresenter(
 	enum class MapState {
 		FOCUS_HERE, FOCUS_EUROPE, FOCUS_OTHER
 	}
+
 	private var markersInitialised = false
 	private var zoomInitialised = false
 
 	private var currentZoom: Float = DEFAULT_MAP_ZOOM
 	private var currentCentre: Coordinate? = null
-	private var currentState:MapState? = null
+	private var currentState: MapState? = null
 
 	private var beaconLocation: BeaconLocation? = null
 
@@ -51,13 +52,13 @@ class MapPresenter(
 		setupMap()
 	}
 
-	private fun setupMap(){
+	private fun setupMap() {
 		markersInitialised = false
 		zoomInitialised = false
 
 		//if we have a map state in memory - restore that
 		val (centre, zoom, state) = prefs.restoreMapCentre()
-		if (centre.isValid()) {
+		if(centre.isValid()) {
 			d { "map-init: restoring saved centre($centre) and zoom($zoom)" }
 			view.zoomTo(centre, zoom, 0)
 			currentState = state
@@ -74,17 +75,17 @@ class MapPresenter(
 			.subscribe({
 				beaconLocation = it
 				view.showMyLocation(it.myLocation)
-				if (!markersInitialised) {
+				if(!markersInitialised) {
 					view.showBeacons(it.beacons)
 					markersInitialised = true
 				}
-				if (!zoomInitialised) {
+				if(!zoomInitialised) {
 					zoomToNearest()
 					zoomInitialised = true
 				}
 			}, {
 				view.showError(msg = it.message)
-				AnalyticsHelper.logException(it, "beaconWatcher-map.error")
+				wtf(it) { "beaconWatcher-map.error" }
 			}))
 	}
 
@@ -98,7 +99,7 @@ class MapPresenter(
 		prefs.saveMapCentre(currentCentre, currentZoom, currentState)
 	}
 
-	private fun zoomToEuropeLevel(durationSeconds:Int = MAP_ZOOM_DURATION_SECONDS) {
+	private fun zoomToEuropeLevel(durationSeconds: Int = MAP_ZOOM_DURATION_SECONDS) {
 		//show all beacons (if available) or default europe
 
 		/*if (beaconLocation == null) {
@@ -129,7 +130,7 @@ class MapPresenter(
 
 	override fun onMapTabPressed() {
 		d { "onMapTabPressed, current;$currentState" }
-		when(currentState){
+		when(currentState) {
 			MapState.FOCUS_HERE -> zoomToEuropeLevel()
 			MapState.FOCUS_EUROPE -> zoomToNearest()
 			MapState.FOCUS_OTHER -> zoomToNearest()

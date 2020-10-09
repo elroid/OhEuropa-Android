@@ -34,6 +34,7 @@ import javax.inject.Inject
 class StartActivity : BaseActivity(), StartContract.View {
 
 	@Inject lateinit var presenter: StartContract.Presenter
+	@Inject lateinit var analyticsHelper: AnalyticsHelper
 
 	@SuppressLint("SetTextI18n")
 	override fun onCreate(savedInstanceState: Bundle?) {
@@ -78,13 +79,12 @@ class StartActivity : BaseActivity(), StartContract.View {
 			}
 			apiAvailability.isUserResolvableError(availability) -> {
 				w { "user-recoverable error" }
-				AnalyticsHelper.logPlayUpdateRequired()
+				analyticsHelper.logPlayUpdateRequired()
 				apiAvailability.getErrorDialog(this, availability, REQUEST_PLAY_SERVICES).show()
 				false
 			}
 			else -> {
-				wtf { "Unrecoverable error for google play services....ignore?" }
-				AnalyticsHelper.logException(message = "Unrecoverable error for google play services")
+				wtf { "Unrecoverable error for google play services....ignoring" }
 				true
 			}
 		}

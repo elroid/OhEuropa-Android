@@ -1,6 +1,10 @@
 package com.oheuropa.android
 
 import android.app.Application
+import android.util.Log
+import com.oheuropa.android.util.CrashlyticsTree
+import com.oheuropa.android.util.CrashlyticsTree.Companion.withCrashlytics
+import timber.log.Timber
 
 /**
  *
@@ -12,4 +16,13 @@ import android.app.Application
  *         Copyright (c) 2018 Elroid Ltd. All rights reserved.
  */
 
-abstract class BaseApp : Application()
+abstract class BaseApp : Application(){
+
+	fun initCrashlytics(enabled: Boolean, logLevel: Int = Log.DEBUG) {
+		withCrashlytics {
+			setCrashlyticsCollectionEnabled(enabled)
+		}
+		if (enabled)
+			Timber.plant(CrashlyticsTree(logLevel))
+	}
+}

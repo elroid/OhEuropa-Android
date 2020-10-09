@@ -4,7 +4,8 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'io.objectbox'
 apply plugin: 'com.akaita.android.easylauncher'
-apply plugin: 'io.fabric'
+apply plugin: 'com.google.firebase.crashlytics'
+apply plugin: 'com.google.gms.google-services'
 
 android {
     compileSdkVersion 28
@@ -98,7 +99,7 @@ kapt {
 }
 
 project.ext {
-    daggerVersion = "2.14.1"
+    daggerVersion = "2.29.1"
     butterKnifeVersion = "8.8.1"
     rxKotlinVersion = "2.2.0"
     rxAndroidVersion = "2.0.1"
@@ -119,8 +120,8 @@ dependencies {
 
     // Back-end libs ///////////////////////////////////////////////////////////////////////////////
     implementation 'com.daasuu:EasingInterpolator:1.0.0' //for audio fade interpolators
-    implementation "com.google.android.gms:play-services-maps:$gmsVersion"
-    implementation "com.google.android.gms:play-services-location:$gmsVersion"
+    implementation "com.google.android.gms:play-services-maps:17.0.0"
+    implementation "com.google.android.gms:play-services-location:17.1.0"
     implementation 'com.evernote:android-job:1.2.5'
     implementation 'com.squareup.okhttp3:logging-interceptor:3.10.0'
 
@@ -134,13 +135,10 @@ dependencies {
     implementation "io.objectbox:objectbox-kotlin:$objectboxVersion"
     implementation "io.objectbox:objectbox-rxjava:$objectboxVersion"
 
-    //analytics & crash reporting
-    implementation('com.crashlytics.sdk.android:crashlytics:2.9.5@aar') {
-        transitive = true
-    }
-    implementation('com.crashlytics.sdk.android:answers:1.4.3@aar') {
-        transitive = true
-    }
+    //firebase
+    implementation platform('com.google.firebase:firebase-bom:25.12.0')
+    implementation 'com.google.firebase:firebase-crashlytics'
+    implementation 'com.google.firebase:firebase-analytics-ktx'
 
     //Standard libs ////////////////////////////////////////////////////////////////////////////////
 
@@ -170,13 +168,15 @@ dependencies {
     // ReactiveX
     implementation "io.reactivex.rxjava2:rxkotlin:$rxKotlinVersion"
     implementation "io.reactivex.rxjava2:rxandroid:$rxAndroidVersion"
-    implementation "com.tspoon.traceur:traceur:1.0.1"
 
     // RxRelay
     implementation "com.jakewharton.rxrelay2:rxrelay:$rxRelayVersion"
+    implementation "com.halfhp.rxtracer:rxtracer:0.1.4"
 
     // Timber
     implementation 'com.github.ajalt:timberkt:1.5.1'
+
+    debugImplementation "androidx.multidex:multidex:2.0.1"
 
     // Testing libs ////////////////////////////////////////////////////////////////////////////////
     testImplementation "junit:junit:4.12"

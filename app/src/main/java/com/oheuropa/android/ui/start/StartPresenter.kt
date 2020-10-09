@@ -2,12 +2,13 @@ package com.oheuropa.android.ui.start
 
 import com.github.ajalt.timberkt.d
 import com.github.ajalt.timberkt.i
+import com.github.ajalt.timberkt.wtf
 import com.oheuropa.android.data.DataManager
-import com.oheuropa.android.data.local.AnalyticsHelper
 import com.oheuropa.android.domain.SPLASH_WAIT_SECONDS
 import com.oheuropa.android.ui.base.BasePresenter
 import com.oheuropa.android.ui.base.SchedulersFacade
 import com.oheuropa.android.util.ViewUtils
+import kotlin.math.max
 
 /**
  * Created Date: 26/03/2018.
@@ -17,7 +18,7 @@ import com.oheuropa.android.util.ViewUtils
 class StartPresenter(
 	startView: StartContract.View,
 	private val dataManager: DataManager
-) : BasePresenter<StartContract.View>(startView), StartContract.Presenter {
+):BasePresenter<StartContract.View>(startView), StartContract.Presenter {
 
 	override fun start() {
 		i { "Starting... " }
@@ -34,14 +35,14 @@ class StartPresenter(
 					continueAfter(SPLASH_WAIT_SECONDS, start)
 			}, {
 				view.showConnectionError(it.message)
-				AnalyticsHelper.logException(it, "start.error")
+				wtf(it) { "start.error" }
 			}))
 	}
 
 	private fun continueAfter(secondsToWait: Int, start: Long) {
 		d { "continueAfter($secondsToWait: $start)" }
 		val elapsed = System.currentTimeMillis() - start
-		val timeLeft = Math.max(0, secondsToWait * 1000 - elapsed)
+		val timeLeft = max(0, secondsToWait * 1000 - elapsed)
 		ViewUtils.handler().postDelayed({ view.continueToFirstActivity() }, timeLeft)
 	}
 }

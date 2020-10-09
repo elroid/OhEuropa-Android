@@ -63,7 +63,7 @@ class AudioPlayer @Inject constructor(ctx: Context) : AudioComponent {
 
 	override fun activate() {
 		v { "activate()" }
-		setState(AudioComponent.State.QUIET)
+		setState(QUIET)
 	}
 
 	override fun deactivate() {

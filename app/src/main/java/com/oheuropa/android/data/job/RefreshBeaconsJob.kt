@@ -7,6 +7,7 @@ import com.github.ajalt.timberkt.d
 import com.github.ajalt.timberkt.e
 import com.github.ajalt.timberkt.i
 import com.github.ajalt.timberkt.w
+import com.github.ajalt.timberkt.wtf
 import com.oheuropa.android.data.DataManager
 import com.oheuropa.android.data.local.AnalyticsHelper
 import javax.inject.Inject
@@ -14,8 +15,10 @@ import javax.inject.Inject
 /**
  * Created by elroid on 23/03/2018.
  */
-class RefreshBeaconsJob
-@Inject constructor(private val dataManager: DataManager) : Job() {
+class RefreshBeaconsJob @Inject constructor(
+	private val dataManager: DataManager,
+	private val analyticsHelper: AnalyticsHelper
+):Job() {
 
 	companion object {
 		const val TAG = "refresh_beacons_job_tag"
@@ -28,7 +31,7 @@ class RefreshBeaconsJob
 			val updateIntervalMS = 86_400_000L//24 hours
 			val updateFlexMS = 21_600_000L//6 hours
 
-			JobRequest.Builder(RefreshBeaconsJob.TAG)
+			JobRequest.Builder(TAG)
 				.setPeriodic(updateIntervalMS, updateFlexMS)
 				.setRequiredNetworkType(JobRequest.NetworkType.CONNECTED)
 				.setRequirementsEnforced(true)
@@ -52,15 +55,15 @@ class RefreshBeaconsJob
 			dataManager.updateBeaconList()
 				.subscribe({
 					i { "Finished beacon update job" }
-					AnalyticsHelper.logBeaconUpdateComplete()
-				},{
-					AnalyticsHelper.logException(it, "Error running RefreshBeaconsJob")
+					analyticsHelper.logBeaconUpdateComplete()
+				}, {
+					wtf(it) { "Error running RefreshBeaconsJob" }
 				})
 
-			Job.Result.SUCCESS
-		} catch (ex: Exception) {
-			AnalyticsHelper.logException(ex, "Error running background RefreshBeaconsJob")
-			Job.Result.FAILURE
+			Result.SUCCESS
+		} catch(ex: Exception) {
+			wtf(ex) { "Error running background RefreshBeaconsJob" }
+			Result.FAILURE
 		}
 	}
 }

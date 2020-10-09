@@ -1,5 +1,6 @@
 package com.oheuropa.android.ui.compass
 
+import com.github.ajalt.timberkt.Timber.wtf
 import com.github.ajalt.timberkt.e
 import com.github.ajalt.timberkt.v
 import com.oheuropa.android.data.local.AnalyticsHelper
@@ -35,7 +36,7 @@ class CompassPresenter(
 	private val beaconWatcher: BeaconWatcher,
 	private val compass: CompassComponent,
 	private val apiService: OhEuropaApiService
-) : LocationEnabledPresenter<CompassContract.View>(view, locator), CompassContract.Presenter {
+):LocationEnabledPresenter<CompassContract.View>(view, locator), CompassContract.Presenter {
 
 	private var songTitle: String = ""
 	private var performerName: String = ""
@@ -50,7 +51,7 @@ class CompassPresenter(
 				performerName = it.current_track.getPerformerName()
 				songTitle = it.current_track.getSongTitle()
 				v { "got new song title($songTitle) and performer($performerName)" }
-				if (isInCentre) {
+				if(isInCentre) {
 					view.showSongInfo(performerName, songTitle)
 				}
 			}, {
@@ -60,14 +61,14 @@ class CompassPresenter(
 
 	private var namePollDisposable: Disposable? = null
 	private fun startActiveNamePolling() {
-		if (namePollDisposable != null) return
+		if(namePollDisposable != null) return
 		v { "startActiveNamePolling()" }
 		val result: Observable<Void> = Observable.create({
-			while (!it.isDisposed) {
+			while(!it.isDisposed) {
 				getTrackName()
 				try {
 					Thread.sleep(TRACK_NAME_UPDATE_DELAY_MS)
-				} catch (ignored: Exception) {
+				} catch(ignored: Exception) {
 				}
 			}
 		})
@@ -79,7 +80,7 @@ class CompassPresenter(
 	}
 
 	private fun stopActiveNamePolling() {
-		if (namePollDisposable != null) {
+		if(namePollDisposable != null) {
 			v { "stopActiveNamePolling, disposable:$namePollDisposable" }
 			namePollDisposable?.dispose()
 			namePollDisposable = null
@@ -87,7 +88,7 @@ class CompassPresenter(
 	}
 
 	private fun checkStatus() {
-		if (isInCentre) {
+		if(isInCentre) {
 			startActiveNamePolling()
 		}
 	}
@@ -113,7 +114,7 @@ class CompassPresenter(
 				v { "combined:$it thread:${GenUtils.printThread()}" }
 				val (distance, bearing) = beaconLocation.getDistanceAndBearing()
 				val circleState = beaconLocation.getCircleState()
-				when (circleState) {
+				when(circleState) {
 					CENTRE -> {
 						//show song info and deactivate compass
 						startActiveNamePolling()
@@ -131,8 +132,7 @@ class CompassPresenter(
 				}
 			}, {
 				view.showError(msg = it.message)
-				AnalyticsHelper.logException(it, "beaconCompassObservable.error")
-			}
-			))
+				wtf(it) { "beaconCompassObservable.error" }
+			}))
 	}
 }

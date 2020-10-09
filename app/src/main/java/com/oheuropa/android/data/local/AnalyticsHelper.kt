@@ -1,13 +1,15 @@
 package com.oheuropa.android.data.local
 
-import com.crashlytics.android.Crashlytics
-import com.crashlytics.android.answers.Answers
-import com.crashlytics.android.answers.CustomEvent
+import android.content.Context
 import com.github.ajalt.timberkt.*
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.ktx.analytics
+import com.google.firebase.analytics.ktx.logEvent
+import com.google.firebase.ktx.Firebase
 import com.oheuropa.android.model.BeaconLocation
 import com.oheuropa.android.model.UserRequest
-import io.fabric.sdk.android.Fabric
 import timber.log.Timber
+import javax.inject.Inject
 
 /**
  * Created Date: 28/03/2018 12:01
@@ -15,48 +17,28 @@ import timber.log.Timber
  * @author <a href="mailto:e@elroid.com">Elliot Long</a>
  *         Copyright (c) 2018 Elroid Ltd. All rights reserved.
  */
-class AnalyticsHelper {
-	companion object {
-		fun logException(t: Throwable? = null, message: String) {
-			Timber.w(t, if (t == null) message else "$message (${t.message})")
+class AnalyticsHelper @Inject constructor(val ctx: Context) {
 
-			//print localised stack trace to log...
-			try {
-				throw Exception(message, t)
-			} catch (e: Exception) {
-				w(e) { "Error:${e.message}"}
-			}
+	private val firebaseAnalytics by lazy { Firebase.analytics }
 
-			if (Fabric.isInitialized()) {
-				try {
-					Crashlytics.logException(t)
-				} catch (e: IllegalStateException) {
-					w { "Crashlytics not enabled, skipping exception log: ${e.message}"}
+	fun logPlayUpdateRequired() {
+		firebaseAnalytics.logEvent("play_update_required", null)
+	}
+
+	fun logBeaconUpdateComplete() {
+		i { "logBeaconUpdateComplete" }
+	}
+
+	fun logBeaconEntered(placeId: String, circleState: BeaconLocation.CircleState, action: UserRequest.Action) {
+		try {
+			if(action == UserRequest.Action.Entered) {
+				firebaseAnalytics.logEvent("beacon_entered") {
+					param("zone", circleState.toString())
+					param("placeId", placeId)
 				}
-
-			} else
-				w { "Crashlytics not enabled, skipping exception log"}
-		}
-
-		fun logPlayUpdateRequired(){
-			Answers.getInstance().logCustom(CustomEvent("Play update required"));
-		}
-
-		fun logBeaconUpdateComplete(){
-			i { "logBeaconUpdateComplete" }
-		}
-
-		fun logBeaconEntered(placeId: String, circleState: BeaconLocation.CircleState, action: UserRequest.Action) {
-			try {
-				if(action == UserRequest.Action.Entered) {
-					val event = CustomEvent("Beacon-Entered")
-					event.putCustomAttribute("zone", circleState.toString())
-					event.putCustomAttribute("placeId", placeId)
-					Answers.getInstance().logCustom(event)
-				}
-			} catch (ex: Exception) {
-				w(ex) { "Error logging beacon entry..." }
 			}
+		} catch(ex: Exception) {
+			w(ex) { "Error logging beacon entry..." }
 		}
 	}
 }

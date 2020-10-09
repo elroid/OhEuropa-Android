@@ -1,7 +1,6 @@
 package com.oheuropa.android.util
 
 import android.util.Log
-import com.crashlytics.android.Crashlytics
 import com.github.ajalt.timberkt.v
 import timber.log.Timber
 import java.util.*

@@ -2,11 +2,8 @@ package com.oheuropa.android.ui.compass
 
 import android.content.Context
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
-import android.view.View
 import android.view.WindowManager
-import com.github.ajalt.timberkt.d
 import com.oheuropa.android.R
 import com.oheuropa.android.ui.base.LocationEnabledActivity
 import com.oheuropa.android.util.ViewUtils

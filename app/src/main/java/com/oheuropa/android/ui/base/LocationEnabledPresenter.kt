@@ -1,8 +1,8 @@
 package com.oheuropa.android.ui.base
 
 import com.github.ajalt.timberkt.w
+import com.github.ajalt.timberkt.wtf
 import com.google.android.gms.common.api.ResolvableApiException
-import com.oheuropa.android.data.local.AnalyticsHelper
 import com.oheuropa.android.domain.LocationComponent
 
 /**
@@ -34,12 +34,12 @@ abstract class LocationEnabledPresenter<out V : LocationEnabledView>(
 	override fun onApiError(ex: ResolvableApiException) {
 		w(ex) { "Api error" }
 		view.resolveApiIssue(ex)
-		AnalyticsHelper.logException(ex, "LocationEnabledPresenter.onApiError")
+		wtf(ex){"LocationEnabledPresenter.onApiError"}
 	}
 
 	override fun onError(ex: Exception) {
 		w(ex) { "General error" }
 		view.showError(msg = ex.message)
-		AnalyticsHelper.logException(ex, "LocationEnabledPresenter.onError")
+		wtf(ex){"LocationEnabledPresenter.onError"}
 	}
 }

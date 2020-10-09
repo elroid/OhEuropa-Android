@@ -1,7 +1,11 @@
 package com.oheuropa.android.data
 
 import android.annotation.SuppressLint
-import com.github.ajalt.timberkt.*
+import com.github.ajalt.timberkt.d
+import com.github.ajalt.timberkt.e
+import com.github.ajalt.timberkt.i
+import com.github.ajalt.timberkt.v
+import com.github.ajalt.timberkt.w
 import com.oheuropa.android.data.job.RefreshBeaconsJob
 import com.oheuropa.android.data.local.AnalyticsHelper
 import com.oheuropa.android.data.local.PrefsHelper
@@ -17,8 +21,8 @@ import io.objectbox.BoxStore
 import io.objectbox.rx.RxQuery
 import io.reactivex.Completable
 import io.reactivex.Observable
-import io.reactivex.ObservableEmitter
-import java.util.*
+import java.util.ArrayList
+import java.util.UUID
 import javax.inject.Inject
 
 
@@ -34,7 +38,8 @@ import javax.inject.Inject
 class DataManager @Inject constructor(
 	private val apiService: OhEuropaApiService,
 	private val boxStore: BoxStore,
-	private val prefs: PrefsHelper
+	private val prefs: PrefsHelper,
+	private val analyticsHelper: AnalyticsHelper
 ) {
 
 	fun followBeaconList(): Observable<List<Beacon>> {
@@ -45,7 +50,7 @@ class DataManager @Inject constructor(
 				RxQuery.observable(query)
 			}
 			true -> {
-				Observable.create { it: ObservableEmitter<List<Beacon>> ->
+				Observable.create {
 					val beacons2 = ArrayList<Beacon>(2)
 					beacons2.add(Beacon(name = "ChocFactory", placeid = "ChocFact", id = 10, lat = 51.468260f, lng = -2.554214f))
 					beacons2.add(Beacon(name = "StreetEnd", placeid = "StreetEnd", id = 11, lat = 51.469125f, lng = -2.550244f))
@@ -75,7 +80,7 @@ class DataManager @Inject constructor(
 	}
 
 	fun ensureBeaconListPresent(): Completable {
-		i { "Ensuring beacon list is present..." };
+		i { "Ensuring beacon list is present..." }
 		return Completable.create { emitter ->
 			val beaconBox = boxStore.boxFor(Beacon::class.java)
 			val count = beaconBox.count()
@@ -96,11 +101,11 @@ class DataManager @Inject constructor(
 	}
 
 	fun ensureUserIdCreated(): Completable {
-		return Completable.create({ emitter ->
-			if (!prefs.hasUserId()) {
+		return Completable.create { emitter ->
+			if(!prefs.hasUserId()) {
 				v { "creating user id..." }
 				val userId = UUID.randomUUID().toString()
-				if (Constants.isDebug(USE_MOCK_INTERACTION_EVENTS)) {
+				if(Constants.isDebug(USE_MOCK_INTERACTION_EVENTS)) {
 					i { "(not)uploading UserId($userId)" }
 					emitter.onComplete()
 				} else {
@@ -113,7 +118,7 @@ class DataManager @Inject constructor(
 			} else
 				v { "we already have a user id: ${prefs.getUserId()}" }
 			emitter.onComplete()
-		})
+		}
 	}
 
 	private fun createUserIdInteraction(userid: String): Completable {
@@ -140,7 +145,7 @@ class DataManager @Inject constructor(
 					e(it) { "Error uploading user interaction" }
 				})
 		}
-		AnalyticsHelper.logBeaconEntered(placeId, circleState, action)
+		analyticsHelper.logBeaconEntered(placeId, circleState, action)
 	}
 
 	private fun createUserInteraction(placeId: String,

@@ -31,3 +31,4 @@ captures/
 projectFilesBackup*
 build_file_checksums.ser
 /.idea/misc.xml
+/app/google-services.json

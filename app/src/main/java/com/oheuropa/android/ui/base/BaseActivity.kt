@@ -9,6 +9,7 @@ import android.widget.Toast
 import com.github.ajalt.timberkt.e
 import com.github.ajalt.timberkt.v
 import com.github.ajalt.timberkt.w
+import com.github.ajalt.timberkt.wtf
 import com.oheuropa.android.R
 import com.oheuropa.android.data.event.AppQuitEvent
 import com.oheuropa.android.data.local.AnalyticsHelper
@@ -75,7 +76,7 @@ abstract class BaseActivity : AppCompatActivity(), BaseView {
 				builder.setPositiveButton(R.string.ok) { dialog, _ -> dialog.dismiss() }
 			builder.create().show()
 		} catch (ex: Throwable) {
-			AnalyticsHelper.logException(ex, "Error showing an error!")
+			wtf(ex){"Error showing an error!"}
 		}
 	}
 
