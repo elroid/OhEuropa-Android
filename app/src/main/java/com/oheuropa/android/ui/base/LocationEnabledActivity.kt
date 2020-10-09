@@ -5,8 +5,8 @@ import android.app.Activity
 import android.content.Intent
 import android.content.IntentSender
 import android.content.pm.PackageManager
-import android.support.v4.app.ActivityCompat
-import android.support.v4.content.ContextCompat
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import com.github.ajalt.timberkt.d
 import com.github.ajalt.timberkt.w
 import com.google.android.gms.common.api.ResolvableApiException

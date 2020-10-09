@@ -3,9 +3,9 @@ package com.oheuropa.android.ui.compass
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Paint
-import android.support.v4.content.ContextCompat
 import android.util.AttributeSet
 import android.view.View
+import androidx.core.content.ContextCompat
 import com.github.ajalt.timberkt.d
 import com.github.ajalt.timberkt.w
 import com.oheuropa.android.R

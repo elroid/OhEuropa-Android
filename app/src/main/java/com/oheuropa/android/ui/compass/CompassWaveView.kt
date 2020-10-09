@@ -1,9 +1,15 @@
 package com.oheuropa.android.ui.compass
 
 import android.content.Context
-import android.graphics.*
-import android.support.v4.content.ContextCompat
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.Canvas
+import android.graphics.Matrix
+import android.graphics.Paint
+import android.graphics.PorterDuff
+import android.graphics.PorterDuffColorFilter
 import android.util.AttributeSet
+import androidx.core.content.ContextCompat
 import com.oheuropa.android.R
 import com.oheuropa.android.util.ViewUtils
 

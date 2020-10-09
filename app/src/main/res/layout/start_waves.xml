@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
+<androidx.constraintlayout.widget.ConstraintLayout
 	android:id="@+id/compassWaves"
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -19,7 +19,7 @@
 		/>
 
 	<!--bubble 1-->
-	<android.support.constraint.Guideline
+	<androidx.constraintlayout.widget.Guideline
 		android:id="@+id/left_guideline1"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
@@ -27,7 +27,7 @@
 		app:layout_constraintGuide_percent=".01"
 		/>
 
-	<android.support.constraint.Guideline
+	<androidx.constraintlayout.widget.Guideline
 		android:id="@+id/bottom_guideline1"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
@@ -45,7 +45,7 @@
 
 
 	<!--bubble 2-->
-	<android.support.constraint.Guideline
+	<androidx.constraintlayout.widget.Guideline
 		android:id="@+id/left_guideline2"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
@@ -53,7 +53,7 @@
 		app:layout_constraintGuide_percent=".24"
 		/>
 
-	<android.support.constraint.Guideline
+	<androidx.constraintlayout.widget.Guideline
 		android:id="@+id/bottom_guideline2"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
@@ -70,7 +70,7 @@
 		/>
 
 	<!--bubble 3-->
-	<android.support.constraint.Guideline
+	<androidx.constraintlayout.widget.Guideline
 		android:id="@+id/left_guideline3"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
@@ -78,7 +78,7 @@
 		app:layout_constraintGuide_percent="0.4"
 		/>
 
-	<android.support.constraint.Guideline
+	<androidx.constraintlayout.widget.Guideline
 		android:id="@+id/bottom_guideline3"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
@@ -95,7 +95,7 @@
 		/>
 
 	<!--bubble 4-->
-	<android.support.constraint.Guideline
+	<androidx.constraintlayout.widget.Guideline
 		android:id="@+id/left_guideline4"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
@@ -103,7 +103,7 @@
 		app:layout_constraintGuide_percent="0.63"
 		/>
 
-	<android.support.constraint.Guideline
+	<androidx.constraintlayout.widget.Guideline
 		android:id="@+id/bottom_guideline4"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
@@ -120,7 +120,7 @@
 		/>
 
 	<!--bubble 5-->
-	<android.support.constraint.Guideline
+	<androidx.constraintlayout.widget.Guideline
 		android:id="@+id/left_guideline5"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
@@ -128,7 +128,7 @@
 		app:layout_constraintGuide_percent="0.95"
 		/>
 
-	<android.support.constraint.Guideline
+	<androidx.constraintlayout.widget.Guideline
 		android:id="@+id/bottom_guideline5"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
@@ -146,7 +146,7 @@
 
 
 	<!--title-->
-	<android.support.constraint.Guideline
+	<androidx.constraintlayout.widget.Guideline
 		android:id="@+id/left_guideline"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
@@ -154,7 +154,7 @@
 		app:layout_constraintGuide_percent=".12"
 		/>
 
-	<android.support.constraint.Guideline
+	<androidx.constraintlayout.widget.Guideline
 		android:id="@+id/right_guideline"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
@@ -182,4 +182,4 @@
 		/>
 
 
-</android.support.constraint.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

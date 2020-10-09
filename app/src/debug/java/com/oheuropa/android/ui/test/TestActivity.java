@@ -1,7 +1,8 @@
 package com.oheuropa.android.ui.test;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+
+import androidx.annotation.Nullable;
 
 import com.oheuropa.android.ui.base.BaseActivity;
 

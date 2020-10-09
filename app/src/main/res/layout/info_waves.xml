@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
+<androidx.constraintlayout.widget.ConstraintLayout
 	android:id="@+id/compassWaves"
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -10,7 +10,7 @@
 	>
 
 
-	<android.support.constraint.Guideline
+	<androidx.constraintlayout.widget.Guideline
 		android:id="@+id/link_top_guide"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
@@ -59,7 +59,7 @@
 		/>
 
 	<!--left bubble-->
-	<android.support.constraint.Guideline
+	<androidx.constraintlayout.widget.Guideline
 		android:id="@+id/left_left_guideline"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
@@ -67,7 +67,7 @@
 		app:layout_constraintGuide_percent=".15"
 		/>
 
-	<android.support.constraint.Guideline
+	<androidx.constraintlayout.widget.Guideline
 		android:id="@+id/left_bottom_guideline"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
@@ -84,7 +84,7 @@
 		/>
 
 	<!--middle bubble-->
-	<android.support.constraint.Guideline
+	<androidx.constraintlayout.widget.Guideline
 		android:id="@+id/middle_left_guideline"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
@@ -92,7 +92,7 @@
 		app:layout_constraintGuide_percent=".63"
 		/>
 
-	<android.support.constraint.Guideline
+	<androidx.constraintlayout.widget.Guideline
 		android:id="@+id/middle_bottom_guideline"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
@@ -109,7 +109,7 @@
 		/>
 
 	<!--right bubble-->
-	<android.support.constraint.Guideline
+	<androidx.constraintlayout.widget.Guideline
 		android:id="@+id/right_left_guideline"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
@@ -117,7 +117,7 @@
 		app:layout_constraintGuide_percent=".93"
 		/>
 
-	<android.support.constraint.Guideline
+	<androidx.constraintlayout.widget.Guideline
 		android:id="@+id/right_bottom_guideline"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
@@ -134,4 +134,4 @@
 		/>
 
 
-</android.support.constraint.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

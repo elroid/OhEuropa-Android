@@ -8,9 +8,8 @@ import android.graphics.Canvas
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.os.Bundle
-import android.support.v4.content.ContextCompat.getColor
-import android.support.v4.content.ContextCompat.getDrawable
 import android.view.WindowManager
+import androidx.core.content.ContextCompat
 import com.github.ajalt.timberkt.e
 import com.github.ajalt.timberkt.v
 import com.github.ajalt.timberkt.w
@@ -46,8 +45,7 @@ import javax.inject.Inject
  * @author <a href="mailto:e@elroid.com">Elliot Long</a>
  *         Copyright (c) 2018 Elroid Ltd. All rights reserved.
  */
-class MapActivity : LocationEnabledActivity<MapContract.Presenter>()
-	, OnMapReadyCallback, MapContract.View {
+class MapActivity:LocationEnabledActivity<MapContract.Presenter>(), OnMapReadyCallback, MapContract.View {
 
 	companion object {
 		fun createIntent(ctx: Context): Intent {
@@ -92,19 +90,19 @@ class MapActivity : LocationEnabledActivity<MapContract.Presenter>()
 		map.uiSettings.isMapToolbarEnabled = false
 
 		map.setOnCameraMoveStartedListener {
-			if (it == REASON_GESTURE)
+			if(it == REASON_GESTURE)
 				presenter.onMapWander()
 		}
 	}
 
 	private fun applyMapStyle(map: GoogleMap) {
 		try {
-			if (map.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.map_style))) {
+			if(map.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.map_style))) {
 				v { "Map style success" }
 			} else {
 				w { "Map style failed" }
 			}
-		} catch (ex: Resources.NotFoundException) {
+		} catch(ex: Resources.NotFoundException) {
 			e(ex) { "Error applying map style" }
 		}
 	}
@@ -145,8 +143,8 @@ class MapActivity : LocationEnabledActivity<MapContract.Presenter>()
 
 		//show accuracy circle
 		val circleOpts = CircleOptions()
-		circleOpts.fillColor(getColor(this, R.color.me_acc_fill))
-		circleOpts.strokeColor(getColor(this, R.color.me_acc_stroke))
+		circleOpts.fillColor(ContextCompat.getColor(this, R.color.me_acc_fill))
+		circleOpts.strokeColor(ContextCompat.getColor(this, R.color.me_acc_stroke))
 		circleOpts.strokeWidth(dpToPxF(1f))
 		circleOpts.radius(loc.accuracy.toDouble())
 		circleOpts.center(loc.toLatLng())
@@ -156,10 +154,10 @@ class MapActivity : LocationEnabledActivity<MapContract.Presenter>()
 
 	val bitMap = mutableMapOf<Int, BitmapDescriptor>()
 	private fun createIcon(drawableResId: Int): BitmapDescriptor {
-		if (bitMap.containsKey(drawableResId))
+		if(bitMap.containsKey(drawableResId))
 			return bitMap.getValue(drawableResId)
 
-		val drawable = getDrawable(getCtx(), drawableResId)
+		val drawable = ContextCompat.getDrawable(getCtx(), drawableResId)
 			?: throw IllegalArgumentException("Drawable is null")
 		val bitmap = createBitmap(drawable)
 		val canvas = Canvas(bitmap)
@@ -172,7 +170,7 @@ class MapActivity : LocationEnabledActivity<MapContract.Presenter>()
 	}
 
 	private fun createBitmap(drawable: Drawable): Bitmap {
-		if (drawable is BitmapDrawable)
+		if(drawable is BitmapDrawable)
 			return drawable.bitmap
 
 		val bitmap = Bitmap.createBitmap(drawable.intrinsicWidth, drawable.intrinsicHeight,
@@ -202,7 +200,7 @@ class MapActivity : LocationEnabledActivity<MapContract.Presenter>()
 	}
 
 	private fun zoomTo(cu: CameraUpdate, durationSeconds: Int) {
-		if (durationSeconds == 0) {
+		if(durationSeconds == 0) {
 			map.moveCamera(cu)
 		} else {
 			map.animateCamera(cu, durationSeconds * 1000, null)

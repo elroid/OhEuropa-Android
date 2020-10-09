@@ -2,8 +2,8 @@ package com.oheuropa.android.data.local
 
 import android.content.Context
 import android.content.SharedPreferences
-import android.preference.PreferenceManager
 import androidx.core.content.edit
+import androidx.preference.PreferenceManager
 import com.github.ajalt.timberkt.d
 import com.oheuropa.android.domain.DEFAULT_MAP_ZOOM
 import com.oheuropa.android.domain.MAX_UPDATE_INTERVAL_HOURS
@@ -21,12 +21,13 @@ import com.oheuropa.android.ui.map.MapPresenter
  */
 const val USER_ID = "UserId"
 const val LAST_UPDATE = "LastUpdate"
+
 class PrefsHelper constructor(ctx: Context) {
 	private val prefs: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(ctx)
 
 
 	//map centre is stored in memory only
-	private var centre:Coordinate? = null
+	private var centre: Coordinate? = null
 	private var zoom: Float? = null
 	private var state: MapPresenter.MapState? = null
 	fun saveMapCentre(centre: Coordinate?, zoom: Float?, state: MapPresenter.MapState?) {
@@ -37,8 +38,8 @@ class PrefsHelper constructor(ctx: Context) {
 
 	fun restoreMapCentre(): Triple<Coordinate, Float, MapPresenter.MapState> {
 		val zoom = this.zoom ?: DEFAULT_MAP_ZOOM
-		val centre = this.centre?: Coordinate(0f, 0f)
-		val state = this.state?: MapPresenter.MapState.FOCUS_HERE
+		val centre = this.centre ?: Coordinate(0f, 0f)
+		val state = this.state ?: MapPresenter.MapState.FOCUS_HERE
 		return Triple(centre, zoom, state)
 	}
 
@@ -53,11 +54,11 @@ class PrefsHelper constructor(ctx: Context) {
 		prefs.edit { putString(USER_ID, userId) }
 	}
 
-	fun logUpdateSuccessful(){
-		prefs.edit{putLong(LAST_UPDATE, System.currentTimeMillis())}
+	fun logUpdateSuccessful() {
+		prefs.edit { putLong(LAST_UPDATE, System.currentTimeMillis()) }
 	}
 
-	fun isUpdateNeeded():Boolean{
+	fun isUpdateNeeded(): Boolean {
 		val lastUpdate = prefs.getLong(LAST_UPDATE, 0)
 		val maxIntervalMs = MAX_UPDATE_INTERVAL_HOURS * 3_600_000
 		return (lastUpdate + maxIntervalMs) < System.currentTimeMillis()

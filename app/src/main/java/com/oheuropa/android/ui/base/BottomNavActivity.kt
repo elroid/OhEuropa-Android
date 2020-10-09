@@ -1,11 +1,11 @@
 package com.oheuropa.android.ui.base
 
 import android.os.Bundle
-import android.support.annotation.LayoutRes
-import android.support.design.widget.BottomNavigationView
 import android.view.MenuItem
+import androidx.annotation.LayoutRes
 import com.github.ajalt.timberkt.i
 import com.github.ajalt.timberkt.v
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.oheuropa.android.R
 import com.oheuropa.android.ui.compass.CompassActivity
 import com.oheuropa.android.ui.info.InfoActivity
@@ -22,38 +22,38 @@ import kotlinx.android.synthetic.main.bottom_navigation.*
  *         Copyright (c) 2018 Elroid Ltd. All rights reserved.
  */
 abstract class BottomNavActivity : BaseActivity(),
-		BottomNavigationView.OnNavigationItemSelectedListener,
-		BottomNavigationView.OnNavigationItemReselectedListener {
+        BottomNavigationView.OnNavigationItemSelectedListener,
+        BottomNavigationView.OnNavigationItemReselectedListener {
 
-	override fun onCreate(savedInstanceState: Bundle?) {
-		i { "onCreate $this" }
-		super.onCreate(savedInstanceState)
-		setContentView(getLayoutId())
+    override fun onCreate(savedInstanceState: Bundle?) {
+        i { "onCreate $this" }
+        super.onCreate(savedInstanceState)
+        setContentView(getLayoutId())
 
-		//set up bottom nav
-		bottomNavigationView.setOnNavigationItemSelectedListener(this)
-		bottomNavigationView.setOnNavigationItemReselectedListener(this)
-	}
+        //set up bottom nav
+        bottomNavigationView.setOnNavigationItemSelectedListener(this)
+        bottomNavigationView.setOnNavigationItemReselectedListener(this)
+    }
 
-	@LayoutRes
-	protected abstract fun getLayoutId(): Int
+    @LayoutRes
+    protected abstract fun getLayoutId(): Int
 
-	internal abstract fun getNavigationMenuItemId(): Int
+    internal abstract fun getNavigationMenuItemId(): Int
 
-	open fun onThisTabPressed() {
-		v { "this tab pressed(%s) - doing nothing by default" }
-	}
+    open fun onThisTabPressed() {
+        v { "this tab pressed(%s) - doing nothing by default" }
+    }
 
-	override fun onNavigationItemReselected(item: MenuItem) {
-		onThisTabPressed()
-	}
+    override fun onNavigationItemReselected(item: MenuItem) {
+        onThisTabPressed()
+    }
 
-	override fun onNavigationItemSelected(item: MenuItem): Boolean {
-		i { "onNavigationItemSelected(${item.title})" }
-		if (item.itemId == getNavigationMenuItemId())
-			onThisTabPressed()
-		else
-			bottomNavigationView.postDelayed({
+    override fun onNavigationItemSelected(item: MenuItem): Boolean {
+        i { "onNavigationItemSelected(${item.title})" }
+        if (item.itemId == getNavigationMenuItemId())
+            onThisTabPressed()
+        else
+            bottomNavigationView.postDelayed({
 				v { "creating intent..." }
 				when (item.itemId) {
 					R.id.navigation_compass -> startActivity(CompassActivity.createIntent(getCtx()))
@@ -62,30 +62,30 @@ abstract class BottomNavActivity : BaseActivity(),
 				}
 				finish()
 			}, 100)
-		return true
-	}
+        return true
+    }
 
-	private fun updateNavigationBarState() {
-		selectBottomNavigationBarItem(getNavigationMenuItemId())
-	}
+    private fun updateNavigationBarState() {
+        selectBottomNavigationBarItem(getNavigationMenuItemId())
+    }
 
-	private fun selectBottomNavigationBarItem(itemId: Int) {
-		val menu = bottomNavigationView.menu
-		val lim = menu.size() - 1
-		(0..lim)
-			.map { menu.getItem(it) }
-			.forEach { if (it.itemId == itemId) it.isChecked = true }
-	}
+    private fun selectBottomNavigationBarItem(itemId: Int) {
+        val menu = bottomNavigationView.menu
+        val lim = menu.size() - 1
+        (0..lim)
+                .map { menu.getItem(it) }
+                .forEach { if (it.itemId == itemId) it.isChecked = true }
+    }
 
-	override fun onStart() {
-		super.onStart()
-		updateNavigationBarState()
-	}
+    override fun onStart() {
+        super.onStart()
+        updateNavigationBarState()
+    }
 
-	// Remove inter-activity transition to avoid screen tossing on tapping bottom navigation items
-	override fun onPause() {
-		super.onPause()
-		overridePendingTransition(0, 0)
-	}
+    // Remove inter-activity transition to avoid screen tossing on tapping bottom navigation items
+    override fun onPause() {
+        super.onPause()
+        overridePendingTransition(0, 0)
+    }
 
 }

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
+<androidx.constraintlayout.widget.ConstraintLayout
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:app="http://schemas.android.com/apk/res-auto"
 	xmlns:tools="http://schemas.android.com/tools"
@@ -12,13 +12,13 @@
 		style="@style/Title"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:paddingBottom="16dp"
-		android:paddingTop="16dp"
 		android:gravity="bottom"
+		android:paddingTop="16dp"
+		android:paddingBottom="16dp"
+		android:text="@string/info_title"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintStart_toStartOf="parent"
 		app:layout_constraintTop_toTopOf="parent"
-		android:text="@string/info_title"
 		/>
 
 	<include
@@ -28,6 +28,7 @@
 		android:layout_height="wrap_content"
 		app:layout_constraintBottom_toBottomOf="parent"
 		/>
+
 	<include
 		android:id="@+id/infoWaves"
 		layout="@layout/info_waves"
@@ -39,13 +40,14 @@
 	<ScrollView
 		android:layout_width="match_parent"
 		android:layout_height="0dp"
+		android:fadeScrollbars="false"
+		android:scrollbarSize="6dp"
+		android:scrollbarThumbVertical="@color/blue"
 		app:layout_constraintBottom_toTopOf="@id/infoWaves"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintStart_toStartOf="parent"
-		android:fadeScrollbars="false"
-		android:scrollbarThumbVertical="@color/blue"
-		android:scrollbarSize="6dp"
-		app:layout_constraintTop_toBottomOf="@id/title">
+		app:layout_constraintTop_toBottomOf="@id/title"
+		>
 
 		<TextView
 			android:layout_width="match_parent"
@@ -60,9 +62,9 @@
 			android:textSize="18sp"
 			app:autoSizeMaxTextSize="36sp"
 			app:autoSizeTextType="uniform"
-
-			tools:ignore="MissingPrefix" />
+			tools:ignore="MissingPrefix"
+			/>
 	</ScrollView>
 
 
-</android.support.constraint.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

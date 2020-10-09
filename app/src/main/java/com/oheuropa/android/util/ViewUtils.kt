@@ -3,10 +3,10 @@ package com.oheuropa.android.util
 import android.content.res.Resources
 import android.os.Handler
 import android.os.Looper
-import android.support.annotation.Dimension
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AbsListView
+import androidx.annotation.Dimension
 import com.github.ajalt.timberkt.v
 import com.github.ajalt.timberkt.w
 
