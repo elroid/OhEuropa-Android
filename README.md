@@ -14,6 +14,12 @@ More information can be found at http://oheuropa.com/
 
 ## Version History
 
+###Version 1.5.1
+* Added legacy apache directive to manifest for Pie compatibility
+
+###Version 1.5.0
+* Added intro animation
+
 ###Version 1.4.0
 * Added privacy link to info screen
 
