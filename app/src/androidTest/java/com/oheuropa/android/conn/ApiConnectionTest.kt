@@ -1,11 +1,13 @@
 package com.oheuropa.android.conn
 
-import android.support.test.runner.AndroidJUnit4
+import androidx.test.runner.AndroidJUnit4
 import com.oheuropa.android.data.remote.OhEuropaApiService
 import com.oheuropa.android.injection.AppModule
 import com.oheuropa.android.injection.AppTestComponent
 import com.oheuropa.android.injection.DaggerAppTestComponent
-import junit.framework.Assert.*
+import junit.framework.Assert.assertEquals
+import junit.framework.Assert.assertNotNull
+import junit.framework.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith

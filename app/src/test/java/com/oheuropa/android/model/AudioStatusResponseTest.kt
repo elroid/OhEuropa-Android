@@ -1,13 +1,8 @@
 package com.oheuropa.android.model
 
-import com.nhaarman.mockito_kotlin.doReturn
-import com.nhaarman.mockito_kotlin.mock
-import com.nhaarman.mockito_kotlin.whenever
 import com.oheuropa.android.framework.RoboelectricTest
 import org.junit.Test
-import org.mockito.Mockito.mock
 import kotlin.test.assertEquals
-import kotlin.test.assertTrue
 
 /**
  *

@@ -1,11 +1,11 @@
 package com.oheuropa.android.domain
 
 import com.github.ajalt.timberkt.d
-import com.nhaarman.mockito_kotlin.doReturn
-import com.nhaarman.mockito_kotlin.mock
 import com.oheuropa.android.data.DataManager
 import com.oheuropa.android.framework.RoboelectricTest
 import com.oheuropa.android.model.Coordinate
+import io.mockk.every
+import io.mockk.mockk
 import io.reactivex.Observable
 import io.reactivex.subjects.ReplaySubject
 import org.junit.Test
@@ -37,19 +37,19 @@ class BeaconWatcherTest : RoboelectricTest() {
 		val endLoc = Coordinate(midLat, midEastLon)
 
 		val locObs = ReplaySubject.create<Coordinate>()
-		val locator = mock<LocationComponent> {
-			on { locationListener() }.doReturn(locObs)
+		val locator = mockk<LocationComponent>{
+			every { locationListener() } returns locObs
 		}
 		val beacon1 = createBeacon("One", 1, northPoint)
 		val beacon2 = createBeacon("Two", 2, eastPoint)
 
 		val beaconList = listOf(beacon1, beacon2)
 		val listObs = Observable.just(beaconList)
-			.doOnNext({
+			.doOnNext {
 				d { "Outputting beacons:$it" }
-			})
-		val dataManager = mock<DataManager> {
-			on { followBeaconList() }.doReturn(listObs)
+			}
+		val dataManager = mockk<DataManager> {
+			every { followBeaconList() } returns listObs
 		}
 
 		val beaconWatcher = BeaconWatcher(dataManager, locator)

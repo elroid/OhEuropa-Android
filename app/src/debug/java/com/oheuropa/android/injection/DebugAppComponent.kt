@@ -16,8 +16,7 @@ import javax.inject.Singleton
  *         Copyright (c) 2018 Elroid Ltd. All rights reserved.
  */
 @Singleton
-@Component(modules = arrayOf(
-	AndroidSupportInjectionModule::class, AppModule::class, DebugAppModule::class, DebugBuildersModule::class))
+@Component(modules = [AndroidSupportInjectionModule::class, AppModule::class, DebugAppModule::class, DebugBuildersModule::class])
 interface DebugAppComponent : MainComponent{
 	@Component.Builder
 	interface Builder {

@@ -2,6 +2,7 @@ package com.oheuropa.android.injection
 
 import com.oheuropa.android.conn.ApiConnectionTest
 import dagger.Component
+import dagger.android.support.AndroidSupportInjectionModule
 import javax.inject.Singleton
 
 /**
@@ -14,8 +15,7 @@ import javax.inject.Singleton
  *         Copyright (c) 2018 Elroid Ltd. All rights reserved.
  */
 @Singleton
-@Component(modules = arrayOf(AppModule::class))
-interface AppTestComponent : MainComponent {
-
+@Component(modules = [AndroidSupportInjectionModule::class, AppModule::class, MainBuildersModule::class])
+interface AppTestComponent:MainComponent {
 	fun inject(test: ApiConnectionTest)
 }

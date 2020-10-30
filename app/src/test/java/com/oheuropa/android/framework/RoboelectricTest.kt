@@ -4,7 +4,6 @@ import android.app.Application
 import android.content.Context
 import android.util.Log
 import com.github.ajalt.timberkt.Timber
-import com.oheuropa.android.BuildConfig
 import com.oheuropa.android.model.Beacon
 import com.oheuropa.android.model.Coordinate
 import org.junit.Before
@@ -27,9 +26,9 @@ import java.io.File
  *         Copyright (c) 2018 Elroid Ltd. All rights reserved.
  */
 @RunWith(RobolectricTestRunner::class)
-@Config(constants = BuildConfig::class,
+@Config(//constants = BuildConfig::class,
 	application = RoboelectricTest.ApplicationStub::class,
-	sdk = intArrayOf(21))
+	sdk = [21])
 abstract class RoboelectricTest {
 
 	@Before
