@@ -28,10 +28,10 @@ android {
 
     defaultConfig {
         applicationId "com.oheuropa.android"
-        versionCode 12
-        versionName "1.6.0"
         minSdkVersion 19
         targetSdkVersion 31
+        versionCode 13
+        versionName "1.7.0"
         testInstrumentationRunner "com.oheuropa.android.framework.CustomTestRunner"
     }
 
