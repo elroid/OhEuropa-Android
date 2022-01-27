@@ -27,14 +27,12 @@
         {
           "id": "5:311188905842439062",
           "name": "lat",
-          "type": 7,
-          "flags": 4
+          "type": 7
         },
         {
           "id": "6:3049624430601553990",
           "name": "lng",
-          "type": 7,
-          "flags": 4
+          "type": 7
         },
         {
           "id": "7:8999722256099085507",
@@ -44,32 +42,27 @@
         {
           "id": "8:5399420809065274508",
           "name": "centerradius",
-          "type": 5,
-          "flags": 4
+          "type": 5
         },
         {
           "id": "9:886341914481845624",
           "name": "innerradius",
-          "type": 5,
-          "flags": 4
+          "type": 5
         },
         {
           "id": "10:1453994938421557692",
           "name": "outerradius",
-          "type": 5,
-          "flags": 4
+          "type": 5
         },
         {
           "id": "11:1268265985010828013",
           "name": "radioplays",
-          "type": 5,
-          "flags": 4
+          "type": 5
         },
         {
           "id": "12:919911655262616331",
           "name": "nearbys",
-          "type": 5,
-          "flags": 4
+          "type": 5
         }
       ],
       "relations": []

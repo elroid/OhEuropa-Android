@@ -22,6 +22,7 @@
 		<activity
 			android:name=".ui.start.StartActivity"
 			android:screenOrientation="sensorPortrait"
+			android:exported="true"
 			>
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN"/>
@@ -33,22 +34,26 @@
 			android:name=".ui.compass.CompassActivity"
 			android:screenOrientation="sensorPortrait"
 			android:theme="@style/AppTheme.Compass"
+			android:exported="false"
 			/>
 
 		<activity
 			android:name=".ui.map.MapActivity"
 			android:screenOrientation="sensorPortrait"
 			android:theme="@style/AppTheme.Map"
+			android:exported="false"
 			/>
 
 		<activity
 			android:name=".ui.info.InfoActivity"
 			android:screenOrientation="sensorPortrait"
+			android:exported="false"
 			/>
 
 		<activity
 			android:name=".ui.intro.IntroActivity"
 			android:screenOrientation="sensorPortrait"
+			android:exported="false"
 			/>
 
 		<service android:name=".data.local.AudioService"/>

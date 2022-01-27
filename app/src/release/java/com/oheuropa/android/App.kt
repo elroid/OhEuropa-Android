@@ -3,7 +3,7 @@ package com.oheuropa.android
 import android.util.Log
 import com.evernote.android.job.JobManager
 import com.github.ajalt.timberkt.Timber
-import com.halfhp.rxtracer.RxTracer
+//import com.halfhp.rxtracer.RxTracer
 import com.oheuropa.android.injection.DaggerAppComponent
 import com.oheuropa.android.util.CrashlyticsTree
 import dagger.android.AndroidInjector
@@ -36,7 +36,7 @@ class App:BaseApp(), HasAndroidInjector {
 			.build()
 			.inject(this)
 
-		RxTracer.enable()
+		//RxTracer.enable()
 		Timber.plant(CrashlyticsTree(Log.INFO))
 		//Timber.plant(Timber.DebugTree())//remove before release
 

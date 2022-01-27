@@ -134,6 +134,7 @@ class MapPresenter(
 			MapState.FOCUS_HERE -> zoomToEuropeLevel()
 			MapState.FOCUS_EUROPE -> zoomToNearest()
 			MapState.FOCUS_OTHER -> zoomToNearest()
+			else -> zoomToNearest()
 		}
 	}
 

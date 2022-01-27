@@ -80,7 +80,7 @@ class StartActivity : BaseActivity(), StartContract.View {
 			apiAvailability.isUserResolvableError(availability) -> {
 				w { "user-recoverable error" }
 				analyticsHelper.logPlayUpdateRequired()
-				apiAvailability.getErrorDialog(this, availability, REQUEST_PLAY_SERVICES).show()
+				apiAvailability.getErrorDialog(this, availability, REQUEST_PLAY_SERVICES)?.show()
 				false
 			}
 			else -> {

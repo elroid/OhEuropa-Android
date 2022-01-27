@@ -5,7 +5,7 @@ import android.util.Log.VERBOSE
 import androidx.multidex.MultiDex
 import com.evernote.android.job.JobManager
 import com.github.ajalt.timberkt.Timber
-import com.halfhp.rxtracer.RxTracer
+//import com.halfhp.rxtracer.RxTracer
 import com.oheuropa.android.injection.DaggerDebugAppComponent
 import com.oheuropa.android.util.ThreadTree
 import dagger.android.AndroidInjector
@@ -38,7 +38,7 @@ class DebugApp : BaseApp(), HasAndroidInjector {
 			.build()
 			.inject(this)
 
-		RxTracer.enable()
+		//RxTracer.enable()
 		//Timber.plant(Timber.DebugTree())
 		Timber.plant(ThreadTree(VERBOSE))
 		initCrashlytics(false)

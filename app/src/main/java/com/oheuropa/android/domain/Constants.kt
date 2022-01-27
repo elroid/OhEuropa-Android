@@ -16,6 +16,7 @@ const val SPLASH_WAIT_SECONDS = 2
 
 const val DEFAULT_MAP_ZOOM = 15f
 const val FADE_DURATION_MS = 5000.toLong()
+const val EXIT_FADE_DURATION_MS = 2000.toLong()
 const val RADIO_STREAM_URL = "https://streams.radio.co/s02776f249/listen"
 const val MAX_VOLUME = 100.toDouble()
 const val MIN_VOLUME_INTERVAL_MS = 250

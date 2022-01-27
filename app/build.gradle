@@ -1,22 +1,24 @@
+plugins {
+    id "com.starter.easylauncher" version "4.1.1"
+}
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'io.objectbox'
-apply plugin: 'com.akaita.android.easylauncher'
 apply plugin: 'com.google.firebase.crashlytics'
 apply plugin: 'com.google.gms.google-services'
 
 android {
-    compileSdkVersion 30
+    compileSdkVersion 31
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.toVersion(javaVersion)
+        targetCompatibility JavaVersion.toVersion(javaVersion)
     }
 
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_1_8.toString()
+        jvmTarget = javaVersion.toString()
     }
 
     lintOptions {
@@ -26,10 +28,10 @@ android {
 
     defaultConfig {
         applicationId "com.oheuropa.android"
-        minSdkVersion 16
-        targetSdkVersion 30
         versionCode 12
         versionName "1.6.0"
+        minSdkVersion 19
+        targetSdkVersion 31
         testInstrumentationRunner "com.oheuropa.android.framework.CustomTestRunner"
     }
 
@@ -87,6 +89,14 @@ android {
     }
 }
 
+easylauncher {
+    buildTypes {
+        debug {
+            filters = orangeRibbonFilter("DEBUG")
+        }
+    }
+}
+
 kapt {
     generateStubs = true
     arguments {
@@ -95,30 +105,30 @@ kapt {
 }
 
 project.ext {
-    daggerVersion = "2.29.1"
+    daggerVersion = "2.40.5"
     butterKnifeVersion = "8.8.1"
     rxKotlinVersion = "2.4.0"
     rxAndroidVersion = "2.1.1"
-    //rxRelayVersion = "2.1.1"
     retrofitVersion = "2.9.0"
     espressoVersion = "3.0.1"
     supportTestVersion = "1.0.1"
-    kotshiVersion = "2.3.0"
+    kotshiVersion = "2.7.0"
+    mockVersion = "1.12.2"
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
     // UI libs /////////////////////////////////////////////////////////////////////////////////////
-    implementation 'org.greenrobot:eventbus:3.2.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
+    implementation 'org.greenrobot:eventbus:3.3.1'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.3'
 
     // Back-end libs ///////////////////////////////////////////////////////////////////////////////
     implementation 'com.daasuu:EasingInterpolator:1.3.0' //for audio fade interpolators
-    implementation "com.google.android.gms:play-services-maps:17.0.0"
-    implementation "com.google.android.gms:play-services-location:17.1.0"
+    implementation "com.google.android.gms:play-services-maps:18.0.2"
+    implementation "com.google.android.gms:play-services-location:19.0.1"
     implementation 'com.evernote:android-job:1.4.2'
-    implementation 'com.squareup.okhttp3:logging-interceptor:4.9.0'
+    implementation 'com.squareup.okhttp3:logging-interceptor:5.0.0-alpha.3'
 
     //retrofit
     implementation "com.squareup.retrofit2:retrofit:$retrofitVersion"
@@ -131,20 +141,20 @@ dependencies {
     implementation "io.objectbox:objectbox-rxjava:$objectboxVersion"
 
     //firebase
-    implementation platform('com.google.firebase:firebase-bom:26.0.0')
+    implementation platform('com.google.firebase:firebase-bom:29.0.4')
     implementation 'com.google.firebase:firebase-crashlytics'
     implementation 'com.google.firebase:firebase-analytics-ktx'
 
     //Standard libs ////////////////////////////////////////////////////////////////////////////////
 
     // Android support libs
-    implementation 'androidx.appcompat:appcompat:1.2.0'
-    implementation 'androidx.preference:preference-ktx:1.1.1'
-    implementation 'com.google.android.material:material:1.2.1'
+    implementation 'androidx.appcompat:appcompat:1.4.1'
+    implementation 'androidx.preference:preference-ktx:1.2.0'
+    implementation 'com.google.android.material:material:1.5.0'
 
     // Kotlin
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlinVersion"
-    implementation 'androidx.core:core-ktx:1.3.2'
+    implementation 'androidx.core:core-ktx:1.7.0'
 
     // Dagger core
     implementation "com.google.dagger:dagger:$daggerVersion"
@@ -164,7 +174,7 @@ dependencies {
     // ReactiveX
     implementation "io.reactivex.rxjava2:rxkotlin:$rxKotlinVersion"
     implementation "io.reactivex.rxjava2:rxandroid:$rxAndroidVersion"
-    implementation "com.halfhp.rxtracer:rxtracer:0.1.4"
+    //bintray casualty :-( implementation "com.halfhp.rxtracer:rxtracer:0.1.4"
 
     // Timber
     implementation 'com.github.ajalt:timberkt:1.5.1'
@@ -172,16 +182,16 @@ dependencies {
     debugImplementation "androidx.multidex:multidex:2.0.1"
 
     // Testing libs ////////////////////////////////////////////////////////////////////////////////
-    testImplementation "junit:junit:4.13.1"
-    testImplementation "org.robolectric:robolectric:4.4"
+    testImplementation "junit:junit:4.13.2"
+    testImplementation "org.robolectric:robolectric:4.7.3"
     testImplementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlinVersion"
     testImplementation "org.jetbrains.kotlin:kotlin-test-junit:$kotlinVersion"
-    testImplementation 'io.mockk:mockk:1.10.2'
-    androidTestImplementation 'io.mockk:mockk-android:1.10.2'
+    testImplementation "io.mockk:mockk:$mockVersion"
+    androidTestImplementation "io.mockk:mockk-android:$mockVersion"
 
-    androidTestImplementation "androidx.test:runner:1.3.0"
-    androidTestImplementation "androidx.test:rules:1.3.0"
-    androidTestImplementation "androidx.test.espresso:espresso-core:3.3.0"
-    androidTestImplementation "androidx.test.espresso:espresso-intents:3.3.0"
-    androidTestImplementation "androidx.annotation:annotation:1.1.0"
+    androidTestImplementation "androidx.test:runner:1.4.0"
+    androidTestImplementation "androidx.test:rules:1.4.0"
+    androidTestImplementation "androidx.test.espresso:espresso-core:$espressoVersion"
+    androidTestImplementation "androidx.test.espresso:espresso-intents:$espressoVersion"
+    androidTestImplementation "androidx.annotation:annotation:1.3.0"
 }
