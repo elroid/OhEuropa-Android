@@ -12,7 +12,7 @@
 	<string name="title_info">Info</string>
 
 	<string name="info_body">Since April 2018, Action Hero have been asking strangers in Europe to sing them a love song. So far, almost 1000 songs have been recorded, and the artists have travelled over 32,000km through 33 European countries in their motorhome, which doubles as a recording studio.\n\nThe compass and the map on this app will direct you to the nearest “beacon”. When you arrive at the beacon location, this app will tune into the Oh Europa love songs broadcast. Use headphones for the best experience.\n\nThe love songs can only be heard within a small radius of each beacon, so you will need to travel in person to the beacon, with this app, in order to hear them. Your device will tune in to the broadcast automatically when you are within range. You can listen day or night: the love songs are playing 24/7, and will continue to broadcast from the beacons forever. Each beacon is located on a border of some kind. Visit oheuropa.com to read about each place.\n\nBe sure to update the app regularly to make sure you can see new beacons as they get added!</string>
-	<string name="loc_justification">Oh Europa needs permission to access your location.\n\nWe won\'t store or transmit this information nor keep listening after you close the application.</string>
+	<string name="loc_justification">Oh Europa needs permission to access your location.\n\nWe will stop listening when you close the application and will never store or transmit your location anywhere.</string>
 	<string name="finding_beacon">finding nearest beacon…</string>
 	<string name="beacon_dist">%s metres</string>
 	<string name="singing">%1$s \nsinging \"%2$s\"</string>
